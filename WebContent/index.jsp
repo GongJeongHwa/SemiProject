@@ -20,7 +20,7 @@
 	<div id="header">
 		<%@ include file="./form/header.jsp"%>
 	</div>
-
+	
 
 
 	<!-- 검색&배경 -->
@@ -45,7 +45,7 @@
 		<br><br><br><br>
 		<div class="row">
 			<h2>
-				나만의 여행 일정을 만들어 보세요&nbsp;&nbsp;<button type="button" class="btn btn-light" id="btn" onclick="location.href='schedule/createSchedule.jsp'">&nbsp;여행짜기&nbsp;<img src="./img/icons/arrow-right-circle-fill.svg" alt="Bootstrap" width="30" height="30"></button>
+				나만의 여행 일정을 만들어보세요&nbsp;&nbsp;<button type="button" class="btn btn-light" id="btn" onclick="location.href='schedule/createSchedule.jsp'">&nbsp;여행짜기&nbsp;<img src="./img/icons/arrow-right-circle-fill.svg" alt="Bootstrap" width="30" height="30"></button>
 			</h2>
 		</div>
 		<br><br>
