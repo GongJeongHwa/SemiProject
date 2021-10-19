@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 <style type="text/css">
-.button{
+#button-header{
   text-align: center;
   border: solid 1.5px gray;
   background-color: white;
@@ -18,9 +18,13 @@
   padding: 8px;
 }
 
-.button:hover{
+#button-header:hover{
 	border: solid 1.5px rgb(105, 231, 175);
 	background-color: rgb(105, 231, 175);
+}
+
+#header button{
+    font-size: 12pt;
 }
 
 </style>
@@ -29,13 +33,19 @@
 <title>Insert title here</title>
 <% 
 	UserDto dto = (UserDto)session.getAttribute("dto");
+	String profilePath = "";
+	if(dto == null){
+		profilePath = request.getContextPath() + "/img/icons/person-circle.svg";
+	}else{
+		//profilePath = dto.getProfilePath();
+	}
 %>
 
 </head>
 <body>
 	<br>
-	<div class="container-lg">
-		<div class="row">
+	<div class="container-lg" id="header">
+		<div class="row" style="font-size: 12pt;">
 			<div class="col-lg-6" style="text-align: left;">
 				<a href="<%=request.getContextPath()%>/index.jsp"><img src="<%=request.getContextPath()%>/img/logo.PNG" width="250"
 					height="80"></a>
@@ -44,7 +54,7 @@
 				<%
 					if (dto != null) {
 				%>
-
+					
 				<%
 					} else {
 				%>
@@ -58,9 +68,9 @@
 				<a href=""><img src="<%=request.getContextPath()%>/img/icons/bell.svg" alt="Bootstrap" width="24" height="24"></a>
 				&nbsp;&nbsp;
 				<div class="btn-group">
-					<button type="button" class="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+					<button type="button" id="button-header" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
 						<img src="<%=request.getContextPath()%>/img/icons/list.svg" alt="Bootstrap" width="21" height="21">
-						<img src="<%=request.getContextPath()%>/img/icons/person-circle.svg" alt="Bootstrap" width="27" height="27">
+						<img src="<%=profilePath %>" alt="Bootstrap" width="27" height="27">
 					</button>
 					<ul class="dropdown-menu dropdown-menu-lg-end">
 						<li>
