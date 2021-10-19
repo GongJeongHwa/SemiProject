@@ -15,9 +15,9 @@ public class JDBCTemplate {
 			e.printStackTrace();
 		}
 		Connection con = null;
-		String url = "jdbc:oracle:thin:@-----------접속주소-----------";
-		String id = "--------";
-		String pw = "--------";
+		String url = "jdbc:oracle:thin:@118.130.245.226:1521:xe";
+		String id = "semi_15jijo";
+		String pw = "1234";
 		try {
 			con = DriverManager.getConnection(url, id, pw);
 			con.setAutoCommit(false); //autocommit 취소

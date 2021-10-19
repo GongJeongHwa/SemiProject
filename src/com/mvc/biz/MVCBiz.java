@@ -8,5 +8,7 @@ public interface MVCBiz {
 	public boolean insertUser();
 	public boolean deleteUser();
 	public boolean updateUser();
+	
+	
 
 }

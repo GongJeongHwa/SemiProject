@@ -11,7 +11,8 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD91v0jFyq9OujfSgguW_LeoicC-wATfNI" ></script>
 <style>
-#map_ma {width:600px; height:400px; clear:both; border:solid 1px red;}
+#map_ma {width:100%; height:400px; clear:both; border:solid 1px gray;}
+
 </style>
 </head>
 <body>
