@@ -216,7 +216,7 @@
 				</p>
 				<br>
 				<p style="text-align: left;">
-				<a style="text-decoration: none; color:black;" href="companion/companion.jsp">
+				<a href="./companion/companionMain.jsp" style="text-decoration: none; color:black;" href="companion/companion.jsp">
 			 		<span style="font-weight:bold;">동행 구하기</span>&nbsp;
 			 		<img src="./img/icons/arrow-right-circle-fill.svg" alt="Bootstrap" width="26" height="26">
 			 	</a>
