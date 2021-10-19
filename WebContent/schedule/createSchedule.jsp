@@ -73,7 +73,7 @@
 			<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
   			<thead>
     		<tr>
-      			<th colspan="2"><b>Hilton hotel seoul</b></th>
+      			<th colspan="2"><b>Hilton Hotel Seoul</b></th>
     		</tr>
   			</thead>
   			<tbody>
