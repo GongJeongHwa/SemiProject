@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
@@ -7,10 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
-<script type="text/javascript" src="index.js"></script>
-<link rel="stylesheet" type="text/css" href="index.css">
+
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -40,24 +38,7 @@
 		</div>
 	</div>
 
-	<!-- 일정짜기 -->
-	<div class="container">
-		<br><br><br><br>
-		<div class="row">
-			<h2>
-				나만의 여행 일정을 만들어 보세요&nbsp;&nbsp;<button type="button" class="btn btn-light" id="btn" onclick="location.href='schedule/createSchedule.jsp'">&nbsp;여행짜기&nbsp;<img src="./img/icons/arrow-right-circle-fill.svg" alt="Bootstrap" width="30" height="30"></button>
-			</h2>
-		</div>
-		<br><br>
-		<div class="row">
-			<div class="col-lg-6"><div class="rounded-start shadow-lg p-3 mb-5 bg-body rounded"><%@ include file="./maps.jsp"%></div><br></div>
-			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/journey.PNG" width="100%" height="400px"></div>
-		</div>
-		<br>
-		<div class="row">
-			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/hotel.PNG" width="100%" height="400px"><br></div>
-			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/root.PNG" width="100%" height="400px"></div>
-		</div>
+
 		
 	</div>
 	
