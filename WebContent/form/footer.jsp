@@ -31,7 +31,7 @@
 				<div class="col-lg-3">
 					<a href=""><b>커뮤니티</b></a><br><br>
 					<a href="<%=request.getContextPath()%>/blog/blog_main.jsp">여행 블로그</a><br><br>
-					<a href="<%=request.getContextPath()%>/companion/companion.jsp">동행 구하기</a><br><br>
+					<a href="<%=request.getContextPath()%>/companion/companionMain.jsp">동행 구하기</a><br><br>
 				</div>
 				<div class="col-lg-3">
 					<a href=""><b>내 정보</b></a><br><br>

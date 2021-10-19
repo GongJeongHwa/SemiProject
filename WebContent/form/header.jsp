@@ -63,7 +63,7 @@
 					}
 				%>
 				&nbsp;&nbsp;&nbsp;
-				<a href=""><img src="<%=request.getContextPath()%>/img/icons/envelope.svg" alt="Bootstrap" width="24" height="24"></a>
+				<a href="<%=request.getContextPath()%>/message.do?command=message"><img src="<%=request.getContextPath()%>/img/icons/envelope.svg" alt="Bootstrap" width="24" height="24"></a>
 				&nbsp;&nbsp;&nbsp;
 				<a href=""><img src="<%=request.getContextPath()%>/img/icons/bell.svg" alt="Bootstrap" width="24" height="24"></a>
 				&nbsp;&nbsp;
