@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
@@ -5,7 +6,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
 
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" ></script>
 <script type="text/javascript">
 	var length = 6;
 	var idx = 1;
@@ -29,6 +34,7 @@
 		window.setTimeout(changePicture, slide);
 	}
 </script>
+
 <style type="text/css">
 #img {
 	background-image: url("<%=request.getContextPath()%>/img/back1.jpg");
@@ -61,10 +67,13 @@
 	<br>
 	
 	
-	<div class="container">
+	<div class="
+	container">
 		<div id="header">
+		
 			<%@ include file="./maps.jsp"%>
 		</div>
+		
 	</div>
 	<br>
 	
