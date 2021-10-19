@@ -17,7 +17,7 @@
 
 </head>
 <body>
-<div id="map_ma"></div>
+<div id="map_ma"></div> 
  
 
 <script type="text/javascript">
