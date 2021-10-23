@@ -41,7 +41,7 @@
      <!-- map -->
     <div class="container">
 		<div class="col-sm-8" style="width:100%">
-			<%@ include file="./maps3.jsp" %>
+			<%@ include file="maptest/maptest1.jsp" %>
 		</div>	
 			
 	<!-- schedule -->		
@@ -71,7 +71,7 @@
 				
 			<!-- table start -->
 			<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  			<thead>
+  			<thead id="results">
     		<tr>
       			<th colspan="2"><b>Hilton hotel Seoul</b></th>
     		</tr>
@@ -93,7 +93,7 @@
   			</thead>
   			<tbody>
     		<tr>
-		      <td><img src="./hilton.jpg" width=90% style="top:20px; position:relative" ></td>
+		      <td><img src="img/hilton.jpg" width=90% style="top:20px; position:relative" ></td>
 		      <td>Complimentary breakfast and Wi-Fi, sustainable practices, and great hotel design are just some of the reasons that make Hilton brands stand out.<br><br></td>
 		    </tr>
 			 </tbody>
@@ -108,7 +108,7 @@
   			</thead>
   			<tbody>
     		<tr>
-		      <td><img src="./hilton.jpg" width=90% style="top:20px; position:relative" ></td>
+		      <td><img src="img/hilton.jpg" width=90% style="top:20px; position:relative" ></td>
 		      <td>Complimentary breakfast and Wi-Fi, sustainable practices, and great hotel design are just some of the reasons that make Hilton brands stand out.<br><br></td>
 		    </tr>
 			 </tbody>
@@ -135,7 +135,7 @@
       <div class="modal-body">
       		<div>
       		<br>
-      		<img src="./hilton.jpg" width=100%>
+      		<img src="img/hilton.jpg" width=100%>
       		<p><br>Hilton Hotels and Resorts is Hilton's flagship brand and one of the largest hotel brands in the world. The brand is targeted at both business and leisure travelers with locations in major city centers, near airports, convention centers, and popular vacation destinations around the world</p>
       		<hr>
       		<a href="https://www.hilton.com/en/">go to web site</a>
@@ -163,14 +163,14 @@
 				
 				<!-- table start -->
 				<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  				<thead>
+  				<thead id="results_ta">
 			    <tr>
 			      <th colspan="2"><b>Mt.Halla</b></th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			    <tr>
-			      <td><img src="./halla.jpg" width=90% style="top:20px; position:relative"></td>
+			      <td><img src="img/halla.jpg" width=90% style="top:20px; position:relative"></td>
 			      <td>Hallasan is the highest mountain in South Korea and is worshipped by people as they believe that gods and spirits live on the mountain.<br><br></td>
 			    </tr>
 			  </tbody>
@@ -185,7 +185,7 @@
 			  </thead>
 			  <tbody>
 			    <tr>
-			      <td><img src="./halla.jpg" width=90% style="top:20px; position:relative"></td>
+			      <td><img src="img/halla.jpg" width=90% style="top:20px; position:relative"></td>
 			      <td>Hallasan is the highest mountain in South Korea and is worshipped by people as they believe that gods and spirits live on the mountain.<br><br></td>
 			    </tr>
 			  </tbody>
@@ -200,7 +200,7 @@
 			  </thead>
 			  <tbody>
 			    <tr>
-			      <td><img src="./halla.jpg" width=90% style="top:20px; position:relative"></td>
+			      <td><img src="img/halla.jpg" width=90% style="top:20px; position:relative"></td>
 			      <td>Hallasan is the highest mountain in South Korea and is worshipped by people as they believe that gods and spirits live on the mountain.<br><br></td>
 			    </tr>
 			  </tbody>
@@ -215,7 +215,7 @@
 			  </thead>
 			  <tbody>
 			    <tr>
-			      <td><img src="./halla.jpg" width=90% style="top:20px; position:relative"></td>
+			      <td><img src="img/halla.jpg" width=90% style="top:20px; position:relative"></td>
 			      <td>Hallasan is the highest mountain in South Korea and is worshipped by people as they believe that gods and spirits live on the mountain.<br><br></td>
 			    </tr>
 			  </tbody>
@@ -229,14 +229,14 @@
 			
 			<!-- table start -->
 			<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-			  <thead>
+			  <thead id="results_rest">
 			    <tr>
 			      <th colspan="2"><b>SUNNY GARDEN</b></th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			    <tr>
-			      <td><img src="./rest.jpg" width=90% style="top:20px; position:relative"></td>
+			      <td><img src="img/rest.jpg" width=90% style="top:20px; position:relative"></td>
 			      <td>$$$$BarbecueAsianKorean<br>3208, 1100-ro, Jeju, Jeju Island 63091 South Korea+82 64-744-1000+ Add website+ Add hours
 			      <br></td>
 			    </tr>
@@ -251,7 +251,7 @@
 			  </thead>
 			  <tbody>
 			    <tr>
-			      <td><img src="./rest.jpg" width=90% style="top:20px; position:relative"></td>
+			      <td><img src="img/rest.jpg" width=90% style="top:20px; position:relative"></td>
 			      <td>$$$$BarbecueAsianKorean<br>3208, 1100-ro, Jeju, Jeju Island 63091 South Korea+82 64-744-1000+ Add website+ Add hours
 			      <br></td>
 			    </tr>
@@ -266,7 +266,7 @@
 			  </thead>
 			  <tbody>
 			    <tr>
-			      <td><img src="./rest.jpg" width=90% style="top:20px; position:relative"></td>
+			      <td><img src="img/rest.jpg" width=90% style="top:20px; position:relative"></td>
 			      <td>$$$$BarbecueAsianKorean<br>3208, 1100-ro, Jeju, Jeju Island 63091 South Korea+82 64-744-1000+ Add website+ Add hours
 			      <br></td>
 			    </tr>
