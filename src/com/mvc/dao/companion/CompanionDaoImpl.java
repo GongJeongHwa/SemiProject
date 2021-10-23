@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.mvc.dto.AskConnect;
 import com.mvc.dto.MessageDto;
+import com.mvc.dto.PromiseDto;
 
 import common.JDBCTemplate;
 
@@ -108,8 +109,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 	}
 
 	@Override
-	public boolean sendRecMessage(String login_id, String con_id, String message, String chat_serial) {
-		Connection con = getConnection();
+	public int sendRecMessage(Connection con, String login_id, String con_id, String message, String chat_serial) {
 		PreparedStatement pstm = null;
 		int res = 0;
 
@@ -126,12 +126,13 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 				commit(con);
 			}
 		} catch (SQLException e) {
+			System.out.println("여기서 오류");
 			e.printStackTrace();
 		} finally {
 			closeStmt(pstm);
-			closeConn(con);
+			System.out.println("sendMessage 종료");
 		}
-		return res > 0 ? true : false;
+		return res;
 	}
 
 	@Override
@@ -245,6 +246,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 
 	}
 
+	//여기서부터 askPermit
 	@Override
 	public boolean askFirst(Connection con, String login_id, String con_id) {
 		PreparedStatement pstm = null;
@@ -321,6 +323,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		}
 		return res>0?true:false;
 	}
+	//여기까지 askPermit
 
 	@Override
 	public boolean askDenied(Connection con, String login_id, String con_id) {
@@ -338,5 +341,80 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 			closeStmt(pstm);
 		}
 		return res>0?true:false;
+	}
+
+	@Override
+	public boolean makePromise(Connection con, String login_id, String sen_id, String loc, String date, String comment) {
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			pstm = con.prepareStatement(makePromise);
+			pstm.setString(1, login_id);
+			pstm.setString(2, sen_id);
+			pstm.setString(3, loc);
+			pstm.setString(4, date);
+			pstm.setString(5, comment);
+			
+			res = pstm.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStmt(pstm);
+		}
+		return res>0?true:false;
+	}
+
+	@Override
+	public List<PromiseDto> getPromise(Connection con, String login_id) {
+		PreparedStatement pstm = null;
+		List<PromiseDto> list = new ArrayList<>();
+		ResultSet rs = null;
+		
+		try {
+			pstm = con.prepareStatement(getPromise);
+			pstm.setString(1, login_id);
+			
+			rs = pstm.executeQuery();
+			
+			while(rs.next()) {
+				PromiseDto dto = new PromiseDto();
+				dto.setSen_id(rs.getString(1));
+				dto.setP_loc(rs.getString(2));
+				dto.setP_time(rs.getString(3));
+				dto.setP_comment(rs.getString(4));
+				
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeRs(rs);
+			closeStmt(pstm);
+		}
+		return list;
+	}
+
+	@Override
+	public int promiseChoice(Connection con, String login_id, String con_id, String loc, String permit) {
+		//PERMIT = 'Y' WHERE REC_ID = ? AND SEN_ID = ? AND P_LOC = ?
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			pstm = con.prepareStatement(promiseChoice);
+			pstm.setString(1, permit);
+			pstm.setString(2, login_id);
+			pstm.setString(3, con_id);
+			pstm.setString(4, loc);
+			
+			res = pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStmt(pstm);
+		}
+		return res;
 	}
 }

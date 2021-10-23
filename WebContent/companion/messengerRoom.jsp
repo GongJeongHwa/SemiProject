@@ -10,25 +10,260 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-	crossorigin="anonymous"></script>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
-	crossorigin="anonymous">
-
-<script type="text/javascript" src="./companion/js/messengerRoom.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+	integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+	
+<style type="text/css">
+#check-promise {
+	width:70%;
+	height:auto;
+	margin-left: 15%;
+	margin-top: 8%;
+	border-radius:10px;
+	background-color:rgb(238, 222, 224);
+	display:none;
+	position: absolute;
+	z-index:1;
+}
+.connect-pic {
+	width:40px;
+	height:40px;
+	float:left;
+	margin-top:15%;
+	margin-left:20%;
+}
+.alert-button {
+	width:45px;
+	height:20px;
+	font-size:10px;
+	border-radius:10px;
+	background-color:white;
+	border:none;
+}
+#goMyPromise:hover {
+	cursor:pointer;
+}
+#openPromise{
+	cursor:pointer;
+}
+.check-ul {
+list-style:none; 
+padding-left:0px; 
+margin-bottom:3px;
+border-radius:10px;
+}
+.check-li-title{
+text-align:center; margin:2%;
+}
+.check-title-span{
+letter-spacing:3px; font-size:larger;
+}
+.check-imgdiv{
+width:100%; height:auto; background-color:rgb(238, 222, 224); border-radius:10px;
+}
+.check-imgdiv2{
+height:100%; width:10%; padding-top:2%
+}
+.check-infodiv{
+width:80%; height:auto; margin-left:13%;
+}
+.check-infoname{
+font-size:15px; letter-spacing:2px; font-weight:bold;
+}
+.check-infoloc{
+margin-left:15px; font-size:12px;
+}
+.check-infolocData{
+margin-left:2px; font-size:12px;
+}
+.check-infodate{
+margin-left:15px; font-size:12px;
+}
+.check-infodateData{
+margin-left:2px; font-size:12px;
+}
+.check-commentdiv{
+width:80%; height:auto; margin-left:13%; font-size:13px; letter-spacing:2px;
+}
+.check-buttondiv{
+width:80%; height:auto; margin-left:13%;
+}
+.check-li-goMy{
+text-align:right; margin-top:10px; margin-bottom:10px;
+}
+#goMyPromise{
+color:rgb(83, 67, 226); margin-right:20px; font-size:13px;
+}
+</style>
 <%
 	UserDto login_id = (UserDto)session.getAttribute("login_id");
 	System.out.println("login_id : " + login_id.getUser_id());
 	List<MessageDto> list = (List<MessageDto>)request.getAttribute("detailList");
 	MessageDto con_id = list.get(list.size()-1);
 %>
+<script type="text/javascript" src="./companion/js/room.js"></script>
+<script type="text/javascript">
+$(function() {
+	$("#inputMessage").on("keydown",function(event) {
+		if (event.keyCode == 13) {
+			if (!event.shiftKey) {
+				event.preventDefault();
+				messageFunction();
+			}
+		}
+	});
+});
+
+
+
+function openPromiseTab() {
+	$("#promiseList").html("");
+	$.ajax({
+		url:"message.do?command=getPromise",
+		dataType:"json",
+		success:function(data){
+			var list = data;
+			
+			$.each(list, function(key, value) {
+				$("#promiseList").append(
+						"<div class='check-imgdiv'>" +
+						"<div class='check-imgdiv2'>" +
+						"<img class='connect-pic' alt='user' src='./img/companion/french.png'>" +
+						"</div>" +
+						"<div class='check-infodiv'>" +
+						"<span id='ask-name' class='check-infoname'>"+value[0]+"</span>" +
+						"<span class='check-infoloc'>장소: </span><span id='ask-loc' class='check-infolocData'>"+value[1]+"</span>" +
+						"<span class='check-infodate'>날짜: </span><span id='ask-time' class='check-infodateData'>"+value[2]+"</span>" +
+						"</div>" +
+						"<div id='ask_comment' class='check-commentdiv'>"+value[3]+"</div>" +
+						"<div class='check-buttondiv'>" +
+						"<button class='alert-button' onclick='permitPromise(this);'>수락</button>" +
+						"<button class='alert-button' onclick='denyPromise(this);'>거절</button>" +
+						"</div>" +
+						"</div>"
+				);
+			});
+		}
+	});
+	$("#check-promise").css("display", "block");
+}
+
+function denyPromise(obj) {
+	var id = $(obj).parent().siblings(".check-infodiv").children("#ask-name").text();
+	var loc = $(obj).parent().siblings(".check-infodiv").children("#ask-loc").text();
+	if (confirm("약속을 거절하시겠습니까?")) {
+		$.ajax({
+			url:"message.do?command=choicePromise",
+			type:"post",
+			data:{
+				"con_id":id,
+				"loc":loc,
+				"permit":"N"
+			},
+			success:function(msg){
+				$(obj).parent().parent(".check-imgdiv").css("display","none");
+			}
+		});
+	}
+}
+
+function permitPromise(obj) {
+	var id = $(obj).parent().siblings(".check-infodiv").children("#ask-name").text();
+	var loc = $(obj).parent().siblings(".check-infodiv").children("#ask-loc").text();
+	var time = $(obj).parent().siblings(".check-infodiv").children("#ask-time").text();
+	var chat_serial = document.getElementById("chat_serial").innerText;
+	var comment = id + "님과의 약속 : " + $(obj).parent().siblings(".check-commentdiv").text();
+	var login_id = $("#login_id").text();
+	
+	if (confirm(id+"님과 함께하시겠나요?")) {
+		$.ajax({
+			url:"message.do?command=choicePromise",
+			type:"post",
+			data:{
+				"con_id":id,
+				"loc":loc,
+				"permit":"Y",
+				"comment":comment,
+				"chat_serial":chat_serial
+			},
+			success:function(msg){
+				alert("약속이 확정되었습니다. 마이페이지에서 약속을 확인해주세요.");
+				$(obj).parent().parent(".check-imgdiv").css("display","none");
+				
+				if (id == $("#con_id").text()) {
+					$("#tbody").append(
+							"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
+							"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + login_id + "</span>" +
+							"<span id='m_time' class='spanTime'>" + time + "</span>" +
+							"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+							"</td></tr>" +
+							"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + comment + "</div>" +
+							"</td></tr>"
+					);
+				}
+			}
+		});
+	}
+}
+
+
+function messageFunction() {
+	var message = document.getElementById("inputMessage").value;
+	var login_id = document.getElementById("login_id").innerText;
+	var con_id = document.getElementById("con_id").innerText;
+	var chat_serial = document.getElementById("chat_serial").innerText;
+	
+	var today = new Date();
+	var year = today.getFullYear();
+	var month = ('0' + (today.getMonth() + 1)).slice(-2);
+	var day = ('0' + today.getDate()).slice(-2);
+	var dateString = year + '/' + month  + '/' + day;
+	
+	$.ajax({
+		url:"message.do?command=sendMessage&message="+message+"&con_id="+con_id+"&chat_serial="+chat_serial,
+		success: function(){
+			$("#tbody").append(
+				"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
+				"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + login_id + "</span>" +
+				"<span id='m_time' class='spanTime'>" + dateString + "</span>" +
+				"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+				"</td></tr>" +
+				"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + message + "</div>" +
+				"</td></tr>"
+			);
+		}
+	});
+	document.getElementById("inputMessage").value = "";
+}
+
+function refreshMassage() {
+	var con_id = document.getElementById("con_id").innerText;
+	var idx = 0;
+	$("#tbody").html("");
+	$.ajax({
+		url:"message.do?command=refresh&con_id="+con_id,
+		dataType:"json",
+		success:function(data) {
+			var json = data;
+			$.each(json, function(idx) {
+				$("#tbody").append(
+						"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
+						"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + json[idx].sen_id + "</span>" +
+						"<span id='m_time' class='spanTime'>" + json[idx].time + "</span>" +
+						"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+						"</td></tr>" +
+						"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + json[idx].message + "</div>" +
+						"</td></tr>"
+				);
+				idx = (idx+1)==json.length? 0 : (idx+1);
+			});
+		}
+	});
+}
+</script>
 
 <body>
 	<!-- 고정(헤더) -->
@@ -40,16 +275,13 @@
 		<div class="messenger-nav">
 			<table style="width: 100%;" class="text-center">
 				<colgroup>
-					<col width="25%">
-					<col width="25%">
-					<col width="25%">
-					<col width="25%">
+					<col width="33%">
+					<col width="33%">
+					<col width="33%">
 				</colgroup>
 				<tr style="height: 70px;">
 					<!-- 클릭시 약속잡기 탭 open -->
 					<td><a id="promiseTab" class="nav-tab fw-bold" onclick="openPromise();">약속잡기</a></td>
-					<!-- 상대방의 일정 url로 연결 (블로그 디테일  -->
-					<td><a href="#" class="nav-tab fw-bold">일정 살펴보기</a></td>
 					<!-- 자기 자신 여행 url전송 -->
 					<!-- 팝업창을 띄어서 여행 리스트를 불러오고 그거 선택해서 submit 누르면 url 넘어가도록 구현하자(블로그 디테일페이지) -->
 					<td><a href="#" class="nav-tab fw-bold">일정 공유하기</a></td>
@@ -58,43 +290,59 @@
 			</table>
 		</div>
 		<div class="messenger-table">
+		
+			<div id="check-promise">
+				<img id="close-button" alt="close" src="./img/companion/close.png" onclick="closeButton(this);">
+				<ul class="check-ul">	
+	    			<li class="check-li-title">
+	    				<span class="check-title-span">나에게 온 약속</span>
+	    			</li>
+					<li id="promiseList">
+	    			</li>
+	    			<li class="check-li-goMy">
+	    				<a id="goMyPromise" onclick="">나의 약속 확인하러가기></a>
+	    			</li>
+	    		</ul>
+			</div>
+			
 			<div class="promise-table">
-				<img id="close-button" alt="close" src="./img/companion/close.png"
-					onclick="">
+				<img id="close-button" alt="close" src="./img/companion/close.png" onclick="closeButton(this);">
 				<div style="width: 100%; height: 90%">
 					<table class="text-center" style="width: 100%; height: 100%;">
 						<colgroup>
 							<col width="18%">
 							<col width="82%">
 						</colgroup>
-						<tr>
-							<td colspan="2">약속 보내기</td>
-						</tr>
-						<tr class="promise-tr">
-							<td class="promise-td">누구와?</td>
-							<td><textarea class="input" rows="1" cols="40" readonly
-									style="letter-spacing: 3px;">오일남</textarea></td>
-						</tr>
-						<tr class="promise-tr">
-							<td class="promise-td">어디서?</td>
-							<td><textarea class="input" rows="1" cols="40"
-									name="location" placeholder="약속하신 장소를 입력해주세요."></textarea></td>
-						</tr>
-						<tr class="promise-tr">
-							<td class="promise-td">언제?</td>
-							<td><textarea class="input" rows="1" cols="40" name="date"
-									placeholder="연/월/일 입력(ex: 2021/05/21)"></textarea></td>
-						</tr>
-						<tr class="promise-tr">
-							<td class="promise-td">뭘 할까?</td>
-							<td><textarea class="input" rows="5" cols="40"
-									name="comment" placeholder="무엇을 할 지 정리해주세요!"></textarea></td>
-						</tr>
-						<tr style="height: 1%;">
-							<td colspan="2">
-								<button id="submitButton" onclick="transPromise();">약속잡기</button>
-							</td>
-						</tr>
+						<tbody id="promiseBody">
+							<tr>
+								<td colspan="2">약속 보내기</td>
+							</tr>
+							<tr class="promise-tr">
+								<td class="promise-td">누가?</td>
+								<td><textarea class="input" rows="1" cols="40" readonly
+										style="letter-spacing: 3px;"><%=login_id.getUser_id()%></textarea></td>
+							</tr>
+							<tr class="promise-tr">
+								<td class="promise-td">어디서?</td>
+								<td><textarea class="input" rows="1" cols="40"
+										name="location" placeholder="약속하신 장소를 입력해주세요."></textarea></td>
+							</tr>
+							<tr class="promise-tr">
+								<td class="promise-td">언제?</td>
+								<td><textarea class="input" rows="1" cols="40" name="date"
+										placeholder="연/월/일 입력(ex: 2021/05/21)"></textarea></td>
+							</tr>
+							<tr class="promise-tr">
+								<td class="promise-td">뭘 할까?</td>
+								<td><textarea class="input" rows="5" cols="40"
+										name="comment" placeholder="구체적인 시간과 무엇을 계획했는지 알려주세요!"></textarea></td>
+							</tr>
+							<tr style="height: 1%;">
+								<td colspan="2">
+									<button id="submitButton" onclick="transPromise();">약속잡기</button>
+								</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -120,8 +368,10 @@
 					<tr>
 						<td colspan="3" style="padding: 5px; padding-bottom: 15px;">
 							<div class="message">
-								상대방에게 불쾌함을 주는 회원은 제제조치가 가해질 수 있습니다.<br> 
-								<a href="#" style="color: red; text-decoration: none; font-size: 10px;">공지사항 확인하러 가기</a>
+								나에게 요청된 약속을 확인할 수 있습니다.
+								<a id="openPromise" onclick="openPromiseTab();" style="color: red; text-decoration: none; font-size: 10px;">&nbsp;약속 확인하기</a><br>
+								이용 전 공지사항을 확인해주시기 바랍니다.
+								<a href="#" style="color: red; text-decoration: none; font-size: 10px;">&nbsp;공지사항 확인하기</a>
 							</div>
 						</td>
 					</tr>

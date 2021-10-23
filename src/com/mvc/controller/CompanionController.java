@@ -20,6 +20,7 @@ import com.mvc.biz.companion.CompanionBizImpl;
 import com.mvc.dao.companion.CompanionDaoImpl;
 import com.mvc.dto.AskConnect;
 import com.mvc.dto.MessageDto;
+import com.mvc.dto.PromiseDto;
 import com.mvc.dto.UserDto;
 
 @WebServlet("/message.do")
@@ -98,10 +99,9 @@ public class CompanionController extends HttpServlet {
 			String message = request.getParameter("message");
 			String chat_serial = request.getParameter("chat_serial");
 
-			dao.sendRecMessage(login_id.getUser_id(), con_id, message, chat_serial);
+			biz.sendRecMessage(login_id.getUser_id(), con_id, message, chat_serial);
 
 		} else if (command.equals("refresh")) {
-			// 채팅창 새로고침 버튼
 			String con_id = request.getParameter("con_id");
 			System.out.println(jsonMessage(login_id.getUser_id(), con_id));
 			response.getWriter().write(jsonMessage(login_id.getUser_id(), con_id));
@@ -142,7 +142,46 @@ public class CompanionController extends HttpServlet {
 			boolean flag = biz.askDenied(login_id.getUser_id(), con_id);
 			response.getWriter().write(flag?"성공":"실패");
 			
+		} else if (command.equals("promise")) {
+			String sen_id = request.getParameter("sen_id");
+			String loc = request.getParameter("loc");
+			String date = request.getParameter("date");
+			String comment = request.getParameter("comment");
+			boolean flag = biz.makePromise(login_id.getUser_id(), sen_id, loc, date, comment);
+			response.getWriter().write(flag?"성공":"실패");
+			
+		} else if (command.equals("getPromise")) {
+			response.getWriter().write(jsonGetPromise(login_id.getUser_id()));
+			
+		} else if (command.equals("choicePromise")) {
+			String con_id = request.getParameter("con_id");
+			String loc = request.getParameter("loc");
+			String permit = request.getParameter("permit");
+			String chat_serial = request.getParameter("chat_serial");
+			String comment = request.getParameter("comment");
+
+			boolean flag = biz.promiseChoice(login_id.getUser_id(), con_id, loc, permit, comment, chat_serial);;
+			
+			response.getWriter().write(flag?"성공":"실패");
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String jsonGetPromise(String login_id) {
+		CompanionBizImpl biz = new CompanionBizImpl();
+		List<PromiseDto> list = biz.getPromise(login_id);
+		JSONObject json = new JSONObject();
+
+		for (int i = 0; i < list.size(); i++) {
+			JSONArray array = new JSONArray();
+			array.add(list.get(i).getSen_id());
+			array.add(list.get(i).getP_loc());
+			array.add(list.get(i).getP_time());
+			array.add(list.get(i).getP_comment());
+
+			json.put("result" + i, array);
+		}
+		return json.toJSONString();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -216,23 +255,21 @@ public class CompanionController extends HttpServlet {
 			return json.toJSONString();
 		}
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public String jsonMessage(String login_id, String con_id) {
 		CompanionDaoImpl dao = new CompanionDaoImpl();
 		List<MessageDto> list = dao.getMessage(login_id, con_id);
-		JSONObject json = new JSONObject();
-
+		JSONArray array = new JSONArray();
+		
 		for (int i = 0; i < list.size(); i++) {
-			JSONArray array = new JSONArray();
-			array.add(list.get(i).getSen_id());
-			array.add(list.get(i).getM_time().toString());
-			array.add(list.get(i).getMessage());
-
-			json.put("result" + i, array);
+			JSONObject object = new JSONObject();
+			object.put("sen_id", list.get(i).getSen_id());
+			object.put("message", list.get(i).getMessage());
+			object.put("time", list.get(i).getM_time().toString());
+			array.add(object);
 		}
-		return json.toJSONString();
+		return array.toJSONString();
 	}
 
 	@SuppressWarnings("unchecked")

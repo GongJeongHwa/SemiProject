@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mvc.dto.AskConnect;
 import com.mvc.dto.MessageDto;
+import com.mvc.dto.PromiseDto;
 
 public interface CompanionDao {
 	//connectionList()메서드 SQL문 ACTIVE = Y
@@ -37,7 +38,7 @@ public interface CompanionDao {
 	
 	public List<MessageDto> connectionList(String login_id);
 	public List<MessageDto> getMessage(String login_id, String connect_id);
-	public boolean sendRecMessage(String login_id, String con_id, String message, String chat_serial);
+	public int sendRecMessage(Connection con, String login_id, String con_id, String message, String chat_serial);
 	public List<AskConnect> getAskConnect(String login_id);
 	public boolean reportUser(String login_id, String con_id);
 	public List<MessageDto> getDeleteList(String login_id);
@@ -61,4 +62,17 @@ public interface CompanionDao {
 	//연결신청 거부
 	String askDenied = "UPDATE ASK_CONNECT SET PERMIT = 'N' WHERE REC_ID = ? AND SEN_ID = ?";
 	public boolean askDenied(Connection con, String login_id, String con_id);
+	
+	//약속 신청
+	//INSERT INTO M_PROMISE VALUES(PROMISE_SEQ.NEXTVAL, LOGIN_ID, SEN_ID, LOC, DATE, COMMENT, 'D');
+	String makePromise = "INSERT INTO M_PROMISE VALUES(PROMISE_SEQ.NEXTVAL, ?, ?, ?, ?, ?, 'D')";
+	public boolean makePromise(Connection con, String login_id, String sen_id, String loc, String date, String comment);
+	
+	//약속 리스트 가져오기
+	String getPromise = "SELECT SEN_ID, P_LOC, P_TIME, P_COMMENT FROM M_PROMISE WHERE REC_ID = ? AND PERMIT = 'D' ORDER BY P_SEQ DESC";
+	public List<PromiseDto> getPromise(Connection con, String login_id);
+	
+	
+	String promiseChoice = "UPDATE M_PROMISE SET PERMIT = ? WHERE REC_ID = ? AND SEN_ID = ? AND P_LOC = ?";
+	public int promiseChoice(Connection con, String login_id, String con_id, String loc, String permit);
 }

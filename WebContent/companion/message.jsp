@@ -15,6 +15,11 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
 	integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 <script type="text/javascript" src="./companion/js/message.js"></script>
+<style type="text/css">
+.trash:hover {
+	cursor:pointer;
+}
+</style>
 
 <body>
 	<!-- request객체에 담겨서 넘어옴. request 객체 : connectList -->
