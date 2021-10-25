@@ -33,7 +33,6 @@ public class CompanionController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		HttpSession session = request.getSession();
-		CompanionDaoImpl dao = new CompanionDaoImpl();
 		CompanionBizImpl biz = new CompanionBizImpl();
 //		UserDto login_id = (UserDto)session.getAttribute("user_id");
 
@@ -50,9 +49,8 @@ public class CompanionController extends HttpServlet {
 		System.out.println("[command : " + command + "]");
 
 		if (command.equals("message")) {
-			// 반환받은 리스트는 유저별 최신 메세지임
-			List<MessageDto> list = dao.connectionList(login_id.getUser_id());
-
+			List<MessageDto> list = biz.connectionList(login_id.getUser_id());
+			
 			List<MessageDto> conList = new ArrayList<>();
 			for (int i = 0; i < list.size(); i++) {
 				MessageDto dto = new MessageDto();
@@ -74,7 +72,6 @@ public class CompanionController extends HttpServlet {
 				conList.add(dto);
 			}
 
-			// 가공한 conList를 응답해주자
 			request.setAttribute("conList", conList);
 			dispatch("companion/message.jsp", request, response);
 
@@ -82,9 +79,8 @@ public class CompanionController extends HttpServlet {
 			response.getWriter().write(jsonAsk(login_id.getUser_id()));
 
 		} else if (command.equals("detailMessage")) {
-			// sen_id 파라미터로 넘어옴, massengerRoom페이지로 데이터 넘겨서 뿌려줘야함
 			String sen_id = request.getParameter("sen_id");
-			List<MessageDto> list = dao.getMessage(login_id.getUser_id(), sen_id);
+			List<MessageDto> list = biz.getMessage(login_id.getUser_id(), sen_id);
 
 			MessageDto dto = new MessageDto();
 			dto.setChat_serial(list.get(0).getChat_serial());
@@ -108,7 +104,7 @@ public class CompanionController extends HttpServlet {
 
 		} else if (command.equals("reportUser")) {
 			String con_id = request.getParameter("con_id");
-			boolean flag = dao.reportUser(login_id.getUser_id(), con_id);
+			boolean flag = biz.reportUser(login_id.getUser_id(), con_id);
 
 			if (flag) {
 				response.getWriter().write("통신완료");
@@ -118,7 +114,7 @@ public class CompanionController extends HttpServlet {
 
 		} else if (command.equals("deleteMessage")) {
 			String con_id = request.getParameter("con_id");
-			boolean flag = dao.reportUser(login_id.getUser_id(), con_id);
+			boolean flag = biz.reportUser(login_id.getUser_id(), con_id);
 
 			if (flag) {
 				response.getWriter().write("삭제완료");
@@ -187,6 +183,7 @@ public class CompanionController extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	public String jsonList(String command, String login_id) {
 		CompanionDaoImpl dao = new CompanionDaoImpl();
+		CompanionBizImpl biz = new CompanionBizImpl();
 		
 		if(command.equals("delete")) {
 			List<MessageDto> list = dao.getDeleteList(login_id);
@@ -222,7 +219,7 @@ public class CompanionController extends HttpServlet {
 			return json.toJSONString();
 			
 		} else {
-			List<MessageDto> list = dao.connectionList(login_id);
+			List<MessageDto> list = biz.connectionList(login_id);
 
 			List<MessageDto> conList = new ArrayList<>();
 			for (int i = 0; i < list.size(); i++) {
@@ -258,8 +255,9 @@ public class CompanionController extends HttpServlet {
 
 	@SuppressWarnings("unchecked")
 	public String jsonMessage(String login_id, String con_id) {
-		CompanionDaoImpl dao = new CompanionDaoImpl();
-		List<MessageDto> list = dao.getMessage(login_id, con_id);
+		CompanionBizImpl biz = new CompanionBizImpl();
+		
+		List<MessageDto> list = biz.getMessage(login_id, con_id);
 		JSONArray array = new JSONArray();
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -277,11 +275,9 @@ public class CompanionController extends HttpServlet {
 		CompanionDaoImpl dao = new CompanionDaoImpl();
 		List<AskConnect> list = dao.getAskConnect(login_id);
 
-		// 최종적으로 리턴해줄 제이슨
 		JSONObject json = new JSONObject();
 
 		for (int i = 0; i < list.size(); i++) {
-			// 제이슨 배열로 만들기.
 			JSONArray array = new JSONArray();
 			array.add(list.get(i).getSen_id());
 			array.add(list.get(i).getComment_ask());
@@ -305,8 +301,7 @@ public class CompanionController extends HttpServlet {
 		dispatch.forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 }
