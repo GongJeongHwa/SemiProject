@@ -2,8 +2,8 @@ package com.mvc.dto;
 
 public class PromiseDto {
 	private int p_seq;
-	private String user_id_f;
-	private String user_id_s;
+	private String sen_id;
+	private String rec_id;
 	private String p_loc;
 	private String p_time;
 	private String p_comment;
@@ -12,11 +12,11 @@ public class PromiseDto {
 		super();
 	}
 
-	public PromiseDto(int p_seq, String user_id_f, String user_id_s, String p_loc, String p_time, String p_comment) {
+	public PromiseDto(int p_seq, String sen_id, String rec_id, String p_loc, String p_time, String p_comment) {
 		super();
 		this.p_seq = p_seq;
-		this.user_id_f = user_id_f;
-		this.user_id_s = user_id_s;
+		this.sen_id = sen_id;
+		this.rec_id = rec_id;
 		this.p_loc = p_loc;
 		this.p_time = p_time;
 		this.p_comment = p_comment;
@@ -30,20 +30,20 @@ public class PromiseDto {
 		this.p_seq = p_seq;
 	}
 
-	public String getUser_id_f() {
-		return user_id_f;
+	public String getSen_id() {
+		return sen_id;
 	}
 
-	public void setUser_id_f(String user_id_f) {
-		this.user_id_f = user_id_f;
+	public void setSen_id(String sen_id) {
+		this.sen_id = sen_id;
 	}
 
-	public String getUser_id_s() {
-		return user_id_s;
+	public String getRec_id() {
+		return rec_id;
 	}
 
-	public void setUser_id_s(String user_id_s) {
-		this.user_id_s = user_id_s;
+	public void setRec_id(String rec_id) {
+		this.rec_id = rec_id;
 	}
 
 	public String getP_loc() {
