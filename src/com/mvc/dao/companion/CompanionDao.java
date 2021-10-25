@@ -36,11 +36,12 @@ public interface CompanionDao {
 	//REC_ID 로그인 되어있는 아이디, SEN_ID 신고당하는 아이디
 	String reportUser = "UPDATE CHAT_LIST SET ACTIVE = 'N', DISABLED_DATE = SYSDATE WHERE CHAT_SERIAL = (SELECT DISTINCT CHAT_SERIAL FROM M_MESSAGE JOIN CHAT_LIST USING(CHAT_SERIAL) WHERE SEN_ID = ? AND REC_ID = ? AND ACTIVE='Y')";
 	
-	public List<MessageDto> connectionList(String login_id);
-	public List<MessageDto> getMessage(String login_id, String connect_id);
+	public List<MessageDto> connectionList(Connection con, String login_id);
+	
+	public List<MessageDto> getMessage(Connection con, String login_id, String connect_id);
 	public int sendRecMessage(Connection con, String login_id, String con_id, String message, String chat_serial);
 	public List<AskConnect> getAskConnect(String login_id);
-	public boolean reportUser(String login_id, String con_id);
+	public boolean reportUser(Connection con, String login_id, String con_id);
 	public List<MessageDto> getDeleteList(String login_id);
 	
 	/*
@@ -51,7 +52,7 @@ public interface CompanionDao {
 	 */
 	String first = " UPDATE ASK_CONNECT SET PERMIT = 'Y' WHERE SEN_ID = ? AND REC_ID = ? ";
 	String second = " INSERT INTO CHAT_LIST VALUES(CHAT_SEQ.NEXTVAL,'Y',SYSDATE) ";
-	String third = " SELECT ROWNUM, CHAT_SERIAL FROM (SELECT CHAT_SERIAL FROM CHAT_LIST ORDER BY CHAT_SERIAL DESC) WHERE ROWNUM = 1 ";
+	String third = " SELECT CHAT_SERIAL FROM (SELECT CHAT_SERIAL FROM CHAT_LIST ORDER BY CHAT_SERIAL DESC) WHERE ROWNUM = 1 ";
 	String fourth = " INSERT INTO M_MESSAGE VALUES(MESSAGE_SEQ.NEXTVAL, ?, ?, ?, ?, SYSDATE) ";
 	
 	public boolean askFirst(Connection con, String login_id, String con_id);

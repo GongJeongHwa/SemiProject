@@ -16,9 +16,7 @@ import common.JDBCTemplate;
 public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 
 	@Override
-	public List<MessageDto> connectionList(String login_id) {
-		// 일단 구현은 해놨는데 속도 측면에서 너무 비효율적인 코드입니다. 기능 자체 모두 구현 후 다시 손봐야합니다.
-		Connection con = getConnection();
+	public List<MessageDto> connectionList(Connection con, String login_id) {
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
 
@@ -76,8 +74,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 	}
 
 	@Override
-	public List<MessageDto> getMessage(String login_id, String connect_id) {
-		Connection con = getConnection();
+	public List<MessageDto> getMessage(Connection con, String login_id, String connect_id) {
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
 		MessageDto dto = null;
@@ -103,7 +100,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeAll(con, pstm, rs);
+			closeAll(null, pstm, rs);
 		}
 		return list;
 	}
@@ -126,11 +123,9 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 				commit(con);
 			}
 		} catch (SQLException e) {
-			System.out.println("여기서 오류");
 			e.printStackTrace();
 		} finally {
 			closeStmt(pstm);
-			System.out.println("sendMessage 종료");
 		}
 		return res;
 	}
@@ -161,8 +156,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 	}
 
 	@Override
-	public boolean reportUser(String login_id, String con_id) {
-		Connection con = getConnection();
+	public boolean reportUser(Connection con, String login_id, String con_id) {
 		PreparedStatement pstm = null;
 		int res = 0;
 
@@ -174,14 +168,9 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 
 			res = pstm.executeUpdate();
 
-			System.out.println("res : " + res);
-			if (res > 0) {
-				commit(con);
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeConn(con);
 			closeStmt(pstm);
 		}
 		return res > 0 ? true : false;

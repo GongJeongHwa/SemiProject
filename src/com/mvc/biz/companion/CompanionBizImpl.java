@@ -1,9 +1,11 @@
 package com.mvc.biz.companion;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mvc.dao.companion.CompanionDaoImpl;
+import com.mvc.dto.MessageDto;
 import com.mvc.dto.PromiseDto;
 
 import common.JDBCTemplate;
@@ -115,4 +117,34 @@ public class CompanionBizImpl extends JDBCTemplate implements CompanionBiz{
 		return res>0?true:false;
 	}
 
+	@Override
+	public boolean reportUser(String login_id, String con_id) {
+		boolean flag = dao.reportUser(con, login_id, con_id);
+		
+		if (flag) {
+			commit(con);
+		} else {
+			rollback(con);
+		}
+		
+		closeConn(con);
+		
+		return flag;
+	}
+
+	@Override
+	public List<MessageDto> getMessage(String login_id, String connect_id) {
+		List<MessageDto> list = dao.getMessage(con, login_id, connect_id);
+		
+		closeConn(con);
+		return list;
+	}
+
+	@Override
+	public List<MessageDto> connectionList(String login_id) {
+		List<MessageDto> list = dao.connectionList(con, login_id);
+		
+		closeConn(con);
+		return list;
+	}
 }
