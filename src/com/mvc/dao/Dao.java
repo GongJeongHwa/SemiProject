@@ -1,8 +1,10 @@
 package com.mvc.dao;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import com.mvc.dto.UserDto;
+import com.mvc.dto.blogDto;
 
 public interface Dao {
 	
@@ -20,5 +22,6 @@ public interface Dao {
 	//다른 sql문 구분
 	
 
-
+	//Blog
+	public ArrayList<blogDto> getBlogList(Connection con);
 }

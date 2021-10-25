@@ -9,6 +9,14 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="TripBot"
+  agent-id="5b2dbcd7-707b-479f-a55b-d811d71de776"
+  language-code="ko"
+></df-messenger>
+
 <style type="text/css">
 #button-header{
   text-align: center;
@@ -47,8 +55,8 @@
 	<div class="container-lg" id="header">
 		<div class="row" style="font-size: 12pt;">
 			<div class="col-lg-6" style="text-align: left;">
-				<a href="<%=request.getContextPath()%>/index.jsp"><img src="<%=request.getContextPath()%>/img/logo.PNG" width="250"
-					height="80"></a>
+				<a href="<%=request.getContextPath()%>/index.jsp"><img src="<%=request.getContextPath()%>/img/logo_new_2.png" width="240"
+					height="65" style="margin-bottom: 20px;"></a>
 			</div>
 			<div class="col-lg-6" style="text-align: right;">
 				<%
