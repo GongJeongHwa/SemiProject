@@ -11,6 +11,7 @@
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 <script type="text/javascript" src="index.js"></script>
 <link rel="stylesheet" type="text/css" href="index.css">
+
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -25,18 +26,20 @@
 
 	<!-- 검색&배경 -->
 	<div>
-		<div class="container-fluid" id="img" style="text-align: center;"></div>
-		<div class="container-fluid" id="searchdiv" style="text-align:center; position:absolute; top:13%;">
-		<br><br>
-		<h4>어디든 상관없이 떠나고 싶을 때 여행을묻다가 도와드립니다!</h4><br>
-		<form class="box" action="search.jsp" method="post" id="searchform">
-			<input id="search" type="search" name="search"
-				placeholder="유연한 검색" aria-label="Search" autocomplete="off" readonly="readonly"
-				style="width: 170px; height:50px; border-radius: 30px; border:solid 1px #d3d3d3; outline: none; cursor:pointer; text-align: center; font-size:12pt;">
-			<button id="searchbtn" type="submit" style="display: none; border:solid 1px #d3d3d3;">
-				<img id="searchbtnimg" src="./img/icons/search.svg" alt="Bootstrap" width="21" height="21">
-			</button>
-		</form>
+		<div style="position:relative;">
+			<div class="container-fluid" id="img" style="text-align: center;"></div>
+			<div class="container-fluid" id="searchdiv" style="text-align:center; position:absolute; top:5%;">
+				<br><br>
+				<h4>어디든 상관없이 떠나고 싶을 때 여행을묻다가 도와드립니다!</h4><br>
+				<form class="box" action="search.jsp" method="post" id="searchform">
+					<input id="search" type="search" name="search"
+						placeholder="유연한 검색" aria-label="Search" autocomplete="off" readonly="readonly"
+						style="width: 170px; height:50px; border-radius: 30px; border:solid 1px #d3d3d3; outline: none; cursor:pointer; text-align: center; font-size:12pt;">
+					<button id="searchbtn" type="submit" style="display: none; border:solid 1px #d3d3d3;">
+						<img id="searchbtnimg" src="./img/icons/search.svg" alt="Bootstrap" width="21" height="21">
+					</button>
+				</form>
+			</div>
 		</div>
 	</div>
 
@@ -86,7 +89,7 @@
 					<div class="card-body" style="padding: 15px;">
 						<p></p>
 						<div style="font-size: 11pt;">
-							2021/11/25 ~ 2021/11/29<br>여행지 : <b>오징어나라</b>
+							<span></span><br>여행지 : <b></b>
 						</div>
 						<hr style="color: gray;">
 						<h6 class="card-title" id="title"></h6>
@@ -114,7 +117,7 @@
 					<div class="card-body" style="padding: 15px;">
 						<p></p>
 						<div style="font-size: 11pt;">
-							2021/12/25 ~ 2021/12/29<br>여행지 : <b>제주</b>
+							<span></span><br>여행지 : <b></b>
 						</div>
 						<hr style="color: gray;">
 						<h6 class="card-title" id="title"></h6>
@@ -142,7 +145,7 @@
 					<div class="card-body" style="padding: 15px;">
 						<p></p>
 						<div style="font-size: 11pt;">
-							2022/01/25 ~ 2022/01/29<br>여행지 : <b>영국</b>
+							<span></span><br>여행지 : <b></b>
 						</div>
 						<hr style="color: gray;">
 						<h6 class="card-title" id="title"></h6>
