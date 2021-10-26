@@ -51,6 +51,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 				pstmS.setString(2, connectList.get(count));
 				pstmS.setString(3, connectList.get(count));
 				pstmS.setString(4, login_id);
+				pstmS.setString(5, connectList.get(count));
 				rsS = pstmS.executeQuery();
 
 				if (rsS.next()) {
@@ -58,6 +59,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 					dto.setSen_id(rsS.getString(1));
 					dto.setRec_id(rsS.getString(2));
 					dto.setMessage(rsS.getString(3));
+					dto.setSender_img(rsS.getString(4));
 					list.add(dto);
 				}
 			} catch (SQLException e) {
@@ -68,8 +70,6 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 			}
 			count++;
 		}
-		closeConn(con);
-		// 최종적으로 반환하는건 유저별 최신 메시지
 		return list;
 	}
 
@@ -95,6 +95,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 				dto.setMessage(rs.getString(2));
 				dto.setM_time(rs.getDate(3));
 				dto.setChat_serial(rs.getString(4));
+				dto.setSender_img(rs.getString(5));
 				list.add(dto);
 			}
 		} catch (SQLException e) {
@@ -144,7 +145,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 			rs = pstm.executeQuery();
 
 			while (rs.next()) {
-				AskConnect dto = new AskConnect(rs.getString(1), rs.getString(2), rs.getDate(3));
+				AskConnect dto = new AskConnect(rs.getString(1), rs.getString(2), rs.getDate(3), rs.getString(4));
 				list.add(dto);
 			}
 		} catch (SQLException e) {
@@ -198,8 +199,8 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		} finally {
 			closeRs(rs);
 			closeStmt(pstm);
-		}
-
+		}	
+		System.out.println("1번 오류없음");
 		// 2번 연결된 회원과의 최신 메시지 가져오기
 		int count = 0;
 		PreparedStatement pstmS = null;
@@ -213,6 +214,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 				pstmS.setString(2, connectList.get(count));
 				pstmS.setString(3, connectList.get(count));
 				pstmS.setString(4, login_id);
+				pstmS.setString(5, connectList.get(count));
 				rsS = pstmS.executeQuery();
 
 				if (rsS.next()) {
@@ -220,6 +222,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 					dto.setSen_id(rsS.getString(1));
 					dto.setRec_id(rsS.getString(2));
 					dto.setMessage(rsS.getString(3));
+					dto.setSender_img(rsS.getString(4));
 					list.add(dto);
 				}
 			} catch (SQLException e) {
@@ -231,8 +234,8 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 			count++;
 		}
 		closeConn(con);
+		System.out.println("1번 오류없음");
 		return list;
-
 	}
 
 	//여기서부터 askPermit
@@ -333,14 +336,14 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 	}
 
 	@Override
-	public boolean makePromise(Connection con, String login_id, String sen_id, String loc, String date, String comment) {
+	public boolean makePromise(Connection con, String login_id, String con_id, String loc, String date, String comment) {
 		PreparedStatement pstm = null;
 		int res = 0;
 		
 		try {
 			pstm = con.prepareStatement(makePromise);
 			pstm.setString(1, login_id);
-			pstm.setString(2, sen_id);
+			pstm.setString(2, con_id);
 			pstm.setString(3, loc);
 			pstm.setString(4, date);
 			pstm.setString(5, comment);
@@ -373,6 +376,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 				dto.setP_loc(rs.getString(2));
 				dto.setP_time(rs.getString(3));
 				dto.setP_comment(rs.getString(4));
+				dto.setUser_img(rs.getString(5));
 				
 				list.add(dto);
 			}
@@ -387,7 +391,6 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 
 	@Override
 	public int promiseChoice(Connection con, String login_id, String con_id, String loc, String permit) {
-		//PERMIT = 'Y' WHERE REC_ID = ? AND SEN_ID = ? AND P_LOC = ?
 		PreparedStatement pstm = null;
 		int res = 0;
 		
@@ -406,4 +409,5 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		}
 		return res;
 	}
+
 }

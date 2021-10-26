@@ -3,7 +3,6 @@ package com.mvc.dto;
 import java.util.Date;
 
 public class UserDto {
-
 	private String user_id;
 	private int seq;
 	private Date join_date;
@@ -19,6 +18,7 @@ public class UserDto {
 	private String gender;
 	private String active;
 	private int panalty;
+	private String user_img;
 
 	public UserDto() {
 		super();
@@ -26,7 +26,7 @@ public class UserDto {
 
 	public UserDto(String user_id, int seq, Date join_date, Date leave_date, String name, String phone, String email,
 			String passwd, String nickname, int age, String address, String u_national, String gender, String active,
-			int panalty) {
+			int panalty, String user_img) {
 		super();
 		this.user_id = user_id;
 		this.seq = seq;
@@ -43,6 +43,7 @@ public class UserDto {
 		this.gender = gender;
 		this.active = active;
 		this.panalty = panalty;
+		this.user_img = user_img;
 	}
 
 	public String getUser_id() {
@@ -163,5 +164,13 @@ public class UserDto {
 
 	public void setPanalty(int panalty) {
 		this.panalty = panalty;
+	}
+	
+	public String getUser_img() {
+		return user_img;
+	}
+
+	public void setUser_img(String user_img) {
+		this.user_img = user_img;
 	}
 }

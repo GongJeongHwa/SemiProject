@@ -7,12 +7,14 @@ public class PromiseDto {
 	private String p_loc;
 	private String p_time;
 	private String p_comment;
+	private String user_img;
 
 	public PromiseDto() {
 		super();
 	}
 
-	public PromiseDto(int p_seq, String sen_id, String rec_id, String p_loc, String p_time, String p_comment) {
+	public PromiseDto(int p_seq, String sen_id, String rec_id, String p_loc, String p_time, String p_comment,
+			String user_img) {
 		super();
 		this.p_seq = p_seq;
 		this.sen_id = sen_id;
@@ -20,6 +22,15 @@ public class PromiseDto {
 		this.p_loc = p_loc;
 		this.p_time = p_time;
 		this.p_comment = p_comment;
+		this.user_img = user_img;
+	}
+
+	public String getUser_img() {
+		return user_img;
+	}
+
+	public void setUser_img(String user_img) {
+		this.user_img = user_img;
 	}
 
 	public int getP_seq() {

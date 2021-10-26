@@ -9,12 +9,14 @@ public class MessageDto {
 	private String sen_id;
 	private String message;
 	private Date m_time;
+	private String sender_img;
 
 	public MessageDto() {
 		super();
 	}
 
-	public MessageDto(int m_number, String chat_serial, String rec_id, String sen_id, String message, Date m_time) {
+	public MessageDto(int m_number, String chat_serial, String rec_id, String sen_id, String message, Date m_time,
+			String sender_img) {
 		super();
 		this.m_number = m_number;
 		this.chat_serial = chat_serial;
@@ -22,6 +24,7 @@ public class MessageDto {
 		this.sen_id = sen_id;
 		this.message = message;
 		this.m_time = m_time;
+		this.sender_img = sender_img;
 	}
 
 	public String getChat_serial() {
@@ -70,6 +73,13 @@ public class MessageDto {
 
 	public void setM_time(Date m_time) {
 		this.m_time = m_time;
+	}
+	public String getSender_img() {
+		return sender_img;
+	}
+
+	public void setSender_img(String sender_img) {
+		this.sender_img = sender_img;
 	}
 
 

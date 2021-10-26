@@ -101,6 +101,35 @@ color:rgb(83, 67, 226); margin-right:20px; font-size:13px;
 %>
 <script type="text/javascript" src="./companion/js/room.js"></script>
 <script type="text/javascript">
+
+$(document).ready(function() {
+	setInterval(function() {
+		var con_id = document.getElementById("con_id").innerText;
+		var idx = 0;
+		$("#tbody").html("");
+		$.ajax({
+			url:"message.do?command=refresh&con_id="+con_id,
+			dataType:"json",
+			success:function(data) {
+				var json = data;
+				$.each(json, function(idx) {
+					$("#tbody").append(
+							"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + json[idx].user_img + ".png'></td>" +
+							"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + json[idx].sen_id + "</span>" +
+							"<span id='m_time' class='spanTime'>" + json[idx].time + "</span>" +
+							"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
+							"</td></tr>" +
+							"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + json[idx].message + "</div>" +
+							"</td></tr>"
+					);
+					idx = (idx+1)==json.length? 0 : (idx+1);
+				});
+			}
+		});
+	}, 15000);
+});
+
+
 $(function() {
 	$("#inputMessage").on("keydown",function(event) {
 		if (event.keyCode == 13) {
@@ -111,8 +140,6 @@ $(function() {
 		}
 	});
 });
-
-
 
 function openPromiseTab() {
 	$("#promiseList").html("");
@@ -126,7 +153,7 @@ function openPromiseTab() {
 				$("#promiseList").append(
 						"<div class='check-imgdiv'>" +
 						"<div class='check-imgdiv2'>" +
-						"<img class='connect-pic' alt='user' src='./img/companion/french.png'>" +
+						"<img class='connect-pic' alt='user' src='./img/user/" + value[4] + ".png'>" +
 						"</div>" +
 						"<div class='check-infodiv'>" +
 						"<span id='ask-name' class='check-infoname'>"+value[0]+"</span>" +
@@ -172,6 +199,7 @@ function permitPromise(obj) {
 	var chat_serial = document.getElementById("chat_serial").innerText;
 	var comment = id + "님과의 약속 : " + $(obj).parent().siblings(".check-commentdiv").text();
 	var login_id = $("#login_id").text();
+	var user_img = document.getElementById("user_img").innerText;
 	
 	if (confirm(id+"님과 함께하시겠나요?")) {
 		$.ajax({
@@ -190,12 +218,12 @@ function permitPromise(obj) {
 				
 				if (id == $("#con_id").text()) {
 					$("#tbody").append(
-							"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
+							"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + user_img + ".png'></td>" +
 							"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + login_id + "</span>" +
 							"<span id='m_time' class='spanTime'>" + time + "</span>" +
-							"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+							"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
 							"</td></tr>" +
-							"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + comment + "</div>" +
+							"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message' style='color:blue;'>" + comment + "</div>" +
 							"</td></tr>"
 					);
 				}
@@ -210,6 +238,7 @@ function messageFunction() {
 	var login_id = document.getElementById("login_id").innerText;
 	var con_id = document.getElementById("con_id").innerText;
 	var chat_serial = document.getElementById("chat_serial").innerText;
+	var user_img = document.getElementById("user_img").innerText;
 	
 	var today = new Date();
 	var year = today.getFullYear();
@@ -221,10 +250,10 @@ function messageFunction() {
 		url:"message.do?command=sendMessage&message="+message+"&con_id="+con_id+"&chat_serial="+chat_serial,
 		success: function(){
 			$("#tbody").append(
-				"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
+				"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + user_img + ".png'></td>" +
 				"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + login_id + "</span>" +
 				"<span id='m_time' class='spanTime'>" + dateString + "</span>" +
-				"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+				"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
 				"</td></tr>" +
 				"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + message + "</div>" +
 				"</td></tr>"
@@ -245,10 +274,10 @@ function refreshMassage() {
 			var json = data;
 			$.each(json, function(idx) {
 				$("#tbody").append(
-						"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
+						"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + json[idx].user_img + ".png'></td>" +
 						"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + json[idx].sen_id + "</span>" +
 						"<span id='m_time' class='spanTime'>" + json[idx].time + "</span>" +
-						"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+						"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
 						"</td></tr>" +
 						"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + json[idx].message + "</div>" +
 						"</td></tr>"
@@ -257,6 +286,72 @@ function refreshMassage() {
 			});
 		}
 	});
+}
+
+function transPromise() {
+	//유효성 검사
+	console.log($(".input:eq(1)").val());
+	if ($(".input:eq(1)").val() == null || $(".input:eq(1)").val() == "") {
+		alert("상대방과 어디서 만날지 입력해주세요.");
+		$(".input:eq(1)").focus();
+		return;
+	} else if (($(".input:eq(2)").val() == null || $(".input:eq(2)").val() == "")&&($(".input:eq(2)").val().length != 10)) {
+		alert("날짜를 정확하게 입력해주세요.");
+		$(".input:eq(2)").focus();
+		return;
+	} else if ($(".input:eq(3)").val() == null || $(".input:eq(3)").val() == "") {
+		alert("무엇을 할 지 설명해주세요!");
+		$(".input:eq(3)").focus();
+		return;
+	}
+	
+	var con_id = $("#con_id").text();
+	var loc = $(".input:eq(1)").val();
+	var date = $(".input:eq(2)").val();
+	var comment = $(".input:eq(3)").val();
+	
+	console.log("보내는이 : "+con_id+" 위치 : "+loc+" 시간 : "+date+" 코멘트 : "+comment);
+	
+	// 유효성 검사 통과 이후
+	if (confirm("약속 요청을 보내시겠습니까?")) {
+		$.ajax({
+			url:"message.do?command=promise",
+			type:"post",
+			data:{
+				"con_id":con_id,
+				"loc":loc,
+				"date":date,
+				"comment":comment
+			},
+			success:function(msg) {
+				alert(msg);
+				$(".promise-table").css("display", "none");
+			}
+		});
+	} else {
+		alert("취소");
+	}
+}
+
+function openPromise() {
+	$(".promise-table").css("display", "block");
+}
+
+function closeButton(obj) {
+	$(obj).parent("div").css("display","none");
+}
+
+function reportUser() {
+	if (confirm("상대방을 규정 위반으로 신고하시겠습니까?\n신고 후 자동으로 연결이 끊깁니다.")) {
+		var con_id = document.getElementById("con_id").innerText;
+		//일단은 ajax로 처리를 하고 삭제된 메세지 함으로 이동시키자.
+		$.ajax({
+			url:"message.do?command=reportUser&con_id=" + con_id,
+			success:function(msg) {
+				alert(msg);
+			}
+		});
+	}
 }
 </script>
 
@@ -350,6 +445,7 @@ function refreshMassage() {
 				<thead>
 					<tr style="display:none">
 						<td>
+							<span id="user_img"><%=login_id.getUser_img() %></span>
 							<span id="con_id"><%=con_id.getSen_id()%></span>
 							<span id="chat_serial"><%=con_id.getChat_serial()%></span>
 							<span id="login_id"><%=login_id.getUser_id()%></span>
@@ -357,7 +453,7 @@ function refreshMassage() {
 					</tr>
 					<!-- 공지 메세지 시작 -->
 					<tr style="margin-top: 10px;">
-						<td rowspan="2" style="text-align: center; padding: 15px;"><img id="pic" alt="bell" src="./img/companion/idea.png"></td>
+						<td rowspan="2" style="text-align: center; padding: 15px;"><img id="pic" alt="bell" src="./img/companion/admin.png"></td>
 						<td colspan="2"><span class="fw-bold" style="font-size: 20px;">여행을 묻다</span></td>
 					</tr>
 					<tr>
@@ -376,12 +472,13 @@ function refreshMassage() {
 				<tbody id="tbody">
 <%	
 				for (int i = 0; i < list.size()-1; i++) {
+					//if문으로 sen_id가 session아이디 인지 아닌지 체크해주는 갈래로 처리하자
 %>
 					<tr>
-						<td rowspan="2" style="text-align: center; padding: 15px;"><img id="pic" alt="profile" src="./img/companion/idea.png"></td>
+						<td rowspan="2" style="text-align: center; padding: 15px;"><img id="pic" alt="profile" src="./img/user/<%=list.get(i).getSender_img() %>.png"></td>
 						<td colspan="2"><span id="sender"class="fw-bold" style="font-size: 20px;"><%=list.get(i).getSen_id() %></span>
 							<span id="m_time" style="font-size: 12px; margin-left: 10px;"><%=list.get(i).getM_time()%></span>
-							<img class="reportIcon" alt="report" src="./img/companion/report.png" onclick="reportUser();">
+							<img class="reportIcon" alt="report" src="./img/companion/report2.png" onclick="reportUser();">
 						</td>
 					</tr>
 					<tr>
@@ -390,7 +487,7 @@ function refreshMassage() {
 						</td>
 					</tr>
 <%
-	}
+				}
 %>
 				</tbody>
 			</table>

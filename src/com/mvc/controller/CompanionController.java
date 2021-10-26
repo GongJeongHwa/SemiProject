@@ -38,6 +38,7 @@ public class CompanionController extends HttpServlet {
 
 		UserDto login_id = new UserDto();
 		login_id.setUser_id("ADMIN");
+		login_id.setUser_img("user1");
 		session.setAttribute("login_id", login_id);
 		System.out.println("로그인 아이디 : " + login_id.getUser_id());
 		
@@ -69,6 +70,7 @@ public class CompanionController extends HttpServlet {
 					dto.setMessage(list.get(i).getMessage());
 				}
 				dto.setM_time(list.get(i).getM_time());
+				dto.setSender_img(list.get(i).getSender_img());
 				conList.add(dto);
 			}
 
@@ -99,7 +101,6 @@ public class CompanionController extends HttpServlet {
 
 		} else if (command.equals("refresh")) {
 			String con_id = request.getParameter("con_id");
-			System.out.println(jsonMessage(login_id.getUser_id(), con_id));
 			response.getWriter().write(jsonMessage(login_id.getUser_id(), con_id));
 
 		} else if (command.equals("reportUser")) {
@@ -139,11 +140,12 @@ public class CompanionController extends HttpServlet {
 			response.getWriter().write(flag?"성공":"실패");
 			
 		} else if (command.equals("promise")) {
-			String sen_id = request.getParameter("sen_id");
+			String con_id = request.getParameter("con_id");
+			System.out.println(con_id);
 			String loc = request.getParameter("loc");
 			String date = request.getParameter("date");
 			String comment = request.getParameter("comment");
-			boolean flag = biz.makePromise(login_id.getUser_id(), sen_id, loc, date, comment);
+			boolean flag = biz.makePromise(login_id.getUser_id(), con_id, loc, date, comment);
 			response.getWriter().write(flag?"성공":"실패");
 			
 		} else if (command.equals("getPromise")) {
@@ -159,6 +161,7 @@ public class CompanionController extends HttpServlet {
 			boolean flag = biz.promiseChoice(login_id.getUser_id(), con_id, loc, permit, comment, chat_serial);;
 			
 			response.getWriter().write(flag?"성공":"실패");
+			
 		}
 	}
 	
@@ -174,6 +177,7 @@ public class CompanionController extends HttpServlet {
 			array.add(list.get(i).getP_loc());
 			array.add(list.get(i).getP_time());
 			array.add(list.get(i).getP_comment());
+			array.add(list.get(i).getUser_img());
 
 			json.put("result" + i, array);
 		}
@@ -205,6 +209,7 @@ public class CompanionController extends HttpServlet {
 				} else {
 					dto.setMessage(list.get(i).getMessage());
 				}
+				dto.setSender_img(list.get(i).getSender_img());
 				deleteList.add(dto);
 			}
 			JSONObject json = new JSONObject();
@@ -213,6 +218,7 @@ public class CompanionController extends HttpServlet {
 				JSONArray array = new JSONArray();
 				array.add(deleteList.get(i).getSen_id());
 				array.add(deleteList.get(i).getMessage());
+				array.add(deleteList.get(i).getSender_img());
 				
 				json.put("result" + i, array);
 			}
@@ -237,6 +243,7 @@ public class CompanionController extends HttpServlet {
 					dto.setMessage(temp3);
 				} else {
 					dto.setMessage(list.get(i).getMessage());
+					dto.setSender_img(list.get(i).getSender_img());
 				}
 				conList.add(dto);
 			}
@@ -246,6 +253,7 @@ public class CompanionController extends HttpServlet {
 				JSONArray array = new JSONArray();
 				array.add(conList.get(i).getSen_id());
 				array.add(conList.get(i).getMessage());
+				array.add(conList.get(i).getSender_img());
 				
 				json.put("result" + i, array);
 			}
@@ -265,6 +273,7 @@ public class CompanionController extends HttpServlet {
 			object.put("sen_id", list.get(i).getSen_id());
 			object.put("message", list.get(i).getMessage());
 			object.put("time", list.get(i).getM_time().toString());
+			object.put("user_img", list.get(i).getSender_img());
 			array.add(object);
 		}
 		return array.toJSONString();
@@ -282,6 +291,7 @@ public class CompanionController extends HttpServlet {
 			array.add(list.get(i).getSen_id());
 			array.add(list.get(i).getComment_ask());
 			array.add(list.get(i).getAsk_date().toString());
+			array.add(list.get(i).getUser_img());
 
 			json.put("result" + i, array);
 		}
@@ -294,7 +304,7 @@ public class CompanionController extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.print(script);
 	}
-
+	
 	public void dispatch(String url, HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		RequestDispatcher dispatch = request.getRequestDispatcher(url);

@@ -13,13 +13,13 @@ public interface CompanionDao {
 	//1. 연결된 회원 리스트 가져오기
 	String queryOne = " SELECT DISTINCT SEN_ID FROM M_MESSAGE JOIN CHAT_LIST USING(CHAT_SERIAL) WHERE REC_ID = ? AND ACTIVE = ? ";
 	//2. 연결된 회원과의 최신 메시지 가져오기
-	String queryTwo = " SELECT SEN_ID, REC_ID, MESSAGE FROM (SELECT * FROM M_MESSAGE WHERE SEN_ID IN(?, ?) "
-			+ " AND REC_ID IN(?, ?) ORDER BY M_TIME DESC) WHERE ROWNUM = 1 ";
+	String queryTwo = " SELECT SEN_ID, REC_ID, MESSAGE, USER_IMG FROM (SELECT * FROM M_MESSAGE WHERE SEN_ID IN(?, ?) "
+			+ " AND REC_ID IN(?, ?) ORDER BY M_TIME DESC) JOIN T_USER ON (? = USER_ID) WHERE ROWNUM = 1 ";
 	
 	//getMessage()메서드 SQL문
-	String getMessage = " SELECT SEN_ID, MESSAGE, M_TIME, CHAT_SERIAL FROM M_MESSAGE WHERE REC_ID = ? AND SEN_ID = ? "
+	String getMessage = " SELECT SEN_ID, MESSAGE, M_TIME, CHAT_SERIAL, USER_IMG FROM M_MESSAGE JOIN T_USER ON(SEN_ID = USER_ID) WHERE REC_ID = ? AND SEN_ID = ? "
 			+ "UNION ALL "
-			+ "SELECT SEN_ID, MESSAGE, M_TIME, CHAT_SERIAL FROM M_MESSAGE WHERE REC_ID = ? AND SEN_ID = ? "
+			+ "SELECT SEN_ID, MESSAGE, M_TIME, CHAT_SERIAL, USER_IMG FROM M_MESSAGE JOIN T_USER ON(SEN_ID = USER_ID) WHERE REC_ID = ? AND SEN_ID = ? "
 			+ "ORDER BY M_TIME ";
 	
 	//sendMessage()메서드 SQL문
@@ -30,7 +30,7 @@ public interface CompanionDao {
 	
 	//연결 신청 리스트
 	//블로그 디테일 페이지에서 동행신청을 하면 -> db에 저장되고 -> 해당 리스트를 가져와서 뿌려줘야함
-	String askConnectList = " SELECT SEN_ID, COMMENT_ASK, ASK_DATE FROM ASK_CONNECT WHERE PERMIT = 'D' AND REC_ID = ? ORDER BY ASK_DATE DESC ";
+	String askConnectList = " SELECT SEN_ID, COMMENT_ASK, ASK_DATE, USER_IMG FROM ASK_CONNECT JOIN T_USER ON(SEN_ID = USER_ID) WHERE PERMIT = 'D' AND REC_ID = ? ORDER BY ASK_DATE DESC ";
 	
 	//불량회원 신고 시 채팅방 삭제된 메세지로 이동하는 쿼리문
 	//REC_ID 로그인 되어있는 아이디, SEN_ID 신고당하는 아이디
@@ -70,10 +70,11 @@ public interface CompanionDao {
 	public boolean makePromise(Connection con, String login_id, String sen_id, String loc, String date, String comment);
 	
 	//약속 리스트 가져오기
-	String getPromise = "SELECT SEN_ID, P_LOC, P_TIME, P_COMMENT FROM M_PROMISE WHERE REC_ID = ? AND PERMIT = 'D' ORDER BY P_SEQ DESC";
+	String getPromise = "SELECT SEN_ID, P_LOC, P_TIME, P_COMMENT, USER_IMG FROM M_PROMISE JOIN T_USER ON(SEN_ID = USER_ID) WHERE REC_ID = ? AND PERMIT = 'D' ORDER BY P_SEQ DESC";
 	public List<PromiseDto> getPromise(Connection con, String login_id);
 	
 	
 	String promiseChoice = "UPDATE M_PROMISE SET PERMIT = ? WHERE REC_ID = ? AND SEN_ID = ? AND P_LOC = ?";
 	public int promiseChoice(Connection con, String login_id, String con_id, String loc, String permit);
+	
 }
