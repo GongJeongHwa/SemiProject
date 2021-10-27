@@ -21,14 +21,13 @@ body {
   padding: 0;
 }
 
-body {
-  padding: 0 !important;
-}
+<!--body {padding: 0 !important;}-->
 
 table {
   font-size: 12px;
 }
 #map {width:80%; height:550px; bottom:50px; left:120px;}
+
 .map-search {
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -38,22 +37,13 @@ table {
   display: -ms-flexbox;
   display: flex;
   left: 0;
-  position: absolute;
+  position: relative;
   top: 0;
   width: 440px;
   z-index: 1;
 }
 
-#listing {
-  position: absolute;
-  width: 200px;
-  height: 470px;
-  overflow: auto;
-  left: 442px;
-  top: 0px;
-  cursor: pointer;
-  overflow-x: hidden;
-}
+ 
 
 #findmaps {
   font-size: 14px;
@@ -80,48 +70,31 @@ table {
   width: 100%;
 }
 
-.placeIcon {
-  width: 20px;
-  height: 34px;
-  margin: 4px;
-}
-
-.hotelIcon {
-  width: 24px;
-  height: 24px;
-}
-
-#resultsTable {
-  border-collapse: collapse;
-  width: 240px;
-}
 
 #rating {
   font-size: 13px;
   font-family: Arial Unicode MS;
 }
 
-.iw_table_row {
-  height: 18px;
-}
-
-.iw_attribute_name {
-  font-weight: bold;
-  text-align: right;
-}
-
-.iw_table_icon {
-  text-align: right;
-}
+photos{
+      "html_attributions" : [],
+      "height" : 20,
+      "width" : 20,
+      "photo_reference" : "CnRvAAAAwMpdHeWlXl-lH0vp7lez4znKPIWSWvgvZFISdKx45AwJVP1Qp37YOrH7sqHMJ8C-vBDC546decipPHchJhHZL94RcTUfPa1jWzo-rSHaTlbNtjh-N68RkcToUCuY9v2HNpo5mziqkir37WU8FJEqVBIQ4k938TI3e7bf8xq-uwDZcxoUbO_ZJzPxremiQurAYzCTwRhE_V0"
+   }
+ 
     </style>
   </head>
 
   <body>
  
+      
+    <div id="map"></div>
+    
     <div class="map-search">
       <div id="findmaps">
-      search:
-      </div>
+      	search:
+    </div>
       
       	<!-- 장소검색 -->  
     <div id="locationField">
@@ -133,48 +106,18 @@ table {
         <option value="all">세계</option>
         <option value="kr" selected>국내</option>
       </select>
-       <script src="http://maps.googleapis.com/maps/api/js"></script>
       </div>
     </div>
-      
-    <div id="map"></div>
        
-      
-    <!--마커 클릭시 팝업 : 개별 장소 상세 info -->
+       
     <div style="display: none">
       <div id="info-content">
-        <table>
-            <tr id="iw-url-row" class="iw_table_row">
-              <td id="iw-icon" class="iw_table_icon"></td>
-              <td id="iw-url"></td>
-            </tr>
-            <tr id="iw-address-row" class="iw_table_row">
-              <td class="iw_attribute_name">Address:</td>
-              <td id="iw-address"></td>
-            </tr>
-            <tr id="iw-phone-row" class="iw_table_row">
-              <td class="iw_attribute_name">Telephone:</td>
-              <td id="iw-phone"></td>
-            </tr>
-            <tr id="iw-rating-row" class="iw_table_row">
-              <td class="iw_attribute_name">Rating:</td>
-              <td id="iw-rating"></td>
-            </tr>
-            <tr id="iw-website-row" class="iw_table_row">
-              <td class="iw_attribute_name">Website:</td>
-              <td id="iw-website"></td>
-            </tr>
-          </table>
         </div>
       </div>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEOFLxuHpLh-ga2m0oiOm5C66luLW65QQ&libraries=places&callback=initMap" async defer></script>
-     
- 
 
-
-    <script> 
   
-    
+  
+ <script>  
 var types = ["tourist_attraction","lodging", "restaurant"]; //명소, 호텔,식당 type 3가지만 검색 
 var map, places, infoWindow;
 var markers = [];
@@ -183,29 +126,14 @@ var countryRestrict = { //지도 시작시 기본 포커스
   'country': 'kr'
 };
 var MARKER_PATH = 'https://developers.google.com/maps/documentation/javascript/images/marker_green'; 
-var MARKER_BASEPATH = 'https://maps.google.com/mapfiles/ms/micons/';
+var MARKER_BASEPATH = 'https://maps.google.com/mapfiles/ms/micons/'; 
 var customIcons = { //지도상에서 type별 마커를 색으로 구분 
-  tourist_attraction: {
-    icon: MARKER_BASEPATH + "yellow.png"
-  },
-  lodging: {
-    icon: MARKER_BASEPATH + "green.png"
-  },
-  restaurant: {
-    icon: MARKER_BASEPATH + "red.png"
-  }
-};
+  tourist_attraction: {icon: MARKER_BASEPATH + "yellow.png"},
+  lodging: {icon: MARKER_BASEPATH + "green.png"},
+  restaurant: {icon: MARKER_BASEPATH + "red.png"}};
 var hostnameRegexp = new RegExp('^https?://.+?/');
-
 var countries = {
-  'kr': {
-    center: {
-      lat: 37.55,
-      lng: 126.84
-    },
-    zoom: 12
-  },
-};
+  'kr': { center: {lat: 37.55,lng: 126.84},zoom: 12},};
 
 
 
@@ -361,37 +289,41 @@ function dropMarker(i) {
   }
 }
 
+<!--listing !! --> <!--createSchedule.jsp의 thead id=results/_ta/_rest로 연결-->
 function addResult(result, i, type) {
   var results = document.getElementById('results');
   var results_ta=document.getElementById('result_ta');
   var results_rest=document.getElementById('result_rest');
 
   var markerLetter = String.fromCharCode('A'.charCodeAt(0) + (i % 26));
-  var markerIcon = MARKER_PATH + markerLetter + '.png';
-
+  var markerIcon = MARKER_PATH + markerLetter + '.png'; 
   var tr = document.createElement('tr');
-  tr.style.backgroundColor = (i % 2 === 0 ? '#F0F0F0' : '#FFFFFF');
+  //tr.style.backgroundColor = (i % 2 === 0 ? '#F0F0F0' : '#FFFFFF'); 퐁당퐁당 배경색 일단지움..
   tr.onclick = function() {
     google.maps.event.trigger(markers[type][i], 'click');
   };
 
   var iconTd = document.createElement('td');
-  var nameTd = document.createElement('td');
+  var nameTd = document.createElement('td'); 
   var icon = document.createElement('img');
   icon.src = markerIcon;
   icon.setAttribute('class', 'placeIcon');
   icon.setAttribute('className', 'placeIcon');
-  var name = document.createTextNode(type + ":" + result.name); //여기까지 type 별 분류가 정상적으로됨 
-  
+  //var name = document.createTextNode(type + ":" + result.name); //제목에 type표시 일단지움..
+  var name = document.createTextNode(result.name);
   iconTd.appendChild(icon);
-  nameTd.appendChild(name);
+  nameTd.appendChild(name); 
   tr.appendChild(iconTd);
-  tr.appendChild(nameTd);
-  if(type==="lodging"){ //type 호텔 분류 
-  results.appendChild(tr);
+  tr.appendChild(nameTd);   
+  
+  if(type==="lodging"){   //검색 결과를 타입별 컨테이너에 분류 
+  //results.appendChild(tr);
+	  document.getElementById('results').appendChild(tr);
+  }else if(type==="tourist_attraction"){
+	  document.getElementById('results_ta').appendChild(tr);
+  }else if(type==="restaurant"){
+	  document.getElementById('results_rest').appendChild(tr);
   }
-  
-  
 }
 
 function clearResults() {
@@ -399,6 +331,18 @@ function clearResults() {
   while (results.childNodes[0]) {
     results.removeChild(results.childNodes[0]);
   }
+ 
+  var results_ta = document.getElementById('results_ta');
+  while (results_ta.childNodes[0]) {
+    results_ta.removeChild(results_ta.childNodes[0]);
+  }
+  
+  var results_rest = document.getElementById('results_rest');
+  while (results_rest.childNodes[0]) {
+    results_rest.removeChild(results_rest.childNodes[0]);
+  }
+  
+  
 }
 
 // Get the place details for a hotel. Show the information in an info window,
@@ -417,22 +361,14 @@ function showInfoWindow() {
     });
 }
 
-// Load the place information into the HTML elements used by the info window.
+<!--Modal : infowindow-->
 function buildIWContent(place) {
-  document.getElementById('iw-icon').innerHTML = '<img class="hotelIcon" ' +
-    'src="' + place.icon + '"/>';
-  document.getElementById('iw-url').innerHTML = '<b><a href="' + place.url +
-    '">' + place.name + '</a></b>';
-  document.getElementById('iw-address').textContent = place.vicinity;
 
-  if (place.formatted_phone_number) {
-    document.getElementById('iw-phone-row').style.display = '';
-    document.getElementById('iw-phone').textContent =
-      place.formatted_phone_number;
-  } else {
-    document.getElementById('iw-phone-row').style.display = 'none';
-  }
-
+  document.getElementById('modalimage').innerHTML = '<img src="'+place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})+'">';  
+  document.getElementById('modalName').innerHTML = '<b><a href="' + place.url +  '">' + place.name + '</a></b>';
+  document.getElementById('modalAddress').textContent = place.vicinity;
+  document.getElementById('modalPhone').textContent = place.formatted_phone_number;
+  
   // Assign a five-star rating to the hotel, using a black star ('&#10029;')
   // to indicate the rating the hotel has earned, and a white star ('&#10025;')
   // for the rating points not achieved.
@@ -444,13 +380,14 @@ function buildIWContent(place) {
       } else {
         ratingHtml += '&#10029;';
       }
-      document.getElementById('iw-rating-row').style.display = '';
-      document.getElementById('iw-rating').innerHTML = ratingHtml;
+      document.getElementById('modalRating').style.display = '';
+      document.getElementById('modalRating').innerHTML = ratingHtml;
     }
   } else {
-    document.getElementById('iw-rating-row').style.display = 'none';
+    document.getElementById('modalRating').style.display = 'none';
   }
 
+  document.getElementById('modalUrl').textContent = website;
   // The regexp isolates the first part of the URL (domain plus subdomain)
   // to give a short URL for displaying in the info window.
   if (place.website) {
@@ -459,17 +396,13 @@ function buildIWContent(place) {
     if (website === null) {
       website = 'http://' + place.website + '/';
       fullUrl = website;
-    }
-    document.getElementById('iw-website-row').style.display = '';
-    document.getElementById('iw-website').textContent = website;
-  } else {
-    document.getElementById('iw-website-row').style.display = 'none';
-  }
+    } 
+    document.getElementById('modalUrl').textContent = website;
+  }   
 }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEOFLxuHpLh-ga2m0oiOm5C66luLW65QQ&libraries=places&callback=initMap"
-        async defer></script>
-     <script src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=Aap_uEA7vb0DDYVJWEaX3O-AtYp77AaswQKSGtDaimt3gt7QCNpdjp1BkdM6acJ96xTec3tsV_ZJNL_JP-lqsVxydG3nh739RE_hepOOL05tfJh2_ranjMadb3VoBYFvF0ma6S24qZ6QJUuV6sSRrhCskSBP5C1myCzsebztMfGvm7ij3gZT
+    </script> 
+          <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEOFLxuHpLh-ga2m0oiOm5C66luLW65QQ&libraries=places&callback=initMap" async defer></script>
+     <script src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=20&photo_reference=Aap_uEA7vb0DDYVJWEaX3O-AtYp77AaswQKSGtDaimt3gt7QCNpdjp1BkdM6acJ96xTec3tsV_ZJNL_JP-lqsVxydG3nh739RE_hepOOL05tfJh2_ranjMadb3VoBYFvF0ma6S24qZ6QJUuV6sSRrhCskSBP5C1myCzsebztMfGvm7ij3gZT
   &key=AIzaSyDEOFLxuHpLh-ga2m0oiOm5C66luLW65QQ"></script>
   </body>
 </html>
