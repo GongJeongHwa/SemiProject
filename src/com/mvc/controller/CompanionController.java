@@ -39,6 +39,7 @@ public class CompanionController extends HttpServlet {
 		UserDto login_id = new UserDto();
 		login_id.setUser_id("ADMIN");
 		login_id.setUser_img("user1");
+		login_id.setName("관리자");
 		session.setAttribute("login_id", login_id);
 		System.out.println("로그인 아이디 : " + login_id.getUser_id());
 		
@@ -71,6 +72,7 @@ public class CompanionController extends HttpServlet {
 				}
 				dto.setM_time(list.get(i).getM_time());
 				dto.setSender_img(list.get(i).getSender_img());
+				dto.setUser_name(list.get(i).getUser_name());
 				conList.add(dto);
 			}
 
@@ -88,6 +90,7 @@ public class CompanionController extends HttpServlet {
 			dto.setChat_serial(list.get(0).getChat_serial());
 			dto.setSen_id(sen_id);
 			list.add(dto);
+			System.out.println("1단계 완료");
 
 			request.setAttribute("detailList", list);
 			dispatch("companion/messengerRoom.jsp", request, response);
@@ -178,6 +181,7 @@ public class CompanionController extends HttpServlet {
 			array.add(list.get(i).getP_time());
 			array.add(list.get(i).getP_comment());
 			array.add(list.get(i).getUser_img());
+			array.add(list.get(i).getUser_name());
 
 			json.put("result" + i, array);
 		}
@@ -210,6 +214,7 @@ public class CompanionController extends HttpServlet {
 					dto.setMessage(list.get(i).getMessage());
 				}
 				dto.setSender_img(list.get(i).getSender_img());
+				dto.setUser_name(list.get(i).getUser_name());
 				deleteList.add(dto);
 			}
 			JSONObject json = new JSONObject();
@@ -219,6 +224,7 @@ public class CompanionController extends HttpServlet {
 				array.add(deleteList.get(i).getSen_id());
 				array.add(deleteList.get(i).getMessage());
 				array.add(deleteList.get(i).getSender_img());
+				array.add(deleteList.get(i).getUser_name());
 				
 				json.put("result" + i, array);
 			}
@@ -244,6 +250,7 @@ public class CompanionController extends HttpServlet {
 				} else {
 					dto.setMessage(list.get(i).getMessage());
 					dto.setSender_img(list.get(i).getSender_img());
+					dto.setUser_name(list.get(i).getUser_name());
 				}
 				conList.add(dto);
 			}
@@ -254,6 +261,7 @@ public class CompanionController extends HttpServlet {
 				array.add(conList.get(i).getSen_id());
 				array.add(conList.get(i).getMessage());
 				array.add(conList.get(i).getSender_img());
+				array.add(conList.get(i).getUser_name());
 				
 				json.put("result" + i, array);
 			}
@@ -274,6 +282,7 @@ public class CompanionController extends HttpServlet {
 			object.put("message", list.get(i).getMessage());
 			object.put("time", list.get(i).getM_time().toString());
 			object.put("user_img", list.get(i).getSender_img());
+			object.put("user_name", list.get(i).getUser_name());
 			array.add(object);
 		}
 		return array.toJSONString();
@@ -292,6 +301,7 @@ public class CompanionController extends HttpServlet {
 			array.add(list.get(i).getComment_ask());
 			array.add(list.get(i).getAsk_date().toString());
 			array.add(list.get(i).getUser_img());
+			array.add(list.get(i).getUser_name());
 
 			json.put("result" + i, array);
 		}

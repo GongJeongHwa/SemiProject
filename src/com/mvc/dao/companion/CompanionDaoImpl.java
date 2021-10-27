@@ -60,6 +60,8 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 					dto.setRec_id(rsS.getString(2));
 					dto.setMessage(rsS.getString(3));
 					dto.setSender_img(rsS.getString(4));
+					dto.setUser_name(rsS.getString(5));
+					
 					list.add(dto);
 				}
 			} catch (SQLException e) {
@@ -96,6 +98,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 				dto.setM_time(rs.getDate(3));
 				dto.setChat_serial(rs.getString(4));
 				dto.setSender_img(rs.getString(5));
+				dto.setUser_name(rs.getString(6));
 				list.add(dto);
 			}
 		} catch (SQLException e) {
@@ -145,7 +148,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 			rs = pstm.executeQuery();
 
 			while (rs.next()) {
-				AskConnect dto = new AskConnect(rs.getString(1), rs.getString(2), rs.getDate(3), rs.getString(4));
+				AskConnect dto = new AskConnect(rs.getString(1), rs.getString(2), rs.getDate(3), rs.getString(4), rs.getString(5));
 				list.add(dto);
 			}
 		} catch (SQLException e) {
@@ -223,6 +226,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 					dto.setRec_id(rsS.getString(2));
 					dto.setMessage(rsS.getString(3));
 					dto.setSender_img(rsS.getString(4));
+					dto.setUser_name(rsS.getString(5));
 					list.add(dto);
 				}
 			} catch (SQLException e) {
@@ -377,6 +381,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 				dto.setP_time(rs.getString(3));
 				dto.setP_comment(rs.getString(4));
 				dto.setUser_img(rs.getString(5));
+				dto.setUser_name(rs.getString(6));
 				
 				list.add(dto);
 			}

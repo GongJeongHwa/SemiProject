@@ -8,13 +8,22 @@ public class PromiseDto {
 	private String p_time;
 	private String p_comment;
 	private String user_img;
+	private String user_name;
+
+	public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
 
 	public PromiseDto() {
 		super();
 	}
 
 	public PromiseDto(int p_seq, String sen_id, String rec_id, String p_loc, String p_time, String p_comment,
-			String user_img) {
+			String user_img, String user_name) {
 		super();
 		this.p_seq = p_seq;
 		this.sen_id = sen_id;
@@ -23,6 +32,7 @@ public class PromiseDto {
 		this.p_time = p_time;
 		this.p_comment = p_comment;
 		this.user_img = user_img;
+		this.user_name = user_name;
 	}
 
 	public String getUser_img() {
