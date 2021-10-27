@@ -9,11 +9,10 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	
+
 <title>createSchedule</title>
 
 
@@ -23,7 +22,7 @@
     #scroll{overflow: auto;width:300px;height:500px;}
     #scroll2{overflow: auto;width:300px;height:500px;}
    	#scroll3{overflow: auto;width:300px;height:500px;}
-   	
+ 
     </style>
     
 </head>
@@ -59,86 +58,90 @@
 		</div>
 	</div>
  
-    <div style="width:100%; height:600px"></div>s
+    <div style="width:100%; height:600px"></div>
 
  
 	<!-- 하단 3컬럼 -->
 	<div class="container">
 		<div class="row" id="rowbelow"> 
+		
 			<!-- 컬럼1: hotel -->
 			<div class="col" id="scroll">
 			<br><br><h3>HOTEL</h3><br>
-				
-			<!-- table start -->
-			<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  			<thead id="results">
+					 
+			<table class="table">
+  			<thead  id="results" data-bs-toggle="modal" data-bs-target="#Modal">
     		<tr>
-      			<th colspan="2"><b>Hilton hotel Seoul</b></th>
+      			<th colspan="2"><b>placename</b></th>
     		</tr>
   			</thead>
   			<tbody>
     		<tr>
-		      <td><img src="img/hilton.jpg" width=90% style="top:20px; position:relative" ></td>
-		      <td>Complimentary breakfast and Wi-Fi, sustainable practices, and great hotel design are just some of the reasons that make Hilton brands stand out.<br><br></td>
+		      <td><img src=" " width=90% style="top:20px; position:relative" ></td>
 		    </tr>
 			 </tbody>
 			</table>
 			
-			<!-- table copy2 -->
-						<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  			<thead>
+			</div>
+		
+			<!-- 컬럼2: place -->
+			<div class="col" id="scroll2">
+				<br><br><h3>PLACE</h3><br>
+			
+			<table class="table">
+  			<thead  id="results_ta" data-bs-toggle="modal" data-bs-target="#Modal">
     		<tr>
-      			<th colspan="2"><b>Hilton hotel seoul</b></th>
+      			<th colspan="2"><b>placename</b></th>
     		</tr>
   			</thead>
   			<tbody>
     		<tr>
-		      <td><img src="img/hilton.jpg" width=90% style="top:20px; position:relative" ></td>
-		      <td>Complimentary breakfast and Wi-Fi, sustainable practices, and great hotel design are just some of the reasons that make Hilton brands stand out.<br><br></td>
+		      <td><img src="" width=90% style="top:20px; position:relative" ></td>
 		    </tr>
 			 </tbody>
 			</table>
+				 
+  			</div>
+  			
+  			<!-- 컬럼3: restaurant -->
+			<div class="col" id="scroll3">
+			<br><br><h3>RESTAURANT</h3><br>
 			
-			<!--  table copy3 -->
-			<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  			<thead>
+			<table class="table">
+  			<thead  id="results_rest" data-bs-toggle="modal" data-bs-target="#Modal">
     		<tr>
-      			<th colspan="2"><b>Hilton hotel seoul</b></th>
+      			<th colspan="2"><b>placename</b></th>
     		</tr>
   			</thead>
   			<tbody>
     		<tr>
-		      <td><img src="img/hilton.jpg" width=90% style="top:20px; position:relative" ></td>
-		      <td>Complimentary breakfast and Wi-Fi, sustainable practices, and great hotel design are just some of the reasons that make Hilton brands stand out.<br><br></td>
+		      <td><img src="" width=90% style="top:20px; position:relative" ></td>
 		    </tr>
 			 </tbody>
 			</table>
-			
-			<!--  table copy4 -->
-
-<!-- Button modal   class는 배경색 결정, primary넣으면 파란색이니 그냥 속성을 지움(투명배경) / data-bs-toggle속성이 팝업을 부여, target으로 열 팝업창을 연결
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  modal
-</button>-->
-
+		
+		</div>
+			 
 
 
 
 <!-- Modal start-->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="modalName" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Hilton Hotel Seoul</h5>
+        <h5 class="modal-title" id="modalName"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
       		<div>
-      		<br>
-      		<img src="img/hilton.jpg" width=100%>
-      		<p><br>Hilton Hotels and Resorts is Hilton's flagship brand and one of the largest hotel brands in the world. The brand is targeted at both business and leisure travelers with locations in major city centers, near airports, convention centers, and popular vacation destinations around the world</p>
+      		<br> 
+      		<p id="modalimage"></p><br>
+      		<p id="modalRating"></p><br>
+      		<p id="modalAddress"></p><br>
+      		<p id="modalPhone"></p><br>
       		<hr>
-      		<a href="https://www.hilton.com/en/">go to web site</a>
+      		<a href="" id="modalUrl">go to web site</a>
       		<hr>
       		<p>review</p>
       		
@@ -154,127 +157,6 @@
   </div>
 </div>
 <!-- modal end -->
-
-			</div>
-		
-			<!-- 컬럼2: place -->
-			<div class="col" id="scroll2">
-				<br><br><h3>PLACE</h3><br>
-				
-				<!-- table start -->
-				<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  				<thead id="results_ta">
-			    <tr>
-			      <th colspan="2"><b>Mt.Halla</b></th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <td><img src="img/halla.jpg" width=90% style="top:20px; position:relative"></td>
-			      <td>Hallasan is the highest mountain in South Korea and is worshipped by people as they believe that gods and spirits live on the mountain.<br><br></td>
-			    </tr>
-			  </tbody>
-			</table>
-			
-			<!-- table copy1 -->
-				<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  				<thead>
-			    <tr>
-			      <th colspan="2"><b>Mt.Halla</b></th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <td><img src="img/halla.jpg" width=90% style="top:20px; position:relative"></td>
-			      <td>Hallasan is the highest mountain in South Korea and is worshipped by people as they believe that gods and spirits live on the mountain.<br><br></td>
-			    </tr>
-			  </tbody>
-			</table>
-			
-			<!-- table copy2 -->
-				<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  				<thead>
-			    <tr>
-			      <th colspan="2"><b>Mt.Halla</b></th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <td><img src="img/halla.jpg" width=90% style="top:20px; position:relative"></td>
-			      <td>Hallasan is the highest mountain in South Korea and is worshipped by people as they believe that gods and spirits live on the mountain.<br><br></td>
-			    </tr>
-			  </tbody>
-			</table>
-			
-			<!-- table copy3 -->
-				<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  				<thead>
-			    <tr>
-			      <th colspan="2"><b>Mt.Halla</b></th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <td><img src="img/halla.jpg" width=90% style="top:20px; position:relative"></td>
-			      <td>Hallasan is the highest mountain in South Korea and is worshipped by people as they believe that gods and spirits live on the mountain.<br><br></td>
-			    </tr>
-			  </tbody>
-			</table>			
-  			</div>
-  			
-  			
-  			<!-- 컬럼3: restaurant -->
-			<div class="col" id="scroll3">
-			<br><br><h3>RESTAURANT</h3><br>
-			
-			<!-- table start -->
-			<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-			  <thead id="results_rest">
-			    <tr>
-			      <th colspan="2"><b>SUNNY GARDEN</b></th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <td><img src="img/rest.jpg" width=90% style="top:20px; position:relative"></td>
-			      <td>$$$$BarbecueAsianKorean<br>3208, 1100-ro, Jeju, Jeju Island 63091 South Korea+82 64-744-1000+ Add website+ Add hours
-			      <br></td>
-			    </tr>
-			  </tbody>
-			</table>
-			<!-- table copy1 -->
-			<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-			  <thead>
-			    <tr>
-			      <th colspan="2"><b>SUNNY GARDEN</b></th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <td><img src="img/rest.jpg" width=90% style="top:20px; position:relative"></td>
-			      <td>$$$$BarbecueAsianKorean<br>3208, 1100-ro, Jeju, Jeju Island 63091 South Korea+82 64-744-1000+ Add website+ Add hours
-			      <br></td>
-			    </tr>
-			  </tbody>
-			</table>			
-			<!-- table copy2 -->
-			<table class="table" data-bs-toggle="modal" data-bs-target="#exampleModal">
-			  <thead>
-			    <tr>
-			      <th colspan="2"><b>SUNNY GARDEN</b></th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <td><img src="img/rest.jpg" width=90% style="top:20px; position:relative"></td>
-			      <td>$$$$BarbecueAsianKorean<br>3208, 1100-ro, Jeju, Jeju Island 63091 South Korea+82 64-744-1000+ Add website+ Add hours
-			      <br></td>
-			    </tr>
-			  </tbody>
-			</table>			   
-		
-		</div>
-			
 			
 			<!-- modal javascript-->
 			<script type="text/javascript">
