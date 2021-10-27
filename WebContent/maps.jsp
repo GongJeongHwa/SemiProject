@@ -9,14 +9,14 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD91v0jFyq9OujfSgguW_LeoicC-wATfNI" ></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD91v0jFyq9OujfSgguW_LeoicC-wATfNI&map_ids=976ef554ef1d691f" ></script>
 <style>
 #map_ma {width:100%; height:400px; clear:both; border:solid 1px gray;}
 
 </style>
 </head>
 <body>
-<div id="map_ma"></div>
+<div id="map_ma" class="rounded img-thumbnail"></div>
 <script type="text/javascript">
 		$(document).ready(function() {
 			var myLatlng = new google.maps.LatLng(35.837143,128.558612); // 위치값 위도 경도
@@ -33,7 +33,7 @@
 	
 	'</div>';
 	var myLatlng = new google.maps.LatLng(Y_point, X_point);
-	var mapOptions = {
+	var mapOptions = {	
 						zoom: zoomLevel,
 						center: myLatlng,
 						mapTypeId: google.maps.MapTypeId.ROADMAP
