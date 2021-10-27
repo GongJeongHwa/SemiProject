@@ -166,21 +166,135 @@ CREATE TABLE BLOG_HEART(
 
 
 
+
+
+
+
+
+
+--------------------------------------------------------------------------------
 -----------------------장소찜테이블
 CREATE TABLE PLACE_HEART(
 	USER_ID VARCHAR2(50) NOT NULL,
 	PLACE_ID VARCHAR2(300) NOT NULL,
-	THUMBNAIL VARCHAR2(300) NOT NULL,
-	PLACE_NAME VARCHAR2(200) NOT NULL,
+	THUMBNAIL VARCHAR2(500) NOT NULL,
+	PLACE_NAME VARCHAR2(300) NOT NULL,
 	LATITUDE VARCHAR2(50) NOT NULL,
 	LONGITUDE VARCHAR2(50) NOT NULL,
+	PLACE_ADDRESS VARCHAR2(500) NOT NULL,
+	NATION VARCHAR2(50) NOT NULL,
+	CITY VARCHAR2(50) NULL,
 	CONSTRAINT FK_PLACE_HEART_USERID FOREIGN KEY(USER_ID) REFERENCES T_USER(USER_ID),
 	CONSTRAINT PK_PLACE_HEART PRIMARY KEY(USER_ID, PLACE_ID)
 );
-
 SELECT * FROM PLACE_HEART;
+SELECT * FROM T_USER;
 
-	
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----장소찜하기 프로시저
+CREATE OR REPLACE PROCEDURE ADDHEART
+(
+	P_USERID IN VARCHAR2,
+	P_PLACEID IN VARCHAR2,
+	P_THUMBNAIL IN VARCHAR2,
+	P_PLACENAME IN VARCHAR2,
+	P_LATITUDE IN VARCHAR2,
+	P_LONGTITUDE IN VARCHAR2,
+	P_ADDRESS IN VARCHAR2,
+	P_NATION IN VARCHAR2,
+	P_CITY IN VARCHAR2,
+	p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN 
+	INSERT INTO PLACE_HEART 
+	VALUES(P_USERID, P_PLACEID, P_THUMBNAIL, P_PLACENAME, P_LATITUDE, P_LONGTITUDE, P_ADDRESS, P_NATION, P_CITY);
+
+	OPEN p_cursor FOR 
+	SELECT COUNT(PLACE_ID) FROM PLACE_HEART WHERE PLACE_ID = P_PLACEID;
+	EXCEPTION
+		WHEN DUP_VAL_ON_INDEX THEN RETURN;
+        WHEN no_data_found THEN
+        dbms_output.put_line('does not exits.');
+    COMMIT;
+END;
+/
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----찜삭제 프로시저
+CREATE OR REPLACE PROCEDURE RMHEART
+(
+	P_USERID IN VARCHAR2,
+	P_PLACEID IN VARCHAR2,
+	p_cursor OUT SYS_REFCURSOR
+)
+IS 
+BEGIN 
+	DELETE FROM PLACE_HEART WHERE USER_ID = P_USERID AND PLACE_ID = P_PLACEID;
+	IF SQL%ROWCOUNT = 0 THEN
+    	RETURN;
+	END IF;	
+
+	OPEN p_cursor FOR 
+	SELECT COUNT(PLACE_ID) FROM PLACE_HEART WHERE PLACE_ID = P_PLACEID;
+	EXCEPTION
+        WHEN no_data_found THEN
+            dbms_output.put_line('does not exits.');
+    COMMIT;
+END;
+/
+
+--------------------------------------------------------------------------------
+-----찜여부 확인
+CREATE OR REPLACE PROCEDURE CONFIRM_HEART
+(
+	P_USERID IN VARCHAR2,
+	P_PLACEID IN VARCHAR2,
+	p_cursor OUT SYS_REFCURSOR
+)
+IS 
+BEGIN 
+	OPEN p_cursor FOR 
+	SELECT PLACE_ID FROM PLACE_HEART WHERE PLACE_ID = P_PLACEID AND USER_ID = P_USERID;
+	EXCEPTION
+        WHEN no_data_found THEN
+            dbms_output.put_line('does not exits.');
+END;
+/
+
+--------------------------------------------------------------------------------
+-----heart count 가져오기
+CREATE OR REPLACE PROCEDURE GETHEARTCOUNT
+(
+	P_PLACEID IN VARCHAR2,
+	p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN 
+	OPEN p_cursor FOR 
+	SELECT COUNT(PLACE_ID) FROM PLACE_HEART WHERE PLACE_ID = P_PLACEID;
+	EXCEPTION
+        WHEN no_data_found THEN
+            dbms_output.put_line('does not exits.');
+END;
+/
+
+-----heart count 프로시저 커서 테스트
+DECLARE
+v_cursor SYS_REFCURSOR;
+emp_rec NUMBER;
+BEGIN
+GETHEARTCOUNT('ChIJgf4OJaelfDURmDvA_sHyPUM', v_cursor);
+FETCH v_cursor INTO emp_rec;
+DBMS_OUTPUT.PUT_LINE(emp_rec);
+END;
+--------------------------------------------------------------------------------
+
+
+
+
 
 
 

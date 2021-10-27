@@ -125,7 +125,7 @@ table {
       </div>
     </div>
       
-    <div id="map"></div>
+    <div id="map" class="rounded"></div>
        
       
     <!--마커 클릭시 팝업 : 개별 장소 상세 info -->

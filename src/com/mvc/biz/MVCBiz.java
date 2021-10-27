@@ -2,6 +2,7 @@ package com.mvc.biz;
 
 import java.util.ArrayList;
 
+import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
 
@@ -14,5 +15,12 @@ public interface MVCBiz {
 	
 	//블로그관련
 	public ArrayList<blogDto> getBlogList();
-
+	
+	
+	//search.jsp 장소heart
+	public int addheart(HeartDto dto);
+	public ArrayList<HeartDto> getHeart(String userid);
+	public int getheartCount(String placeid);
+	public boolean confirmheart(String userid, String placeid);
+	public int rmheart(String userid, String placeid);
 }

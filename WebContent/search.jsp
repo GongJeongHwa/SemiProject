@@ -1,28 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
+<% request.setCharacterEncoding("UTF-8");%>
+<% response.setContentType("text/html; charset=UTF-8");%>
 <%
-request.setCharacterEncoding("UTF-8");
-%>
-<%
-response.setContentType("text/html; charset=UTF-8");
-%>
-<%
-String keyword = request.getParameter("search");
+	String keyword = request.getParameter("search");
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
-	integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
-	crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript"
-	src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <style type="text/css">
 #searchbtn {
@@ -105,6 +96,10 @@ String keyword = request.getParameter("search");
     overflow:hidden; 
     text-overflow:ellipsis;
 }
+#staticBackdrop{
+	font-family: Consolas;
+}
+
 </style>
 
 <!-- 장소api -->
@@ -118,14 +113,11 @@ let infowindow;
 let markerlist = [];
 
 function initMap() {
+	  infowindow = new google.maps.InfoWindow();
 	  map = new google.maps.Map(document.getElementById("map"), {
 	    center: { lat: -33.866, lng: 151.196 },
 	    zoom: 15,
 	  });
-	  const request = {
-	    placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
-	    fields: ["name", "formatted_address", "place_id", "geometry"],
-	  };
 }
 
 function createMarker(place) {
@@ -141,10 +133,11 @@ function createMarker(place) {
 	    position: place.geometry.location,
 	  });
 	  markerlist.push(marker);
-
+	  
 	  google.maps.event.addListener(marker, "click", () => {
-	    infowindow.setContent(place.name);
-	    infowindow.open(map);
+		infoString = place.name + " (" + place.address_components[2].long_name +")<br>";
+	    infowindow.setContent(infoString);
+	    infowindow.open(map,marker);
 	  });
 	  
 	  //맵에 현재마커위치로 이동
@@ -351,6 +344,50 @@ function getPlaceDetail(placeid){
         if (status == google.maps.places.PlacesServiceStatus.OK) {
 			console.log(results);
 			$("#staticBackdropLabel").html(results.name);
+			$("#heartcount").html("");
+			$("#userlist").html("");
+			
+			//찜여부확인 ajax로 가져오기
+			$.ajax({
+				url:"<%=request.getContextPath()%>/search.do?command=confirmheart",
+				method: "post",
+				data: {"placeid": results.place_id},
+				success:function(data){
+					if(data == "true"){
+						$("#btnheart").removeAttr("onclick");
+						$("#btnheart").attr("onclick","rmheart();");
+						$("#heartimg").prop("src","./img/icons/suit-heart-fill.svg");
+						$("#heart").html("해제");
+					}else{
+						$("#btnheart").removeAttr("onclick");
+						$("#btnheart").attr("onclick","addheart();");
+						$("#heartimg").prop("src","./img/icons/suit-heart.svg");
+						$("#heart").html("추가");
+					}
+				},
+				error:function(){
+					$("#heart").html("에러");
+				}
+			});
+			
+			//찜한 회원수 ajax로 가져오기
+			$.ajax({
+				url:"<%=request.getContextPath()%>/search.do?command=heartcount",
+				method: "post",
+				data: {"placeid": results.place_id},
+				success:function(data){
+					$("#heartcount").html("<b>"+data+"</b>&nbsp명");
+				},
+				error:function(){
+					$("#heartcount").html("<b>"+확인불가+"</b>");
+				}
+			});
+			//여행지에 추가한 회원(가능 시)
+			
+			
+			//마커
+			createMarker(results);
+			
 			
 			var start = 0;
 			$(".carousel-inner").eq(0).children().each(function(){
@@ -365,19 +402,24 @@ function getPlaceDetail(placeid){
 			/* var image = results.hasOwnProperty('photos')? results.photos[0].getUrl() : results.icon;
 			$(".modal-body").eq(0).find("img").prop("src",image); */
 			
-			$(".modal-body").eq(0).find("p").html("");
+			$(".modal-body").eq(0).find("p").html("<br>");
 			$(".modal-body").eq(0).find("p").append("<img src='./img/icons/shop.svg' alt='Bootstrap' width='21' height='21'>&nbsp;&nbsp;" + results.formatted_address + "<br>");
-			if(results.hasOwnProperty('website')){
-				$(".modal-body").eq(0).find("p").append("<div id='url'><img src='./img/icons/link.svg' alt='Bootstrap' width='21' height='21'>&nbsp;&nbsp;<a href='"+ results.website +"'>"+ results.website +"</a></div>");
+			$(".modal-body").eq(0).find("p").append("<div id='url'><img src='./img/icons/link.svg' alt='Bootstrap' width='21' height='21'>&nbsp;&nbsp;<a href='"+ results.website +"'>"+ (results.hasOwnProperty('website')? results.website:'') +"</a></div>");
+			$(".modal-body").eq(0).find("p").append("<img src='./img/icons/telephone-fill.svg' alt='Bootstrap' width='21' height='21'>&nbsp;&nbsp;" + (results.hasOwnProperty('international_phone_number')? results.international_phone_number:'') + "<br>");
+			if(results.hasOwnProperty('opening_hours')){
+				for(var i = 0; i < results.opening_hours.weekday_text.length; i++){
+					$(".modal-body").eq(0).find("p").append(results.opening_hours.weekday_text[i] + "<br>");
+				}
 			}
-			$(".modal-body").eq(0).find("p").append("<img src='./img/icons/telephone-fill.svg' alt='Bootstrap' width='21' height='21'>&nbsp;&nbsp;" + results.international_phone_number + "<br>");
-			$(".modal-body").eq(0).find("p").append("<hr>total review ★" + results.rating + "<br><br>");
-			for(var i = 0; i < results.reviews.length; i++){
-				var star = "";
-				for(var j = 0; j < results.reviews[i].rating; j++){star += "★";}
-				for(var j = results.reviews[i].rating; j < 5; j++){star += "☆";}
-				$(".modal-body").eq(0).find("p").append("<b>"+ results.reviews[i].author_name + "</b> " + star + "<br>");
-				$(".modal-body").eq(0).find("p").append(results.reviews[i].text + "<br><hr>");
+			$(".modal-body").eq(0).find("p").append("<hr>total review ★" + (results.hasOwnProperty('rating')? results.rating:'') + "<br><br>");
+			if(results.hasOwnProperty('reviews')){
+				for(var i = 0; i < results.reviews.length; i++){
+					var star = "";
+					for(var j = 0; j < results.reviews[i].rating; j++){star += "★";}
+					for(var j = results.reviews[i].rating; j < 5; j++){star += "☆";}
+					$(".modal-body").eq(0).find("p").append("<b>"+ results.reviews[i].author_name + "</b> " + star + "<br>");
+					$(".modal-body").eq(0).find("p").append(results.reviews[i].text + "<br><hr>");
+				}
 			}
 			var image = results.hasOwnProperty('photos')? results.photos[0].getUrl() : results.icon;
 			$("#thumbnail").val(image);
@@ -386,13 +428,16 @@ function getPlaceDetail(placeid){
 			$("#latitude").val(results.geometry.location.lat());
 			$("#longtitude").val(results.geometry.location.lng());
 			$("#placeid").val(results.place_id);
-			
-			//찜한 회원수 ajax로 가져오기
-        	
-			//여행지에 추가한 회원(가능 시)
-			
-			//마커
-			createMarker(results);		
+			for(var i = 0; i < results.address_components.length; i++){
+				if(results.address_components[i].types[0] == 'country'){
+					$("#nation").val(results.address_components[i].long_name); break;
+				}	
+			}
+			for(var i = 0; i < results.address_components.length; i++){
+				if(results.address_components[i].types[0] == 'administrative_area_level_1'){
+					$("#city").val(results.address_components[i].long_name); break;
+				}	
+			}
 			
 			
         }else if(status == google.maps.places.PlacesServiceStatus.INVALID_REQUEST){
@@ -405,6 +450,84 @@ function getPlaceDetail(placeid){
     });
 }
 
+//찜 추가 -> session id 와 modal상의 hidden데이터를 테이블로 전송 (성공여부에따라 toast출력)
+function addheart(){
+	
+	//ajax로 데이너 넘기기
+	var sendData = {"placeid" : $("#placeid").val(),
+					"thumbnail" : $("#thumbnail").val(),
+					"placename" : $("#placename").val(),
+					"latitude" : $("#latitude").val(),
+					"longtitude" : $("#longtitude").val(),
+					"address" : $("#address").val(),
+					"nation" : $("#nation").val(),
+					"city" : $("#city").val()};
+	$.ajax({
+		url:"<%=request.getContextPath()%>/search.do?command=addheart",
+		method: "post",
+		data: sendData,
+		success:function(data){ 
+			if(data != "-1" && data != "no_id"){
+				toastr.options.positionClass = "toast-top-right";
+				toastr.success("찜 목록에 추가되었습니다");
+				$("#btnheart").removeAttr("onclick");
+				$("#btnheart").attr("onclick","rmheart();");
+				$("#heartimg").prop("src","./img/icons/suit-heart-fill.svg");
+				$("#heart").html("해제");
+				$("#heartcount").html("<b>"+data+"</b>&nbsp명");
+				
+			}else if(data == "-1"){
+				toastr.options.positionClass = "toast-top-right";
+				toastr.error("추가 실패");
+			}else{//noid
+				toastr.options.positionClass = "toast-top-right";
+				toastr.warning("로그인이 필요합니다.");
+			}
+		},
+		error: function(){
+			toastr.options.positionClass = "toast-top-right";
+			toastr.warning("통신 실패");
+		}
+	});
+}
+
+function rmheart(){
+	$.ajax({
+		url:"<%=request.getContextPath()%>/search.do?command=rmheart",
+		method: "post",
+		data: {"placeid": $("#placeid").val()},
+		success:function(data){ 
+			if(data != "-1" && data != "세션종료"){
+				toastr.options.positionClass = "toast-top-right";
+				toastr.success("찜 해제 완료되었습니다.");
+				$("#btnheart").removeAttr("onclick");
+				$("#btnheart").attr("onclick","addheart();");
+				$("#heartimg").prop("src","./img/icons/suit-heart.svg");
+				$("#heart").html("추가");
+				$("#heartcount").html("<b>"+data+"</b>&nbsp명");
+				
+			}else if(data == "-1"){
+				toastr.options.positionClass = "toast-top-right";
+				toastr.error("찜 삭제 실패");
+				
+			}else{//세션종료
+				toastr.options.positionClass = "toast-top-right";
+				toastr.warning("로그인이 필요합니다.");
+				$("#btnheart").removeAttr("onclick");
+				$("#btnheart").attr("onclick","addheart();");
+				$("#heartimg").prop("src","./img/icons/suit-heart.svg");
+				$("#heart").html("추가");
+			}
+		},
+		error: function(){
+			toastr.options.positionClass = "toast-top-right";
+			toastr.warning("통신 실패");
+		}
+	});
+}
+
+
+
 //content 클리어
 function clear(){
 	$(".content").html("");
@@ -415,7 +538,7 @@ function addDiv(image, title, value){
 	var html = "";
 	html = "<div class='col' style='position:relative; padding-bottom:30px;'>" + 
 		   "<img class='rounded' src='"+ image +"' width='100%' height='350px'>" +
-		   "<figcaption>"+ title +"</figcaption>" +
+		   "<figcaption style='font-weight:bold; font-size:13pt; font-family:Consolas;'>"+ title +"</figcaption>" +
 		   "<div style='position: absolute; top:5%; left:8%'>" +
 		   "<button class='btn_heart' onclick='modal(this.value)' data-bs-toggle='modal' data-bs-target='#staticBackdrop' value='"+ value +"'><img class='img'  src='./img/icons/suit-heart.svg' alt='Bootstrap' width='20' height='20'></button>" +
 		   "</div>"+
@@ -462,22 +585,6 @@ function modal(value){
 	$("#Modalcarousel").carousel(0); //슬라이드 초기화
 }
 
-//찜 추가 -> session id 와 modal상의 hidden데이터를 테이블로 전송 (성공여부에따라 toast출력)
-function addheart(){
-	//session dto 여부확인
-	toastr.options.positionClass = "toast-top-right";
-	toastr.success("찜 목록에 추가되었습니다");
-	
-	//ajax로 데이너 넘기기
-	
-	$.ajax({
-		url:"search.do?command=addheart",
-		method: "post",
-		success:function(data){ 
-			
-		}
-	});
-}
 
 //windows onload
 $(function(){
@@ -569,7 +676,7 @@ $(function(){
 
 
 
-	<div class="modal fade" style="height: 1200px;" id="staticBackdrop"
+	<div class="modal fade" style="height: 100%;" id="staticBackdrop"
 		data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 		aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div
@@ -655,14 +762,14 @@ $(function(){
 							<p></p>
 							<!-- /col1 -->
 						</div>
-
+						<!-- emoji-heart-eyes -->
 						<div class='col'>
 							<!-- col2 -->
 							<div id="map" class="rounded"></div>
+							<br>
+							<img class='img' src='./img/icons/bookmark-heart.svg' alt='Bootstrap' width='20' height='20'>&nbsp;이 장소를 찜한 회원 수 : <span id="heartcount"></span>
 							<hr>
-							찜한 회원 수 : <span></span>
-							<hr>
-							여행지에 추가한 회원 리스트 <br>
+							<img class='img' src='./img/icons/pin-fill.svg' alt='Bootstrap' width='20' height='20'>&nbsp;여행지에 추가한 회원 리스트 <br>
 							<div id="userlist"></div>
 							<!-- col2 -->
 						</div>
@@ -676,8 +783,10 @@ $(function(){
 					<input type="hidden" id="latitude" value=""> 
 					<input type="hidden" id="longtitude" value="">
 					<input type="hidden" id="placeid" value="">
+					<input type="hidden" id="nation" value="">
+					<input type="hidden" id="city" value="">
 					<button type="button" class="btn" data-bs-dismiss="modal" style="outline: none;">닫기</button>
-					<button type="button" id="btnheart" class="btn_1" onclick="addheart();"><img class='img' src='./img/icons/suit-heart.svg' alt='Bootstrap' width='20' height='20'> 추가</button>
+					<button type="button" id="btnheart" class="btn_1" onclick=""><img class='img' id="heartimg" src='./img/icons/suit-heart.svg' alt='Bootstrap' width='20' height='20'><span id="heart">추가</span></button>
 					<button type="button" class="btn_2" onclick="">여행일정에 담기</button>
 				</div>
 			</div>
