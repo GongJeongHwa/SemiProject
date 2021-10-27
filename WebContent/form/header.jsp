@@ -40,12 +40,16 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <% 
-	UserDto dto = (UserDto)session.getAttribute("dto");
+	UserDto userdto = new UserDto();
+	userdto.setUser_id("SUNGTAE");
+	session.setAttribute("UserDto", userdto);
+	session.setMaxInactiveInterval(30*60);
 	String profilePath = "";
+	UserDto dto = (UserDto)session.getAttribute("UserDto");
 	if(dto == null){
 		profilePath = request.getContextPath() + "/img/icons/person-circle.svg";
 	}else{
-		//profilePath = dto.getProfilePath();
+		profilePath = request.getContextPath() + "/img/icons/person-circle.svg";
 	}
 %>
 
@@ -62,7 +66,7 @@
 				<%
 					if (dto != null) {
 				%>
-					
+					<%=dto.getUser_id() %>님 환영합니다.					
 				<%
 					} else {
 				%>

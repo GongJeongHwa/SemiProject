@@ -3,6 +3,7 @@ package com.mvc.dao;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
 
@@ -24,4 +25,15 @@ public interface Dao {
 
 	//Blog
 	public ArrayList<blogDto> getBlogList(Connection con);
+	
+	
+	
+	
+	
+	//search add heart(장소찜 관련)
+	public int addheart(Connection con, HeartDto dto);
+	public ArrayList<HeartDto> getheart(Connection con, String userid);
+	public int getheartCount(Connection con, String placeid);
+	public boolean confirmheart(Connection con, String userid, String placeid);
+	public int rmheart(Connection con, String userid, String placeid);
 }

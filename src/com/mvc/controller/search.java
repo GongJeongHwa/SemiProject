@@ -9,9 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 
 import com.mvc.biz.BizImpl;
-import com.mvc.dto.blogDto;
+import com.mvc.dto.HeartDto;
+import com.mvc.dto.UserDto;
 
 /**
  * Servlet implementation class search
@@ -28,12 +31,54 @@ public class search extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		
+		HttpSession session = request.getSession();
+		UserDto dto = (UserDto)session.getAttribute("UserDto");
 		String command = request.getParameter("command");
+		PrintWriter pw = response.getWriter();
+		
+		if(command.equals("confirmheart")) {
+			if(dto != null) {
+				boolean res = new BizImpl().confirmheart(dto.getUser_id(), request.getParameter("placeid"));
+				pw.print(res);
+			}else {
+				pw.print("no_id");
+			}
+		}
+		
 		
 		if(command.equals("addheart")) {
+			if(dto != null) {
+				HeartDto heartdto = new HeartDto();
+				heartdto.setUserid(dto.getUser_id());
+				heartdto.setPlace_id(request.getParameter("placeid"));
+				heartdto.setThumbnail(request.getParameter("thumbnail"));
+				heartdto.setPlace_name(request.getParameter("placename"));
+				heartdto.setLatitude(request.getParameter("latitude"));
+				heartdto.setLongtitude(request.getParameter("longtitude"));
+				heartdto.setPlace_address(request.getParameter("address"));
+				heartdto.setNation(request.getParameter("nation"));
+				heartdto.setCity(request.getParameter("city"));
+
+				int res = new BizImpl().addheart(heartdto);
+					pw.print(res);
+			}else {
+				pw.print("no_id");
+			}
+		}
+		
+		else if(command.equals("rmheart")) {
+			if(dto != null) {
+				int res = new BizImpl().rmheart(dto.getUser_id(), request.getParameter("placeid"));
+				pw.print(res);
+			}else {
+				pw.print("세션종료");
+			}
 			
-			
-			
+		}
+		
+		else if(command.equals("heartcount")) {
+			int res = new BizImpl().getheartCount(request.getParameter("placeid"));
+			pw.print(res);
 		}
 	}
 

@@ -6,13 +6,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="./companion/css/messengerRoomCss.css" rel="stylesheet" type="text/css"/>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="./companion/js/room.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+
+<%
+	UserDto login_id = (UserDto)session.getAttribute("login_id");
+	List<MessageDto> list = (List<MessageDto>)request.getAttribute("detailList");
+	MessageDto con_id = list.get(list.size()-1);
+%>
+
 <style type="text/css">
-#check-promise {
+	#check-promise {
 	width:70%;
 	height:auto;
 	margin-left: 15%;
@@ -54,7 +64,7 @@ border-radius:10px;
 text-align:center; margin:2%;
 }
 .check-title-span{
-letter-spacing:3px; font-size:larger;
+letter-spacing:3px; font-size:24px; font-weight:bold; font-family: 'Nanum Gothic', sans-serif;
 }
 .check-imgdiv{
 width:100%; height:auto; background-color:rgb(238, 222, 224); border-radius:10px;
@@ -92,15 +102,191 @@ text-align:right; margin-top:10px; margin-bottom:10px;
 #goMyPromise{
 color:rgb(83, 67, 226); margin-right:20px; font-size:13px;
 }
+.messenger-table {
+	width: 700px;
+	height: 600px;
+	margin: 0 auto;
+	background-color: rgb(245, 240, 240);
+	border-radius: 10px;
+	opacity: 0.9;
+	box-shadow: blur;
+	overflow: auto;
+	position: relative;
+}
+
+.message {
+	width: 97%;
+	height: auto;
+	overflow: hidden;
+	float: left;
+}
+
+.reportTab {
+	width: 100%;
+	padding: 0px;
+}
+
+tr {
+	height: 30px;
+}
+
+#pic {
+	width: 50px;
+	height: 50px;
+}
+
+.reportIcon {
+	margin-left: 10px;
+	width: 20px;
+	height: 20px;
+}
+
+<!--
+-->
+#picture {
+	width: 10%;
+	height: 100%;
+	float: left;
+}
+
+#messageBody {
+	width: 90%;
+	float: right;
+	height: auto;
+}
+
+<!--
+-->
+.nav-tab {
+	font-size: 20px;
+	text-decoration: none;
+	color: black;
+}
+
+<!--
+-->
+.inputForm {
+	width: 700px;
+	margin: 0 auto;
+	margin-bottom: 150px;
+	height: 75px;
+	background-color: rgb(241, 244, 245);
+	border-radius: 10px;
+	opacity: 0.8;
+	padding: 10px;
+}
+
+<!--
+-->
+.messenger-nav {
+	width: 700px;
+	height: 80px;
+	margin: 0 auto;
+	margin-top: 100px;
+	padding: 10px;
+	opacity: 0.8;
+}
+
+textarea::placeholder {
+	letter-spacing: 1.5px;
+	font-size: 90%;
+}
+
+<!--
+-->
+.promise-table {
+	position: absolute;
+	width: 70%;
+	height: 60%;
+	background-color: rgb(250, 218, 223);
+	margin-left: 15%;
+	margin-top: 10%;
+	border-radius: 10px;
+	display: none;
+}
+
+#close-button {
+	width: 15px;
+	height: 15px;
+	margin-left: 95%;
+}
+
+.promise-tr {
+	height: 5%;
+}
+
+.promise-td {
+	padding-left: 30px;
+	font-family: 'Nanum Gothic', sans-serif;
+}
+
+.input {
+	resize: none;
+	border: 1px solid;
+	border-radius: 10px;
+}
+
+#close-button:hover {
+	cursor: pointer;
+}
+
+#button:hover {
+	cursor: pointer;
+}
+
+.reportIcon:hover {
+	cursor: pointer;
+}
+
+#promiseTab:hover {
+	cursor: pointer;
+}
+
+.firstTd {
+	text-align: center; padding: 15px;
+}
+.spanSender {
+	font-size: 20px;
+}
+.spanTime {
+	font-size: 12px; margin-left: 10px;
+}
+.secondTd {
+	padding: 5px; padding-bottom: 15px;
+}
+#refresh:hover{
+	cursor:pointer;
+}
 </style>
-<%
-	UserDto login_id = (UserDto)session.getAttribute("login_id");
-	System.out.println("login_id : " + login_id.getUser_id());
-	List<MessageDto> list = (List<MessageDto>)request.getAttribute("detailList");
-	MessageDto con_id = list.get(list.size()-1);
-%>
-<script type="text/javascript" src="./companion/js/room.js"></script>
 <script type="text/javascript">
+$(document).ready(function() {
+	setInterval(function() {
+		var con_id = document.getElementById("con_id").innerText;
+		var idx = 0;
+		$("#tbody").html("");
+		$.ajax({
+			url:"message.do?command=refresh&con_id="+con_id,
+			dataType:"json",
+			success:function(data) {
+				var json = data;
+				$.each(json, function(idx) {
+					$("#tbody").append(
+							"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + json[idx].user_img + ".png'></td>" +
+							"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + json[idx].user_name + "</span>" +
+							"<span id='m_time' class='spanTime'>" + json[idx].time + "</span>" +
+							"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
+							"</td></tr>" +
+							"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + json[idx].message + "</div>" +
+							"</td></tr>"
+					);
+					idx = (idx+1)==json.length? 0 : (idx+1);
+				});
+			}
+		});
+	}, 15000);
+});
+
+
 $(function() {
 	$("#inputMessage").on("keydown",function(event) {
 		if (event.keyCode == 13) {
@@ -111,8 +297,6 @@ $(function() {
 		}
 	});
 });
-
-
 
 function openPromiseTab() {
 	$("#promiseList").html("");
@@ -126,10 +310,11 @@ function openPromiseTab() {
 				$("#promiseList").append(
 						"<div class='check-imgdiv'>" +
 						"<div class='check-imgdiv2'>" +
-						"<img class='connect-pic' alt='user' src='./img/companion/french.png'>" +
+						"<img class='connect-pic' alt='user' src='./img/user/" + value[4] + ".png'>" +
 						"</div>" +
 						"<div class='check-infodiv'>" +
-						"<span id='ask-name' class='check-infoname'>"+value[0]+"</span>" +
+						"<span id='ask-id' style='display:none;'>" + value[0] + "</span>" +
+						"<span id='ask-name' class='check-infoname'>"+value[5]+"</span>" +
 						"<span class='check-infoloc'>장소: </span><span id='ask-loc' class='check-infolocData'>"+value[1]+"</span>" +
 						"<span class='check-infodate'>날짜: </span><span id='ask-time' class='check-infodateData'>"+value[2]+"</span>" +
 						"</div>" +
@@ -166,12 +351,14 @@ function denyPromise(obj) {
 }
 
 function permitPromise(obj) {
-	var id = $(obj).parent().siblings(".check-infodiv").children("#ask-name").text();
+	var id = $(obj).parent().siblings(".check-infodiv").children("#ask-id").text();
 	var loc = $(obj).parent().siblings(".check-infodiv").children("#ask-loc").text();
 	var time = $(obj).parent().siblings(".check-infodiv").children("#ask-time").text();
 	var chat_serial = document.getElementById("chat_serial").innerText;
 	var comment = id + "님과의 약속 : " + $(obj).parent().siblings(".check-commentdiv").text();
 	var login_id = $("#login_id").text();
+	var user_name = document.getElementById("user_name").innerText;
+	var user_img = document.getElementById("user_img").innerText;
 	
 	if (confirm(id+"님과 함께하시겠나요?")) {
 		$.ajax({
@@ -190,12 +377,12 @@ function permitPromise(obj) {
 				
 				if (id == $("#con_id").text()) {
 					$("#tbody").append(
-							"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
-							"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + login_id + "</span>" +
+							"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + user_img + ".png'></td>" +
+							"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + user_name + "</span>" +
 							"<span id='m_time' class='spanTime'>" + time + "</span>" +
-							"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+							"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
 							"</td></tr>" +
-							"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + comment + "</div>" +
+							"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message' style='color:blue;'>" + comment + "</div>" +
 							"</td></tr>"
 					);
 				}
@@ -208,8 +395,10 @@ function permitPromise(obj) {
 function messageFunction() {
 	var message = document.getElementById("inputMessage").value;
 	var login_id = document.getElementById("login_id").innerText;
+	var user_name = document.getElementById("user_name").innerText;
 	var con_id = document.getElementById("con_id").innerText;
 	var chat_serial = document.getElementById("chat_serial").innerText;
+	var user_img = document.getElementById("user_img").innerText;
 	
 	var today = new Date();
 	var year = today.getFullYear();
@@ -221,10 +410,10 @@ function messageFunction() {
 		url:"message.do?command=sendMessage&message="+message+"&con_id="+con_id+"&chat_serial="+chat_serial,
 		success: function(){
 			$("#tbody").append(
-				"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
-				"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + login_id + "</span>" +
+				"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + user_img + ".png'></td>" +
+				"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + user_name + "</span>" +
 				"<span id='m_time' class='spanTime'>" + dateString + "</span>" +
-				"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+				"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
 				"</td></tr>" +
 				"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + message + "</div>" +
 				"</td></tr>"
@@ -245,10 +434,10 @@ function refreshMassage() {
 			var json = data;
 			$.each(json, function(idx) {
 				$("#tbody").append(
-						"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/companion/idea.png'></td>" +
-						"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + json[idx].sen_id + "</span>" +
+						"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + json[idx].user_img + ".png'></td>" +
+						"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + json[idx].user_name + "</span>" +
 						"<span id='m_time' class='spanTime'>" + json[idx].time + "</span>" +
-						"<img class='reportIcon' alt='report' src='./img/companion/report.png' onclick='reportUser();'>" +
+						"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
 						"</td></tr>" +
 						"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + json[idx].message + "</div>" +
 						"</td></tr>"
@@ -258,10 +447,76 @@ function refreshMassage() {
 		}
 	});
 }
+
+function transPromise() {
+	//유효성 검사
+	console.log($(".input:eq(1)").val());
+	if ($(".input:eq(1)").val() == null || $(".input:eq(1)").val() == "") {
+		alert("상대방과 어디서 만날지 입력해주세요.");
+		$(".input:eq(1)").focus();
+		return;
+	} else if (($(".input:eq(2)").val() == null || $(".input:eq(2)").val() == "")&&($(".input:eq(2)").val().length != 10)) {
+		alert("날짜를 정확하게 입력해주세요.");
+		$(".input:eq(2)").focus();
+		return;
+	} else if ($(".input:eq(3)").val() == null || $(".input:eq(3)").val() == "") {
+		alert("무엇을 할 지 설명해주세요!");
+		$(".input:eq(3)").focus();
+		return;
+	}
+	
+	var con_id = $("#con_id").text();
+	var loc = $(".input:eq(1)").val();
+	var date = $(".input:eq(2)").val();
+	var comment = $(".input:eq(3)").val();
+	
+	console.log("보내는이 : "+con_id+" 위치 : "+loc+" 시간 : "+date+" 코멘트 : "+comment);
+	
+	// 유효성 검사 통과 이후
+	if (confirm("약속 요청을 보내시겠습니까?")) {
+		$.ajax({
+			url:"message.do?command=promise",
+			type:"post",
+			data:{
+				"con_id":con_id,
+				"loc":loc,
+				"date":date,
+				"comment":comment
+			},
+			success:function(msg) {
+				alert(msg);
+				$(".promise-table").css("display", "none");
+			}
+		});
+	} else {
+		alert("취소");
+	}
+}
+
+function openPromise() {
+	$(".promise-table").css("display", "block");
+}
+
+function closeButton(obj) {
+	$(obj).parent("div").css("display","none");
+}
+
+function reportUser() {
+	if (confirm("상대방을 규정 위반으로 신고하시겠습니까?\n신고 후 자동으로 연결이 끊깁니다.")) {
+		var con_id = document.getElementById("con_id").innerText;
+		//일단은 ajax로 처리를 하고 삭제된 메세지 함으로 이동시키자.
+		$.ajax({
+			url:"message.do?command=reportUser&con_id=" + con_id,
+			success:function(msg) {
+				alert(msg);
+			}
+		});
+	}
+}
 </script>
 
+
 <body>
-	<!-- 고정(헤더) -->
 	<div id="header">
 		<%@ include file="/form/header.jsp"%>
 	</div>
@@ -275,10 +530,8 @@ function refreshMassage() {
 					<col width="33%">
 				</colgroup>
 				<tr style="height: 70px;">
-					<!-- 클릭시 약속잡기 탭 open -->
 					<td><a id="promiseTab" class="nav-tab fw-bold" onclick="openPromise();">약속잡기</a></td>
 					<!-- 자기 자신 여행 url전송 -->
-					<!-- 팝업창을 띄어서 여행 리스트를 불러오고 그거 선택해서 submit 누르면 url 넘어가도록 구현하자(블로그 디테일페이지) -->
 					<td><a href="#" class="nav-tab fw-bold">일정 공유하기</a></td>
 					<td><a id="refresh" class="nav-tab fw-bold" onclick="refreshMassage();">새로고침</a></td>
 				</tr>
@@ -305,36 +558,36 @@ function refreshMassage() {
 				<div style="width: 100%; height: 90%">
 					<table class="text-center" style="width: 100%; height: 100%;">
 						<colgroup>
-							<col width="18%">
-							<col width="82%">
+							<col width="24%">
+							<col width="76%">
 						</colgroup>
 						<tbody id="promiseBody">
 							<tr>
-								<td colspan="2">약속 보내기</td>
+								<td colspan="2" style="font-size:20px; font-family: 'Nanum Gothic', sans-serif;"><b style="padding:10px;">약속 보내기</b></td>
 							</tr>
 							<tr class="promise-tr">
-								<td class="promise-td">누가?</td>
+								<td class="promise-td"><b>누가?</b></td>
 								<td><textarea class="input" rows="1" cols="40" readonly
 										style="letter-spacing: 3px;"><%=login_id.getUser_id()%></textarea></td>
 							</tr>
 							<tr class="promise-tr">
-								<td class="promise-td">어디서?</td>
+								<td class="promise-td"><b>어디서?</b></td>
 								<td><textarea class="input" rows="1" cols="40"
 										name="location" placeholder="약속하신 장소를 입력해주세요."></textarea></td>
 							</tr>
 							<tr class="promise-tr">
-								<td class="promise-td">언제?</td>
+								<td class="promise-td"><b>언제?</b></td>
 								<td><textarea class="input" rows="1" cols="40" name="date"
 										placeholder="연/월/일 입력(ex: 2021/05/21)"></textarea></td>
 							</tr>
 							<tr class="promise-tr">
-								<td class="promise-td">뭘 할까?</td>
+								<td class="promise-td"><b>무엇을?</b></td>
 								<td><textarea class="input" rows="5" cols="40"
 										name="comment" placeholder="구체적인 시간과 무엇을 계획했는지 알려주세요!"></textarea></td>
 							</tr>
 							<tr style="height: 1%;">
 								<td colspan="2">
-									<button id="submitButton" onclick="transPromise();">약속잡기</button>
+									<button id="submitButton" onclick="transPromise();" style="border-radius:5px; font-family: 'Nanum Gothic', sans-serif;">보내기</button>
 								</td>
 							</tr>
 						</tbody>
@@ -350,14 +603,16 @@ function refreshMassage() {
 				<thead>
 					<tr style="display:none">
 						<td>
+							<span id="user_name"><%=login_id.getName() %></span>
+							<span id="user_img"><%=login_id.getUser_img() %></span>
 							<span id="con_id"><%=con_id.getSen_id()%></span>
 							<span id="chat_serial"><%=con_id.getChat_serial()%></span>
 							<span id="login_id"><%=login_id.getUser_id()%></span>
 						</td>
 					</tr>
-					<!-- 공지 메세지 시작 -->
+					<!-- 공지 메세지 -->
 					<tr style="margin-top: 10px;">
-						<td rowspan="2" style="text-align: center; padding: 15px;"><img id="pic" alt="bell" src="./img/companion/idea.png"></td>
+						<td rowspan="2" style="text-align: center; padding: 15px;"><img id="pic" alt="bell" src="./img/companion/admin.png"></td>
 						<td colspan="2"><span class="fw-bold" style="font-size: 20px;">여행을 묻다</span></td>
 					</tr>
 					<tr>
@@ -370,18 +625,16 @@ function refreshMassage() {
 							</div>
 						</td>
 					</tr>
-					<!-- 메세지 끝 -->
 				</thead>
-				<!-- 메세지 시작 -->
 				<tbody id="tbody">
 <%	
 				for (int i = 0; i < list.size()-1; i++) {
 %>
 					<tr>
-						<td rowspan="2" style="text-align: center; padding: 15px;"><img id="pic" alt="profile" src="./img/companion/idea.png"></td>
-						<td colspan="2"><span id="sender"class="fw-bold" style="font-size: 20px;"><%=list.get(i).getSen_id() %></span>
+						<td rowspan="2" style="text-align: center; padding: 15px;"><img id="pic" alt="profile" src="./img/user/<%=list.get(i).getSender_img() %>.png"></td>
+						<td colspan="2"><span id="sender"class="fw-bold" style="font-size: 20px;"><%=list.get(i).getUser_name() %></span>
 							<span id="m_time" style="font-size: 12px; margin-left: 10px;"><%=list.get(i).getM_time()%></span>
-							<img class="reportIcon" alt="report" src="./img/companion/report.png" onclick="reportUser();">
+							<img class="reportIcon" alt="report" src="./img/companion/report2.png" onclick="reportUser();">
 						</td>
 					</tr>
 					<tr>
@@ -390,12 +643,11 @@ function refreshMassage() {
 						</td>
 					</tr>
 <%
-	}
+				}
 %>
 				</tbody>
 			</table>
 		</div>
-		<!-- 메세지 입력칸 -->
 		<div class="inputForm">
 			<div style="width: 70%; float: left; margin-left: 30px;">
 				<textarea id="inputMessage" class="input" style="height: 50px; width: 100%;" rows="2"
@@ -407,7 +659,6 @@ function refreshMassage() {
 			</div>
 		</div>
 	</div>
-	<!-- 고정(푸터) -->
 	<div id="footer">
 		<%@ include file="/form/footer.jsp"%>
 	</div>
