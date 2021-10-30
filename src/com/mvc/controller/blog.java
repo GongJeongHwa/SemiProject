@@ -67,6 +67,13 @@ public class blog extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			out.print(jarray.toJSONString());
 		}
+		
+		if(command.equals("blogone")) {
+			
+		}
+		
+		
+		
 	}
 
 	public void dispatch(String url, HttpServletRequest request, HttpServletResponse reponse) throws ServletException, IOException {

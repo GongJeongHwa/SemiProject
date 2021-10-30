@@ -56,7 +56,21 @@ public class BizImpl implements MVCBiz{
 		return list;
 	}
 
-	
+	@Override
+	public int addSchedule(blogDto dto) {
+		
+		con = getConnection();
+		int seq = dao.getBlogSeq(con, dto.getUser_id()) + 1;
+		int res = dao.addSchedule(con, seq, dto);
+		if(res > 0) {
+			commit(con);
+		}else {
+			rollback(con);
+		}
+		closeConn(con);
+		
+		return res;
+	}
 	
 	
 	
@@ -129,6 +143,8 @@ public class BizImpl implements MVCBiz{
 		
 		return res;
 	}
+
+
 
 
 

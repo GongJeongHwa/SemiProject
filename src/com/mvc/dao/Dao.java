@@ -25,8 +25,8 @@ public interface Dao {
 
 	//Blog
 	public ArrayList<blogDto> getBlogList(Connection con);
-	
-	
+	public int getBlogSeq(Connection con, String userid);
+	public int addSchedule(Connection con, int seq, blogDto dto);
 	
 	
 	

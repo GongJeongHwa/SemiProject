@@ -28,26 +28,27 @@ $(document).ready(function(){
 		method: "post",
 		dataType: "json",
 		success:function(data){
-			
-			$(".card").each(function(){
-				$(this).find("img").eq(0).prop("src", data[start].path);
-				var str = "";
-				for(var i = data[start].penalty; i < 3; i++){str += "★";}
-				for(var i = 0; i < data[start].penalty; i++){str += "☆";}
-				$(this).find("p").eq(0).html(data[start].userid + "&nbsp;" + str);
-				$(this).find("span").eq(0).html(data[start].mindate + " ~ " + data[start].maxdate);
-				$(this).find("b").eq(0).html(data[start].area);
-				$(this).find("h6").html(data[start].title);
-				$(this).find("p").eq(1).html(data[start].content);
-				$(this).find("button").attr("onclick","location.href='blog.do?command=selectone&blogseq=" + data[start].blogseq + "&user_id=" + data[start].userid + "'");
-				$(this).find("span").eq(1).html(data[start].blogheart);
-				$(this).find("span").eq(2).html(data[start].comment);
-				$(this).find("span").eq(3).html(data[start].hits);
-				start = (start+1)==data.length? 0 : (start+1);
-			});
-			start = 0;	
+		
 			list = data;
 			
+			for(var i = 0; i < data.length; i++){
+			
+				if(i == 3) return;
+				console.log(1);
+				$(".card").eq(i).find("img").eq(0).prop("src", data[i].path);
+				var str = "";
+				for(var j = data[i].penalty; j < 3; j++){str += "★";}
+				for(var j = 0; j < data[i].penalty; j++){str += "☆";}
+				$(".card").eq(i).find("p").eq(0).html(data[i].userid + "&nbsp;" + str);
+				$(".card").eq(i).find("span").eq(0).html(data[i].mindate + " ~ " + data[i].maxdate);
+				$(".card").eq(i).find("b").eq(0).html(data[i].area);
+				$(".card").eq(i).find("h6").html(data[i].title);
+				$(".card").eq(i).find("p").eq(1).html(data[i].content);
+				$(".card").eq(i).find("button").attr("onclick","location.href='blog.do?command=selectone&blogseq=" + data[i].blogseq + "&user_id=" + data[i].userid + "'");
+				$(".card").eq(i).find("span").eq(1).html(data[i].blogheart);
+				$(".card").eq(i).find("span").eq(2).html(data[i].comment);
+				$(".card").eq(i).find("span").eq(3).html(data[i].hits);
+			}
 		}
 	});
 	
@@ -156,6 +157,11 @@ function changePicture_2(){
 }
 //left 버튼
 function left(){
+	if(list.length <= 3) {
+		alert("더이상 글이 존재하지 않습니다.");
+		return;
+	}
+
 	$(".card").eq(0).animate().stop();
 	start = (start-1) < 0? list.length-1 : (start-1);
 	temp = start;
@@ -183,6 +189,11 @@ function left(){
 }
 //right 버튼
 function right(){
+	if(list.length <= 3) {
+		alert("더이상 글이 존재하지 않습니다.");
+		return;
+	}
+
 	$(".card").eq(2).animate().stop();
 	var temp = start;
 	

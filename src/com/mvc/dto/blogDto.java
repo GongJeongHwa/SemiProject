@@ -2,6 +2,7 @@ package com.mvc.dto;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class blogDto {
 	private String user_id;
@@ -11,7 +12,7 @@ public class blogDto {
 	private String title;
 	private String content;
 	private String areaname;
-	private HashMap<Date, StringBuilder> map;
+	private LinkedHashMap<Date, String> map;
 	private Date maxdate;
 	private Date mindate;
 	private String thumbnailPath; //썸네일 경로
@@ -19,10 +20,12 @@ public class blogDto {
 	private int comment; //댓글수 디폴트 0
 	private int hits;	//글 조회수 디폴트 1
 	
-	public blogDto() {}
+	public blogDto() {
+		map = new LinkedHashMap<Date, String>();
+	}
 
 	public blogDto(String user_id, int user_penalty, int blog_seq, Date blog_create_date, String title, String content,
-			String areaname, HashMap<Date, StringBuilder> map, Date maxdate, Date mindate, String thumbnailPath,
+			String areaname, LinkedHashMap<Date, String> map, Date maxdate, Date mindate, String thumbnailPath,
 			int heart_count, int comment, int hits) {
 		super();
 		this.user_id = user_id;
@@ -97,11 +100,11 @@ public class blogDto {
 		this.areaname = areaname;
 	}
 
-	public HashMap<Date, StringBuilder> getMap() {
+	public LinkedHashMap<Date, String> getMap() {
 		return map;
 	}
 
-	public void setMap(HashMap<Date, StringBuilder> map) {
+	public void setMap(LinkedHashMap<Date, String> map) {
 		this.map = map;
 	}
 
