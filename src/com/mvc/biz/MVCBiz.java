@@ -15,6 +15,7 @@ public interface MVCBiz {
 	
 	//블로그관련
 	public ArrayList<blogDto> getBlogList();
+	public int addSchedule(blogDto dto);
 	
 	
 	//search.jsp 장소heart
@@ -23,4 +24,6 @@ public interface MVCBiz {
 	public int getheartCount(String placeid);
 	public boolean confirmheart(String userid, String placeid);
 	public int rmheart(String userid, String placeid);
+	
+	
 }

@@ -135,7 +135,7 @@ function createMarker(place) {
 	  markerlist.push(marker);
 	  
 	  google.maps.event.addListener(marker, "click", () => {
-		infoString = place.name + " (" + place.address_components[2].long_name +")<br>";
+		infoString = "<a href='"+ place.url +"'>" +place.name + " (" + place.address_components[2].long_name +")</a><br>";
 	    infowindow.setContent(infoString);
 	    infowindow.open(map,marker);
 	  });

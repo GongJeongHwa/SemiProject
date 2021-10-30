@@ -14,8 +14,14 @@
 
 
 table {
-  font-size: 12px;
+  font-size: 13px;
+  vertical-align: middle;
 }
+tr{
+	cursor: pointer;
+}
+
+
 #map {height:550px;}
 .map-search {
   -webkit-box-align: center;
@@ -26,7 +32,7 @@ table {
   display: -ms-flexbox;
   display: flex;
   left: 0;
-  position: absolute;
+  position: relative;
   top: 0;
   width: 440px;
   z-index: 1;
@@ -121,7 +127,6 @@ table {
         <option value="all">세계</option>
         <option value="kr" selected>국내</option>
       </select>
-       <script src="http://maps.googleapis.com/maps/api/js"></script>
       </div>
     </div>
       
@@ -160,9 +165,12 @@ table {
  
 
 
-    <script> 
+
   
-    
+<script>
+var markerColor = {tourist_attraction:"fbfe00", lodging:"67ff58", restaurant:"fa4f2d"};
+var markerlink = "http://www.googlemapsmarkers.com/v1/";
+
 var types = ["tourist_attraction","lodging", "restaurant"]; //명소, 호텔,식당 type 3가지만 검색 
 var map, places, infoWindow;
 var markers = [];
@@ -171,29 +179,14 @@ var countryRestrict = { //지도 시작시 기본 포커스
   'country': 'kr'
 };
 var MARKER_PATH = 'https://developers.google.com/maps/documentation/javascript/images/marker_green'; 
-var MARKER_BASEPATH = 'https://maps.google.com/mapfiles/ms/micons/';
+var MARKER_BASEPATH = 'https://maps.google.com/mapfiles/ms/micons/'; 
 var customIcons = { //지도상에서 type별 마커를 색으로 구분 
-  tourist_attraction: {
-    icon: MARKER_BASEPATH + "yellow.png"
-  },
-  lodging: {
-    icon: MARKER_BASEPATH + "green.png"
-  },
-  restaurant: {
-    icon: MARKER_BASEPATH + "red.png"
-  }
-};
+  tourist_attraction: {icon: MARKER_BASEPATH + "yellow.png"},
+  lodging: {icon: MARKER_BASEPATH + "green.png"},
+  restaurant: {icon: MARKER_BASEPATH + "red.png"}};
 var hostnameRegexp = new RegExp('^https?://.+?/');
-
 var countries = {
-  'kr': {
-    center: {
-      lat: 37.55,
-      lng: 126.84
-    },
-    zoom: 12
-  },
-};
+  'kr': { center: {lat: 37.55,lng: 126.84},zoom: 12},};
 
 
 
@@ -283,6 +276,8 @@ function search() {
                 text: markerLetter,
               }
             });
+            console.log(markers[type][i]);
+            
             // If the user clicks a hotel marker, show the details of that hotel
             // in an info window.
             markers[type][i].placeResult = results[i];
@@ -350,43 +345,57 @@ function dropMarker(i) {
 }
 
 function addResult(result, i, type) {
-  var results = document.getElementById('results');
-  var results_ta=document.getElementById('result_ta');
-  var results_rest=document.getElementById('result_rest');
+	  var results = document.getElementById('results');
+	  var results_ta=document.getElementById('result_ta');
+	  var results_rest=document.getElementById('result_rest');
 
-  var markerLetter = String.fromCharCode('A'.charCodeAt(0) + (i % 26));
-  var markerIcon = MARKER_PATH + markerLetter + '.png';
+	  var markerLetter = String.fromCharCode('A'.charCodeAt(0) + (i % 26));
+	  var markerIcon = markerlink + markerLetter + "/" + markerColor[type]; 
+	  console.log(markerIcon);
+	  var tr = document.createElement('tr');
+	  //tr.style.backgroundColor = (i % 2 === 0 ? '#F0F0F0' : '#FFFFFF'); 퐁당퐁당 배경색 일단지움..
+	  tr.onclick = function() {
+	    google.maps.event.trigger(markers[type][i], 'click');
+	  };
 
-  var tr = document.createElement('tr');
-  tr.style.backgroundColor = (i % 2 === 0 ? '#F0F0F0' : '#FFFFFF');
-  tr.onclick = function() {
-    google.maps.event.trigger(markers[type][i], 'click');
-  };
-
-  var iconTd = document.createElement('td');
-  var nameTd = document.createElement('td');
-  var icon = document.createElement('img');
-  icon.src = markerIcon;
-  icon.setAttribute('class', 'placeIcon');
-  icon.setAttribute('className', 'placeIcon');
-  var name = document.createTextNode(type + ":" + result.name); //여기까지 type 별 분류가 정상적으로됨 
-  
-  iconTd.appendChild(icon);
-  nameTd.appendChild(name);
-  tr.appendChild(iconTd);
-  tr.appendChild(nameTd);
-  if(type==="lodging"){ //type 호텔 분류 
-  results.appendChild(tr);
-  }
-  
-  
-}
+	  var iconTd = document.createElement('td');
+	  var nameTd = document.createElement('td'); 
+	  var icon = document.createElement('img');
+	  icon.src = markerIcon;
+	  icon.setAttribute('class', 'placeIcon');
+	  icon.setAttribute('className', 'placeIcon');
+	  //var name = document.createTextNode(type + ":" + result.name); //제목에 type표시 일단지움..
+	  var name = document.createTextNode(result.name);
+	  iconTd.appendChild(icon);
+	  nameTd.appendChild(name); 
+	  tr.appendChild(iconTd);
+	  tr.appendChild(nameTd);   
+	  
+	  if(type==="lodging"){   //검색 결과를 타입별 컨테이너에 분류 
+	  //results.appendChild(tr);
+		  document.getElementById('results').appendChild(tr);
+	  }else if(type==="tourist_attraction"){
+		  document.getElementById('results_ta').appendChild(tr);
+	  }else if(type==="restaurant"){
+		  document.getElementById('results_rest').appendChild(tr);
+	  }
+	}
 
 function clearResults() {
-  var results = document.getElementById('results');
-  while (results.childNodes[0]) {
-    results.removeChild(results.childNodes[0]);
-  }
+	  var results = document.getElementById('results');
+	  while (results.childNodes[0]) {
+	    results.removeChild(results.childNodes[0]);
+	  }
+	 
+	  var results_ta = document.getElementById('results_ta');
+	  while (results_ta.childNodes[0]) {
+	    results_ta.removeChild(results_ta.childNodes[0]);
+	  }
+	  
+	  var results_rest = document.getElementById('results_rest');
+	  while (results_rest.childNodes[0]) {
+	    results_rest.removeChild(results_rest.childNodes[0]);
+	  }
 }
 
 // Get the place details for a hotel. Show the information in an info window,
@@ -407,18 +416,29 @@ function showInfoWindow() {
 
 // Load the place information into the HTML elements used by the info window.
 function buildIWContent(place) {
-  document.getElementById('iw-icon').innerHTML = '<img class="hotelIcon" ' +
-    'src="' + place.icon + '"/>';
-  document.getElementById('iw-url').innerHTML = '<b><a href="' + place.url +
-    '">' + place.name + '</a></b>';
+	console.log(place);
+	if(place.hasOwnProperty('photos')){
+		$("#modalimage").html("<img src='" + place.photos[0].getUrl({'maxWidth':400, 'maxHeight':400}) + "'>");
+	}else{
+		$("#modalimage").html("<img src='" + place.icon + "'>");
+	}
+	
+	document.getElementById('modalName').innerHTML = place.name;
+	document.getElementById('modalAddress').textContent = place.vicinity;
+	$("#modaldetailpage").html("<b><a href='" + place.url + "'>상세보기</a></b>");  
+	
+  document.getElementById('iw-icon').innerHTML = '<img class="hotelIcon" ' + 'src="' + place.icon + '"/>';
+  document.getElementById('iw-url').innerHTML = '<b><a href="' + place.url + '">' + place.name + '</a></b>';
   document.getElementById('iw-address').textContent = place.vicinity;
 
   if (place.formatted_phone_number) {
     document.getElementById('iw-phone-row').style.display = '';
-    document.getElementById('iw-phone').textContent =
-      place.formatted_phone_number;
+    document.getElementById('modalPhone').style.display = '';
+    document.getElementById('iw-phone').textContent = place.formatted_phone_number;
+    document.getElementById('modalPhone').textContent = place.formatted_phone_number;
   } else {
     document.getElementById('iw-phone-row').style.display = 'none';
+    document.getElementById('modalPhone').style.display = 'none';
   }
 
   // Assign a five-star rating to the hotel, using a black star ('&#10029;')
@@ -434,9 +454,12 @@ function buildIWContent(place) {
       }
       document.getElementById('iw-rating-row').style.display = '';
       document.getElementById('iw-rating').innerHTML = ratingHtml;
+      document.getElementById('modalRating').style.display = '';
+      document.getElementById('modalRating').innerHTML = ratingHtml;
     }
   } else {
     document.getElementById('iw-rating-row').style.display = 'none';
+    document.getElementById('modalRating').style.display = 'none';
   }
 
   // The regexp isolates the first part of the URL (domain plus subdomain)
@@ -450,9 +473,31 @@ function buildIWContent(place) {
     }
     document.getElementById('iw-website-row').style.display = '';
     document.getElementById('iw-website').textContent = website;
+    document.getElementById('modalUrl').style.display = '';
+	$("#modalUrl").removeAttr("href");
+	$("#modalUrl").attr("href",website);
   } else {
     document.getElementById('iw-website-row').style.display = 'none';
+    document.getElementById('modalUrl').style.display = 'none';
   }
+  
+  //---------modal input hidden-----------
+  	$("#address").val(place.vicinity);
+  	$("#url").val(place.url);
+  	$("#lng").val(place.geometry.location.lng());
+  	$("#lat").val(place.geometry.location.lat());
+	for(var i = 0; i < place.address_components.length; i++){
+		if(place.address_components[i].types[0] == 'country'){
+			$("#nation").val(place.address_components[i].long_name); break;
+		}	
+	}
+	for(var i = 0; i < place.address_components.length; i++){
+		if(place.address_components[i].types[0] == 'administrative_area_level_1'){
+			$("#city").val(place.address_components[i].long_name); break;
+		}	
+	}
+  
+  
 }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEOFLxuHpLh-ga2m0oiOm5C66luLW65QQ&libraries=places&callback=initMap"
@@ -461,3 +506,25 @@ function buildIWContent(place) {
   &key=AIzaSyDEOFLxuHpLh-ga2m0oiOm5C66luLW65QQ"></script>
   </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
