@@ -30,6 +30,7 @@ clear: left;
 margin-left: 200px;
 }
 </style>
+
   <script type="text/javascript">
         	function func_prompt () {
         		var comment = prompt("메시지를 입력해주세요.")
@@ -139,7 +140,7 @@ margin-left: 200px;
 	<br>
 	<br>
 
-<!-- 	<div id="form-commentInfo">
+<!-- <div id="form-commentInfo">
 		<div id="comment-count">댓글 
 			<span id="count">0</span>
 		</div> 
@@ -147,9 +148,44 @@ margin-left: 200px;
 		<button id="submit">등록</button> 
 	</div>
 	<div id=comments>
-	</div> 
+	</div> -->
 	
-	 -->
+	<div id="disqus_thread"></div>    <!--DISQUS 댓글 서비스가 실제로 출력되는 곳-->
+...
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT
+     *  THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR
+     *  PLATFORM OR CMS.
+     *
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT:
+     *  https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    // 이 부분에 있던 주석을 풀고 다음과 같이 작성
+    var disqus_config = function () {
+        this.page.url = "http://127.0.0.1:8000/p/{{ post.post_id }}/";
+        this.page.identifier = "{{ post.post_id }}";
+        this.language = "ko";
+    };
+
+
+    (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+        var d = document, s = d.createElement('script');
+
+        // IMPORTANT: Replace EXAMPLE with your forum shortname!
+        s.src = 'https://pystagram.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>
+    Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript" rel="nofollow">
+        comments powered by Disqus.
+    </a>
+</noscript>
 	
 
 	<br>
