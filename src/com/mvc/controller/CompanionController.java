@@ -37,9 +37,9 @@ public class CompanionController extends HttpServlet {
 //		UserDto login_id = (UserDto)session.getAttribute("user_id");
 
 		UserDto login_id = new UserDto();
-		login_id.setUser_id("ADMIN");
-		login_id.setUser_img("user1");
-		login_id.setName("관리자");
+		login_id.setUser_id("SUNGTAE");
+		login_id.setUser_img("user8");
+		login_id.setName("허성태");
 		session.setAttribute("login_id", login_id);
 		System.out.println("로그인 아이디 : " + login_id.getUser_id());
 		
@@ -90,7 +90,6 @@ public class CompanionController extends HttpServlet {
 			dto.setChat_serial(list.get(0).getChat_serial());
 			dto.setSen_id(sen_id);
 			list.add(dto);
-			System.out.println("1단계 완료");
 
 			request.setAttribute("detailList", list);
 			dispatch("companion/messengerRoom.jsp", request, response);

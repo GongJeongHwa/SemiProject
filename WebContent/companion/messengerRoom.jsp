@@ -406,6 +406,17 @@ function messageFunction() {
 	var day = ('0' + today.getDate()).slice(-2);
 	var dateString = year + '/' + month  + '/' + day;
 	
+	if (message.trim() == "" || message == null) {
+		alert("메세지를 입력해주세요");
+		$("#inputMessage").focus();
+		return;
+	}
+	if (message.length > 200) {
+		alert("메세지를 너무 길게 입력하셨습니다.\n 200자 미만으로 입력해주세요");
+		$("#inputMessage").focus();
+		return;
+	}
+	
 	$.ajax({
 		url:"message.do?command=sendMessage&message="+message+"&con_id="+con_id+"&chat_serial="+chat_serial,
 		success: function(){
@@ -450,29 +461,57 @@ function refreshMassage() {
 
 function transPromise() {
 	//유효성 검사
-	console.log($(".input:eq(1)").val());
-	if ($(".input:eq(1)").val() == null || $(".input:eq(1)").val() == "") {
+	if ($(".input:eq(1)").val() == null || $(".input:eq(1)").val().trim() == "") {
 		alert("상대방과 어디서 만날지 입력해주세요.");
 		$(".input:eq(1)").focus();
 		return;
-	} else if (($(".input:eq(2)").val() == null || $(".input:eq(2)").val() == "")&&($(".input:eq(2)").val().length != 10)) {
+	}
+	
+	//날짜 유효성 검사
+	if ($(".input:eq(2)").val().length != 10) {
+		alert("날짜를 형식에 알맞게 입력해주세요. ex) 2021/10/29 ");
+		$(".input:eq(2)").focus();
+		return;
+	}
+	
+	if ($(".input:eq(2)").val() == null || $(".input:eq(2)").val().trim() == "") {
 		alert("날짜를 정확하게 입력해주세요.");
 		$(".input:eq(2)").focus();
 		return;
-	} else if ($(".input:eq(3)").val() == null || $(".input:eq(3)").val() == "") {
+	}
+	
+	var temp = $(".input:eq(2)").val().split('/');
+	var today = new Date();
+	var year = today.getFullYear();
+	var month = today.getMonth() + 1;
+	
+	for (var i = 0; i < 3; i++) {
+		if (temp[0] < year) {
+			alert("이미 지난 해에는 약속을 잡을 수 없어요! ");
+			$(".input:eq(2)").focus();
+			return;
+		} else if ((temp[1] > 12 || temp[1] < 1) || temp[1] < month ) {
+			alert("월을 잘못 입력하셨습니다. 다시 입력해주세요.");
+			$(".input:eq(2)").focus();
+			return;
+		} else if (temp[2] < 1 || temp[2] > 31) {
+			alert("날짜를 잘못 입력하셨습니다. 다시 입력해주세요.");
+			$(".input:eq(2)").focus();
+			return;
+		}
+	}
+	
+	if ($(".input:eq(3)").val() == null || $(".input:eq(3)").val().trim() == "") {
 		alert("무엇을 할 지 설명해주세요!");
 		$(".input:eq(3)").focus();
 		return;
 	}
 	
 	var con_id = $("#con_id").text();
-	var loc = $(".input:eq(1)").val();
-	var date = $(".input:eq(2)").val();
+	var loc = $(".input:eq(1)").val().trim();
+	var date = $(".input:eq(2)").val().trim();
 	var comment = $(".input:eq(3)").val();
 	
-	console.log("보내는이 : "+con_id+" 위치 : "+loc+" 시간 : "+date+" 코멘트 : "+comment);
-	
-	// 유효성 검사 통과 이후
 	if (confirm("약속 요청을 보내시겠습니까?")) {
 		$.ajax({
 			url:"message.do?command=promise",
@@ -509,6 +548,7 @@ function reportUser() {
 			url:"message.do?command=reportUser&con_id=" + con_id,
 			success:function(msg) {
 				alert(msg);
+				location.href="message.do?command=message";
 			}
 		});
 	}
@@ -532,7 +572,7 @@ function reportUser() {
 				<tr style="height: 70px;">
 					<td><a id="promiseTab" class="nav-tab fw-bold" onclick="openPromise();">약속잡기</a></td>
 					<!-- 자기 자신 여행 url전송 -->
-					<td><a href="#" class="nav-tab fw-bold">일정 공유하기</a></td>
+					<td><a class="nav-tab fw-bold" onclick="openPromiseTab()">약속 확인하기</a></td>
 					<td><a id="refresh" class="nav-tab fw-bold" onclick="refreshMassage();">새로고침</a></td>
 				</tr>
 			</table>
@@ -556,38 +596,38 @@ function reportUser() {
 			<div class="promise-table">
 				<img id="close-button" alt="close" src="./img/companion/close.png" onclick="closeButton(this);">
 				<div style="width: 100%; height: 90%">
-					<table class="text-center" style="width: 100%; height: 100%;">
+					<table style="width: 100%; height: 100%;">
 						<colgroup>
 							<col width="24%">
 							<col width="76%">
 						</colgroup>
 						<tbody id="promiseBody">
 							<tr>
-								<td colspan="2" style="font-size:20px; font-family: 'Nanum Gothic', sans-serif;"><b style="padding:10px;">약속 보내기</b></td>
+								<td colspan="2" style="font-size:20px; font-family: 'Nanum Gothic', sans-serif;" class="text-center"><b style="padding:10px;">약속 보내기</b></td>
 							</tr>
 							<tr class="promise-tr">
-								<td class="promise-td"><b>누가?</b></td>
-								<td><textarea class="input" rows="1" cols="40" readonly
-										style="letter-spacing: 3px;"><%=login_id.getUser_id()%></textarea></td>
+								<td class="promise-td text-center"><b>누가?</b></td>
+								<td><textarea class="input" rows="1" readonly
+										style="letter-spacing:3px; width:90%;"><%=login_id.getUser_id()%></textarea></td>
 							</tr>
 							<tr class="promise-tr">
-								<td class="promise-td"><b>어디서?</b></td>
-								<td><textarea class="input" rows="1" cols="40"
-										name="location" placeholder="약속하신 장소를 입력해주세요."></textarea></td>
+								<td class="promise-td text-center"><b>어디서?</b></td>
+								<td><textarea class="input" rows="1"
+										name="location" placeholder="약속하신 장소를 입력해주세요." style="letter-spacing:3px; width:90%;"></textarea></td>
 							</tr>
 							<tr class="promise-tr">
-								<td class="promise-td"><b>언제?</b></td>
-								<td><textarea class="input" rows="1" cols="40" name="date"
-										placeholder="연/월/일 입력(ex: 2021/05/21)"></textarea></td>
+								<td class="promise-td text-center"><b>언제?</b></td>
+								<td><textarea class="input" rows="1" name="date"
+										placeholder="연/월/일 입력(ex: 2021/05/21)" style="letter-spacing:3px; width:90%;"></textarea></td>
 							</tr>
 							<tr class="promise-tr">
-								<td class="promise-td"><b>무엇을?</b></td>
-								<td><textarea class="input" rows="5" cols="40"
-										name="comment" placeholder="구체적인 시간과 무엇을 계획했는지 알려주세요!"></textarea></td>
+								<td class="promise-td text-center"><b>무엇을?</b></td>
+								<td><textarea class="input" rows="5"
+										name="comment" placeholder="구체적인 시간과 무엇을 계획했는지 알려주세요!" style="letter-spacing:3px; width:90%;"></textarea></td>
 							</tr>
-							<tr style="height: 1%;">
-								<td colspan="2">
-									<button id="submitButton" onclick="transPromise();" style="border-radius:5px; font-family: 'Nanum Gothic', sans-serif;">보내기</button>
+							<tr style="height:1%;">
+								<td colspan="2" class="text-center">
+									<button id="submitButton" onclick="transPromise();" class="btn-primary" style="border-radius:15px;">보내기</button>
 								</td>
 							</tr>
 						</tbody>
@@ -618,8 +658,8 @@ function reportUser() {
 					<tr>
 						<td colspan="3" style="padding: 5px; padding-bottom: 15px;">
 							<div class="message">
-								나에게 요청된 약속을 확인할 수 있습니다.
-								<a id="openPromise" onclick="openPromiseTab();" style="color: red; text-decoration: none; font-size: 10px;">&nbsp;약속 확인하기</a><br>
+								상대방에게 매너를 지켜주세요! Manner Maketh Man!
+								<br>
 								이용 전 공지사항을 확인해주시기 바랍니다.
 								<a href="#" style="color: red; text-decoration: none; font-size: 10px;">&nbsp;공지사항 확인하기</a>
 							</div>

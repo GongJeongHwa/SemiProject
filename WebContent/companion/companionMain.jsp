@@ -8,8 +8,7 @@
 </head>
 <script type="text/javascript" src="../index.js"></script>
 <link rel="stylesheet" type="text/css" href="../index.css">
-<script type="text/javascript"
-	src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style type="text/css">
 .center {
 	margin-top: 10px width: 250px;
@@ -22,7 +21,8 @@
 .section {
 	width: 100%;
 	height: 500px;
-	margin-bottom:100px;
+	background-color:rgb(224, 210, 210); 
+	color:black
 }
 
 #sectionLeft {
@@ -46,32 +46,114 @@
 	width: 100%;
 	background-size: 100% 100%;
 }
+.guide-img {
+	width:65%;
+	height:650px;
+	border-radius: 50px; 
+	border:1px solid #555555;
+}
+
+<!-- 슬라이드 css -->
+ul, li {
+	list-style: none;
+}
+.slide {
+	height: 300px;
+	overflow: hidden;
+}
+.slide ul {
+	position: relative;
+	height: 100%;
+}
+.slide li {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	opacity: 0;
+	animation: fade 30s infinite;
+}
+.slide li:nth-child(1) {
+	animation-delay: 0s;
+}
+.slide li:nth-child(2) {
+	animation-delay: 6s;
+}
+.slide li:nth-child(3) {
+	animation-delay: 12s;
+}
+.slide li:nth-child(4) {
+	animation-delay: 18s;
+}
+.slide li:nth-child(5) {
+	animation-delay: 24s;
+}
+
+@keyframes fade {
+      0% {opacity:0;}
+      5% {opacity:1;}
+      25% {opacity:1;}
+      30% {opacity:0;}
+      100% {opacity:0;}
+}
 </style>
 
 <script type="text/javascript">
-	function findCompanion() {
-		location.href = "#";
-	}
+$(document).ready(function(){
+	var list;
+	var start = 0;
+	
+	//blogdto list 가져오기
+	$.ajax({
+		url:"../blog.do?command=bloglist",
+		method: "post",
+		dataType: "json",
+		success:function(data){
+			
+			$(".card").each(function(){
+				var imgPath = "../" + data[start].path;
+				$(this).find("img").eq(0).prop("src", imgPath);
+				var str = "";
+				for(var i = data[start].penalty; i < 3; i++){str += "★";}
+				for(var i = 0; i < data[start].penalty; i++){str += "☆";}
+				$(this).find("p").eq(0).html(data[start].userid + "&nbsp;" + str);
+				$(this).find("span").eq(0).html(data[start].mindate + " ~ " + data[start].maxdate);
+				$(this).find("b").eq(0).html(data[start].area);
+				$(this).find("h6").html(data[start].title);
+				$(this).find("p").eq(1).html(data[start].content);
+				$(this).find("button").attr("onclick","location.href='blog.do?command=selectone&blogseq=" + data[start].blogseq + "&user_id=" + data[start].userid + "'");
+				$(this).find("span").eq(1).html(data[start].blogheart);
+				$(this).find("span").eq(2).html(data[start].comment);
+				$(this).find("span").eq(3).html(data[start].hits);
+				start = (start+1)==data.length? 0 : (start+1);
+			});
+			start = 0;	
+			list = data;
+			
+		}
+	});
+	$("#one").attr("checked", true);
+});
+
+function findCompanion() {
+	location.href = "#";
+}
 </script>
 
 <body>
-	<!-- 고정(헤더) -->
 	<div id="header">
 		<%@ include file="/form/header.jsp"%>
 	</div>
 
 	<div id="body">
-		<div id="sectionLeft" class="section"
-			style="background-color:rgb(224, 210, 210); color:black">
-			<div class="display-4 text-center">
-				<br><br> <b
-					style="letter-spacing: 10px; line-height: 100px;"> 혼자일때 보다<br>
-					누군가와 함께하고 싶을 순간
-				</b>
+		<div id="sectionLeft" class="section">
+			<div class="display-4 text-center"><br><br>
+				<b style="letter-spacing: 10px; line-height: 100px;"> 혼자일때 보다<br>누군가와 함께하고 싶을 순간</b>
 			</div>
 		</div>
 	</div>
-	<div class="container-fluid" id="img3" style="padding: 7%;">
+	<div class="container-fluid" id="img2" style="padding:7%;">
 		<div class="row">
 			<h1 class="display-5" style="text-align: center;"><b>지금 함께할 여행메이트를 찾아보세요!</b></h1>
 		</div>
@@ -180,18 +262,24 @@
 			</div>
 		</div>
 	</div>
-	<div>
-		<div id="guideSection" class="container-fluid"
-			style="margin-top: 100px;">
-			<div class="text-center display-4">
-				<b>이용하는법을 알아볼까요?</b>
-				<!-- 이용하는 법 이미지 만들어서 넣자. -->
+	<div style="padding-top: 80px; background-color: rgb(221, 246, 255);">
+		<div id="guideSection" class="container-fluid text-center" style="padding: 0; padding-bottom:200px;">
+			<div style="margin-bottom: 50px;">
+				<h1 class="display-4" style="text-align: center;"><b>이용하는 법을 알아볼까요?</b></h1>
+			</div>
+			<div style="height:700px; padding-top:10px; background-color: rgb(221, 246, 255)">
+				<div class="slide" style="height:100%;">
+					<ul id="ul">
+						<li><img src="../img/companion/info1.png" alt="info1" id="imgOne" class="guide-img"></li>
+						<li><img src="../img/companion/info2.png" alt="info2" id="imgTwo" class="guide-img"></li>
+						<li><img src="../img/companion/info3.png" alt="info3" id="imgThree" class="guide-img"></li>
+						<li><img src="../img/companion/info4.png" alt="info4" id="imgFour" class="guide-img"></li>
+						<li><img src="../img/companion/info5.png" alt="info5" id="imgFour" class="guide-img"></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
-	
-
-	<!-- 고정(푸터) -->
 	<div id="footer">
 		<%@ include file="/form/footer.jsp"%>
 	</div>
