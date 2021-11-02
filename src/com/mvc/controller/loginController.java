@@ -45,7 +45,7 @@ public class loginController extends HttpServlet {
 				dispatch("index.jsp", request, response);
 
 			}else {
-				jsResponse("로그인실패", "user/login.jsp", response);
+				jsResponse("로그인실패", request.getContextPath()+"/user/login.jsp", response);
 			}
 		}else if(command.equals("logout")) {
 			
@@ -110,7 +110,7 @@ public class loginController extends HttpServlet {
 			
 			int res = dao.register(dto);
 			
-			jsResponse("회원가입성공! 필요합니다", "index.jsp", response);
+			jsResponse("회원가입성공!", request.getContextPath()+"/index.jsp", response);
 
 		}
 

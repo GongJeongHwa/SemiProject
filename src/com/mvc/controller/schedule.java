@@ -39,7 +39,7 @@ public class schedule extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		
 		HttpSession session = request.getSession();
-		UserDto dto = (UserDto)session.getAttribute("UserDto");
+		UserDto dto = (UserDto)session.getAttribute("dto");
 		String command = request.getParameter("command");
 		PrintWriter pw = response.getWriter();
 		

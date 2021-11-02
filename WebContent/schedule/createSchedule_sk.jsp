@@ -1,7 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
-<% response.setContentType("text/html; charset=UTF-8"); %>       
+<% response.setContentType("text/html; charset=UTF-8"); %>
+<%@ page import="com.mvc.dto.UserDto" %>   
+<% 
+   UserDto userdto = (UserDto)session.getAttribute("dto");
+   String user_id = "";
+   if(userdto != null){
+	   user_id = userdto.getUser_id();
+   }
+%>    
     
 <!DOCTYPE html>
 <html>
@@ -46,6 +54,8 @@
 let photopath = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photo_reference=';
 let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 
+  //userid
+  let userid = "<%=user_id %>";
 
   //컨트롤러에 넘길 배열
   let tourlist = new Array();
@@ -260,6 +270,13 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 		
 		//form
 		$("#formclick").click(function(){
+			
+			if(userid == ""){
+				toastr.options.positionClass = "toast-top-right";
+				toastr.warning("로그인이 필요합니다.");
+				return;
+			} 
+			
 			
 			if(tourlist.length == 0){
 				alert("일정이 담겨있지 않습니다.");

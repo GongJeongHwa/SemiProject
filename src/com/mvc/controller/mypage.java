@@ -43,7 +43,7 @@ public class mypage extends HttpServlet {
 			
 			if (user == null || user.getUser_id().trim().equals("")) {
 				System.out.println("로그인확인!!!");
-				jsResponse("로그인이 필요합니다", "login/login.jsp", response);
+				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
 			} else {
 				//내여행 리스트
 				List<blogDto> travel_list =  m_dao.selectTravelSql(user.getUser_id());
@@ -61,7 +61,7 @@ public class mypage extends HttpServlet {
 		}else if(command.equals("myTravel")){
 			if (user == null || user.getUser_id().trim().equals("")) {
 				System.out.println("로그인확인!!!");
-				jsResponse("로그인이 필요합니다", "login/login.jsp", response);
+				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
 
 			} else {
 				//내여행 리스트
@@ -75,7 +75,7 @@ public class mypage extends HttpServlet {
 		}else if(command.equals("myCompanion")) {
 			if (user == null || user.getUser_id().trim().equals("")) {
 				System.out.println("로그인확인!!!");
-				jsResponse("로그인이 필요합니다", "login/login.jsp", response);
+				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
 			} else {
 				//내여행 리스트
 				List<blogDto> travel_list =  m_dao.selectTravelSql(user.getUser_id());
