@@ -93,7 +93,7 @@
 								<%
 									} else {
 								%>
-									<span onclick="location.href='login/login.jsp'">로그인</span>
+									<span onclick="location.href='<%=request.getContextPath()%>/login/login.jsp'">로그인</span>
 								<%
 									}
 								%>
