@@ -105,8 +105,9 @@ public class schedule extends HttpServlet {
 				}
 				
 				int res = new BizImpl().addSchedule(bdto);
+				System.out.println(res); //콘솔은 값이 잘 나옴
 				if(res > 0) {
-					response.sendRedirect(request.getContextPath() + "/index.jsp");
+					dispatch("/blog.do?command=selectone&blogseq="+ res +"&user_id="+ bdto.getUser_id(), request, response);
 				}else {
 					response.sendRedirect(request.getContextPath() + "/schedule/createSchedule_sk.jsp");
 				}

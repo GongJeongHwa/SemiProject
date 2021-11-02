@@ -99,6 +99,79 @@ public class DaoImpl implements Dao{
 	}
 	
 	@Override
+	public blogDto getblogOne(Connection con, String userid, int blogseq) {
+		
+		blogDto bdto = new blogDto();
+		String query = "SELECT * FROM V_BLOG_ONE WHERE USER_ID = ? AND BLOG_SEQ = ?";
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, userid);
+			pstmt.setInt(2, blogseq);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				int tour_seq = rs.getInt(9);
+				
+				if(tour_seq == 1) {
+					bdto.setUser_id(rs.getString(1));
+					bdto.setUser_penalty(rs.getInt(2));
+					bdto.setBlog_seq(rs.getInt(3));
+					bdto.setBlog_create_date(rs.getDate(4));
+					bdto.setTitle(rs.getString(5));
+					bdto.setContent(rs.getString(6));
+					bdto.setThumbnailPath(rs.getString(7));
+					bdto.setAreaname(rs.getString(8));
+					bdto.setHeart_count(rs.getInt(12));
+					bdto.setComment(rs.getInt(13));
+					bdto.setHits(rs.getInt(14));
+				}
+				
+				bdto.getMap().put(rs.getDate(10), rs.getString(11));
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, pstmt, rs);
+		}
+		return bdto;
+	}
+	
+	@Override
+	public int bloghitsUp(Connection con, String userid, int blogseq) {
+		
+		String query = "BEGIN BLOG_HITSUP(?,?); END;";
+		int res = 0;
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, userid);
+			pstmt.setInt(2, blogseq);
+			res = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, pstmt, null);
+		}
+		return res;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
 	public int getBlogSeq(Connection con, String userid) {
 		
 		int seq = 0;
@@ -170,7 +243,7 @@ public class DaoImpl implements Dao{
 		} finally {
 			closeAll(null, pstmt, null);
 		}
-		return b? 1 : 0;
+		return b? seq : 0;
 	}
 	
 	
@@ -326,6 +399,8 @@ public class DaoImpl implements Dao{
 		}
 		return res;
 	}
+
+
 
 
 

@@ -32,7 +32,7 @@ public class blog extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
-		
+		 
 		String command = request.getParameter("command");
 		
 		if(command.equals("bloglist")) {
@@ -68,7 +68,17 @@ public class blog extends HttpServlet {
 			out.print(jarray.toJSONString());
 		}
 		
-		if(command.equals("blogone")) {
+		if(command.equals("selectone")) {
+			System.out.println("넘겨받은 seq : " + request.getParameter("blogseq"));
+			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
+			String userid = request.getParameter("user_id");
+			
+			blogDto bdto = new BizImpl().getblogOne(userid, blogseq);
+			request.setAttribute("bdto", bdto);
+			dispatch("/blog/blog_detail_sk.jsp", request, response);
+			
+			
+			
 			
 		}
 		
