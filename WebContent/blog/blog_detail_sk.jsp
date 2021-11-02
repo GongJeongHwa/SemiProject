@@ -1019,14 +1019,41 @@ jQuery(document).ready(function($){
 	</div>
 
 	<script type="text/javascript">
-        	function func_prompt () {
-        		var comment = prompt("메시지를 입력해주세요.")
-        		
-        		if(comment==false){
-        			alert("메시지를 입력해주세요.");
-        		}
-        	}
-    </script>   
+//건든 내용
+   function func_prompt () {
+      var comment = prompt("메시지를 입력해주세요.");
+        console.log(comment);
+        
+        //유효성검사
+        if (comment.trim() == "" || comment == null) {
+           alert("메세지를 입력하셔야 동행신청이 가능합니다.");
+           return;
+        }
+        //현재 페이지의 작성자 아이디 가져와야함. 페이지 상에서 DISPLAY NONE으로 TEXT값 넣어줘서 만들어놔야함
+        var con_id = "ILNAM"; 
+        console.log(con_id);
+        
+        $.ajax({
+           url:"message.do?command=blogAsk",
+           type:"post",
+           data: {
+              "con_id":con_id,
+              "comment":comment
+           },
+           success:function(data) {
+              console.log(data);
+              if (data == 1) {
+                 alert("동행 신청을 완료했습니다.\n상대방 수락 시 채팅창이 연결됩니다!");
+              } else if (data == -1) {
+               alert("동행 신청을 실패했습니다.")                 
+              }
+           },
+           error:function(msg) {
+              console.log(msg);
+           }
+        });
+   }
+</script>         
 	
 	 
 	

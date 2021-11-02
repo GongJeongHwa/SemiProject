@@ -51,7 +51,7 @@ public interface CompanionDao {
 	 --최신 시리얼번호 SELECT해오고 변수에 저장하고 그걸로 사용하자
 	 */
 	String first = " UPDATE ASK_CONNECT SET PERMIT = 'Y' WHERE SEN_ID = ? AND REC_ID = ? ";
-	String second = " INSERT INTO CHAT_LIST VALUES(CHAT_SEQ.NEXTVAL,'Y',SYSDATE) ";
+	String second = " INSERT INTO CHAT_LIST VALUES(CHAT_SEQ.NEXTVAL,'Y', NULL) ";
 	String third = " SELECT CHAT_SERIAL FROM (SELECT CHAT_SERIAL FROM CHAT_LIST ORDER BY CHAT_SERIAL DESC) WHERE ROWNUM = 1 ";
 	String fourth = " INSERT INTO M_MESSAGE VALUES(MESSAGE_SEQ.NEXTVAL, ?, ?, ?, ?, SYSDATE) ";
 	
@@ -77,4 +77,7 @@ public interface CompanionDao {
 	String promiseChoice = "UPDATE M_PROMISE SET PERMIT = ? WHERE REC_ID = ? AND SEN_ID = ? AND P_LOC = ?";
 	public int promiseChoice(Connection con, String login_id, String con_id, String loc, String permit);
 	
+	//블로그 디테일 -> 동행 신청하기
+	String blogAskCompanion = " INSERT INTO ASK_CONNECT VALUES(ASK_SEQ.NEXTVAL, ?, ?, ?, SYSDATE, 'D') ";
+	public int blogAskCompanion(Connection con, String login_id, String con_id, String comment);
 }

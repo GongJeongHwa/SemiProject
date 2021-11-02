@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<% request.setCharacterEncoding("UTF-8"); %>
+<% response.setContentType("text/html; charset=UTF-8"); %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -94,9 +99,9 @@
 	<!-- 사이드바 -->
 	<div id="left" class="sidebar">
 		<ul>
-			<li><a href="<%=request.getContextPath()%>/user/mypage.jsp">내여행</a></li>
+			<li><a href="mypage.do?command=mypage">내여행</a></li>
 			<hr>
-			<li><a href="<%=request.getContextPath()%>/user/info_update.jsp">정보수정</a></li>
+			<li><a href="mypage.do?command=infoUpdate">정보수정</a></li>
 			<hr>
 			<li><a href="#" onclick="popup();">회원탈퇴</a></li>	
 			<hr>
@@ -113,62 +118,97 @@
 	
 		<!-- 나의여행 목록 -->
 		<div class="t_list">
-			<h3>나의여행<a href="<%=request.getContextPath()%>/user/my_travel.jsp"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
+			<h3>나의여행<a href="mypage.do?command=myTravel"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
 			<table class="table" style="width:750px;">
+				<col width="100px">
 				<col width="60px">
-				<col width="60px">
-				<col width="500px">
+				<col width="400px">
 				
 				<tr>
 					<th>날짜</th>
 					<th>　♡</th>
 					<th>여행지</th>
 				</tr>
-				<tr>
-					<td colspan="3" class="blank_list">여행일정이 없습니다.</td>
-
+				<c:choose>
+					<c:when test="${empty travel_list }">
+						<tr>
+							<td colspan="3" class="blank_list"> 여행일정이 없습니다.</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${travel_list }" var="blogDto">
+							<tr>
+								<td>${blogDto.blog_create_date }</td>
+								<td>${blogDto.heart_count }</td>
+								<td>${blogDto.areaname }</td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>	
 					
 			</table>
 		</div>
 		
 		<!-- 찜목록 -->
 		<div class="t_list">
-			<h3>내가 찜한 여행지 & 일정<a href="<%=request.getContextPath()%>/user/save_travel.jsp"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
+			<h3>내가 찜한 여행지 & 일정<a href="mypage.do?command=wishedTravel"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
 			<table class="table" style="width:750px;">
-				<col width="60px">
-				<col width="60px">
-				<col width="500px">
+				<col width="100px">
+				<col width="160px">
+				<col width="300px">
 				<tr>
-					<th>날짜</th>
-					<th>　♡</th>
-					<th>여행지</th>
+					<th>국가</th>
+					<th>장소이름</th>
+					<th>위도 / 경도</th>
 				</tr>
-				<tr>
-					<td> 9/30</td>
-					<td>♥13</td>
-					<td onclick="#">부산</td>
-				</tr>
+				<c:choose>
+					<c:when test="${empty wished_list }">
+						<tr>
+							<td colspan="3" class="blank_list"> 여행일정이 없습니다.</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${wished_list }" var="HeardDto">
+							<tr>
+								<td>${HeardDto.nation }</td>
+								<td>${HeardDto.place_name }</td>
+								<td>${HeardDto.latitude } / ${HeardDto.longtitude }</td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>	
 			</table>
 		</div>
 		
 		<!-- 약속일정 -->
 		<div class="t_list">
-			<h3>나의 약속<a href="<%=request.getContextPath()%>/user/my_companion.jsp"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
+			<h3>나의 약속<a href="mypage.do?command=myCompanion"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
 			<table class="table" style="width:750px;">
-				<col width="30px">
-				<col width="70px">
-				<col width="70px">
-				<col width="450px">
+				<col width="100px">
+				<col width="60px">
+				<col width="400px">
 				
 				<tr>
-					<th>&nbsp;V</th>
 					<th>날짜</th>
 					<th>시간</th>
-					<th>약속장소</th>
+					<th>comment</th>
 				</tr>
-				<tr>
-					<td colspan="4" class="blank_list">약속이 없습니다.</td>
-				</tr>
+				<c:choose>
+					<c:when test="${empty companion_list }">
+						<tr>
+							<td colspan="3" class="blank_list"> 약속이 없습니다.</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${companion_list }" var="PromiseDto">
+							<tr>
+								<td>${PromiseDto.p_time }</td>
+								<td>${PromiseDto.p_loc }</td>
+								<td>${PromiseDto.p_comment }</td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>	
 			</table>
 		
 		</div>
