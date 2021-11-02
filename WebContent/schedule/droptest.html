@@ -3,30 +3,21 @@
 <head>
  <meta charset="UTF-8">
 <title>Insert title here</title>
-   <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 
 <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" ></script>
 
 <style type="text/css">
- body.dragging, body.dragging * {
-  cursor: move !important;
-}
-
-.dragged {
-  position: absolute;
-  opacity: 0.5;
-  z-index: 2000;
-}
+ 
 
 ol.example li.placeholder {
-  position: relative;
-  /** More li styles **/
+  position: relative; 
 }
 ol.example li.placeholder:before {
-  position: absolute;
-  /** Define arrowhead **/
+  position: absolute; 
 }
  </style>
 </head>
@@ -34,17 +25,9 @@ ol.example li.placeholder:before {
 
 <div class="span4"> 
 
-              <table class="table table-striped table-bordered">
-                <thead class="sorted_head" style="text-align:center">
+              <table class="table table-striped table-bordered" border="1" style="height:170px;">
+                <thead class="sorted_head" style="text-align:center" id="addlist">
                   <tr>
- 
-                    <th><img src="./halla.jpg" width=150px height=100px><pre>Mt.halla</pre></th>
-                    <th><img src="img/cafe2.jpg" width=150px height=100px><pre>Cafe Glenko</pre></th>
-                    <th><img src="./hilton.jpg" width=150px height=100px><pre>Hotel Hilton</pre></th>
-                  	<th><img src="./rest.jpg" width=150px height=100px><pre>sunny garden</pre></th>
-                  	<th><img src="./camellia.jpg" width=150px height=100px><pre>Hill camellia</pre></th>
-                  	<th><img src="./rest.jpg" width=150px height=100px><pre>sunny garden</pre></th>
- 
                   </tr>
                 </thead>
               </table>

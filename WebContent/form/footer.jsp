@@ -26,7 +26,7 @@
 					<a href=""><b>소개</b></a><br><br>
 					<a href="">여묻</a><br><br>
 					<a href="">여묻 이용방법</a><br><br>
-					<a href="<%=request.getContextPath()%>/schedule/createSchedule.jsp">여행일정 만들기</a><br><br>
+					<a href="<%=request.getContextPath()%>/schedule/createSchedule_sk.jsp">여행일정 만들기</a><br><br>
 				</div>
 				<div class="col-lg-3">
 					<a href=""><b>커뮤니티</b></a><br><br>
