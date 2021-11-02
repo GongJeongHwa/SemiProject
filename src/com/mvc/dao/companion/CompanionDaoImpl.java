@@ -422,8 +422,8 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		
 		try {
 			pstm = con.prepareStatement(blogAskCompanion);
-			pstm.setString(1, login_id);
-			pstm.setString(2, con_id);
+			pstm.setString(1, con_id);
+			pstm.setString(2, login_id);
 			pstm.setString(3, comment);
 			res = pstm.executeUpdate();
 		} catch (SQLException e) {
