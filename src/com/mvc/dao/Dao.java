@@ -11,14 +11,24 @@ public interface Dao {
 	
 	//우저 관련 sql
 	String selectUserSql = ""; // 예시) 유저 선택
-	String insertUserSql = ""; // 예시) 유저 회원가입
+	String insertUserSql = " INSERT INTO T_USER VALUES(?,USER_SEQ.NEXTVAL,SYSDATE,NULL,?,?,?,?,?,?,?,?,?,'Y',0,'user02' )"; // 예시) 유저 회원가입
 	String deleteUserSql = ""; // 예시) 유저 삭제
-	String updateUserSql = ""; // 예시) 유저 수정
-	
+	String updateUserSql = " UPDATE T_USER SET NAME=?, PHONE=?, EMAIL=?, PASSWD=?, NICKNAME=?, ADDRESS=?, U_NATIONAL=?, GENDER=?, AGE=? WHERE USER_ID=? "; // 예시) 유저 수정 
+	String loginUserSql = " SELECT * FROM T_USER WHERE USER_ID=? AND PASSWD=? "; //로그인 유저
+	String idchkSql = " SELECT * FROM T_USER WHERE USER_ID=? "; //아이디 중복체크
 	public UserDto selectUser(Connection con);
 	public boolean insertUser(Connection con, UserDto dto);
 	public boolean updateUser(Connection con, UserDto dto);
 	public boolean deleteUser(Connection con, int seq);
+	
+	//user dao
+	public UserDto login(String id, String pw); //기본 로그인
+	public UserDto login(String id); //네이버 로그인
+	public String idChk(String id); // 회원가입 - id체크
+	public int register(UserDto dto);
+	public int info_update(UserDto dto);//정보수정
+	
+	
 	public int bloghitsUp(Connection con, String userid, int blogseq);
 	
 	//다른 sql문 구분

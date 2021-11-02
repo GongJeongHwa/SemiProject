@@ -20,6 +20,7 @@ public class blogDto {
 	private int comment; //댓글수 디폴트 0
 	private int hits;	//글 조회수 디폴트 1
 	
+	
 	public blogDto() {
 		map = new LinkedHashMap<Date, String>();
 	}

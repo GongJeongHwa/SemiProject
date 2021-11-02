@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% request.setCharacterEncoding("UTF-8"); %>
+<% response.setContentType("text/html; charset=UTF-8"); %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -85,9 +89,9 @@
 	<!-- 사이드바 -->
 	<div id="left" class="sidebar">
 		<ul>
-			<li><a href="<%=request.getContextPath()%>/user/mypage.jsp">내여행</a></li>
+			<li><a href="mypage.do?command=mypage">내여행</a></li>
 			<hr>
-			<li><a href="<%=request.getContextPath()%>/user/info_update.jsp">정보수정</a></li>
+			<li><a href="mypage.do?command=infoUpdate">정보수정</a></li>
 			<hr>
 			<li><a href="#" onclick="popup();">회원탈퇴</a></li>	
 			<hr>
@@ -119,12 +123,23 @@
 					<th>여행지</th>
 					<th>　</th>
 				</tr>
-				<tr>
-					<td>9/30</td>
-					<td>♥13</td>
-					<td onclick="#">부산</td>
-					<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>
-				</tr>
+				<c:choose>
+					<c:when test="${empty wished_list }">
+						<tr>
+							<td colspan="4" class="blank_list"> 여행일정이 없습니다.</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${wished_list }" var="t_dto">
+							<tr>
+								<td>${t_dto.tdate }</td>
+								<td>${t_dto.heart }</td>
+								<td>${t_dto.location }</td>
+								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>	
 			</table>
 		</div>
 	</div>

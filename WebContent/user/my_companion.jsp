@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<% request.setCharacterEncoding("UTF-8"); %>
+<% response.setContentType("text/html; charset=UTF-8"); %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -84,9 +89,9 @@
 	<!-- 사이드바 -->
 	<div id="left" class="sidebar">
 		<ul>
-			<li><a href="<%=request.getContextPath()%>/user/mypage.jsp">내여행</a></li>
+			<li><a href="mypage.do?command=mypage">내여행</a></li>
 			<hr>
-			<li><a href="<%=request.getContextPath()%>/user/info_update.jsp">정보수정</a></li>
+			<li><a href="mypage.do?command=infoUpdate">정보수정</a></li>
 			<hr>
 			<li><a href="#" onclick="popup();">회원탈퇴</a></li>	
 			<hr>
@@ -108,17 +113,33 @@
 			</div>
 			
 			<table class="table" style="width:750px;">
+				<col width="60px">
+				<col width="60px">
+				<col width="500px">
 				<col width="30px">
-				<col width="70px">
-				<col width="70px">
-				<col width="450px">
-				
 				<tr>
-					<th>&nbsp;V</th>
 					<th>날짜</th>
 					<th>시간</th>
-					<th>약속장소</th>
+					<th>comment</th>
+					<th>　</th>
 				</tr>
+				<c:choose>
+					<c:when test="${empty companion_list }">
+						<tr>
+							<td colspan="4" class="blank_list"> 약속이 없습니다.</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${companion_list }" var="PromiseDto">
+							<tr>
+								<td>${PromiseDto.p_time }</td>
+								<td>${PromiseDto.p_loc }</td>
+								<td>${PromiseDto.p_comment }</td>
+								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>	
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>	
 			</table>
 		</div>
 	</div>

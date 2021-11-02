@@ -16,6 +16,8 @@ import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
 
+import static common.JDBCTemplate.*;
+
 public class DaoImpl implements Dao{
 	
 	PreparedStatement pstmt;
@@ -52,7 +54,163 @@ public class DaoImpl implements Dao{
 	}
 	
 	
+	//USER
 	
+	@Override
+	public UserDto login(String id, String pw) {
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null; 
+		UserDto res = new UserDto();
+		
+		try {
+			pstm = con.prepareStatement(loginUserSql);
+			pstm.setString(1, id);
+			pstm.setString(2, pw);
+			System.out.println("03. query준비 : " + loginUserSql);
+			
+			rs = pstm.executeQuery();
+			System.out.println("04. query 실행 및 리턴");
+			
+			while(rs.next()) {
+				res.setUser_id(rs.getString("USER_ID"));
+				res.setSeq(rs.getInt("SEQ"));
+				res.setJoin_date(rs.getDate("JOIN_DATE"));
+				res.setLeave_date(rs.getDate("LEAVE_DATE"));
+				res.setName(rs.getString("NAME"));
+				res.setPhone(rs.getString("PHONE"));
+				res.setEmail(rs.getString("EMAIL"));
+				res.setPasswd(rs.getString("PASSWD"));
+				res.setNickname(rs.getString("NICKNAME"));
+				res.setAge(rs.getInt("AGE"));
+				res.setAddress(rs.getString("ADDRESS"));
+				res.setU_national(rs.getString("U_NATIONAL"));
+				res.setGender(rs.getString("GENDER"));
+				res.setActive(rs.getString("ACTIVE"));
+				res.setPanalty(rs.getInt("PENALTY"));
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("3/4단계 에러");
+			e.printStackTrace();
+		}finally {
+			closeAll(con, pstm, rs);
+		}
+			
+		return res;
+	}
+	@Override
+	public UserDto login(String id) {
+		
+		return null;
+	}
+	@Override
+	public String idChk(String id) {
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		String res = null;
+		
+		try {
+			pstm = con.prepareStatement(idchkSql);
+			pstm.setString(1, id);
+			System.out.println("03. query 준비 : "+idchkSql);
+			
+			rs = pstm.executeQuery();
+			System.out.println("04.query실행 및 리턴");
+			
+			while(rs.next()) {
+				res = rs.getString(1);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("3/4단계 에러");
+			e.printStackTrace();
+		}finally {
+			closeAll(con, pstm, rs);
+		}
+
+		return res;
+	}
+	@Override
+	public int register(UserDto dto) {
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			pstm = con.prepareStatement(insertUserSql);
+			pstm.setString(1, dto.getUser_id());
+			pstm.setString(2, dto.getName());
+			pstm.setString(3, dto.getPhone());
+			pstm.setString(4, dto.getEmail());
+			pstm.setString(5, dto.getPasswd());
+			pstm.setString(6, dto.getNickname());
+			pstm.setInt(7, dto.getAge());
+			pstm.setString(8, dto.getAddress());
+			pstm.setString(9, dto.getU_national());
+			pstm.setString(10, dto.getGender());
+			
+			System.out.println(dto.getUser_id()+ " // " +dto.getName()+ " // " + dto.getPhone() +" // " + dto.getEmail() +" // "+ dto.getPasswd() );
+			System.out.println(dto.getNickname()+ " // " +dto.getAge()+ " // " + dto.getAddress() +" // " + dto.getU_national() +" // "+ dto.getGender() );
+			System.out.println("03.query 준비 : " + insertUserSql);
+			
+			res = pstm.executeUpdate();
+			System.out.println("04. query 실행 및 리턴");
+			if(res>0) {
+				commit(con);
+			}else {
+				rollback(con);
+			}
+		} catch (SQLException e) {
+			System.out.println("3/4단계 에러");
+			e.printStackTrace();
+		}finally {
+			closeStmt(pstm);
+			closeConn(con);
+		}
+		
+			
+		return res;
+	}
+	@Override
+	public int info_update(UserDto dto) {
+		
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			
+			pstm = con.prepareStatement(updateUserSql);
+			pstm.setString(1, dto.getName());
+			pstm.setString(2, dto.getPhone());
+			pstm.setString(3, dto.getEmail());
+			pstm.setString(4, dto.getPasswd());
+			pstm.setString(5, dto.getNickname());
+			pstm.setString(6, dto.getAddress());
+			pstm.setString(7, dto.getU_national());
+			pstm.setString(8, dto.getGender());
+			pstm.setInt(9, dto.getAge());
+			pstm.setString(10, dto.getUser_id());
+			System.out.println("03.sql준비 : "+updateUserSql);
+			
+			res = pstm.executeUpdate();
+			
+			if(res>0) {
+				commit(con);
+			}
+		} catch (SQLException e) {
+			System.out.println("3/4 단계 오류");
+			e.printStackTrace();
+		}finally {
+			closeStmt(pstm);
+			closeConn(con);
+			System.out.println("05 db종료 \n");
+		}
+		
+		return res;
+	}
 	
 	
 	
