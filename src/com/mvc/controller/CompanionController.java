@@ -37,9 +37,9 @@ public class CompanionController extends HttpServlet {
 //		UserDto login_id = (UserDto)session.getAttribute("user_id");
 
 		UserDto login_id = new UserDto();
-		login_id.setUser_id("SUNGTAE");
-		login_id.setUser_img("user8");
-		login_id.setName("허성태");
+		login_id.setUser_id("ADMIN");
+		login_id.setUser_img("user1");
+		login_id.setName("관리자");
 		session.setAttribute("login_id", login_id);
 		System.out.println("로그인 아이디 : " + login_id.getUser_id());
 		
@@ -164,6 +164,12 @@ public class CompanionController extends HttpServlet {
 			
 			response.getWriter().write(flag?"성공":"실패");
 			
+		} else if (command.equals("blogAsk")) {
+			String con_id = request.getParameter("con_id");
+			String comment = request.getParameter("comment");
+			
+			boolean flag = biz.blogAskCompanion(login_id.getUser_id(), con_id, comment);
+			response.getWriter().write(flag?1:-1);
 		}
 	}
 	

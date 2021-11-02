@@ -19,4 +19,7 @@ public interface CompanionBiz {
 	public List<MessageDto> getMessage(String login_id, String connect_id);
 	public List<MessageDto> connectionList(String login_id);
 	
+	//블로그 디테일 동행신청
+	public boolean blogAskCompanion(String login_id, String con_id, String comment);
+	
 }
