@@ -192,7 +192,7 @@ function deleteMessageTab() {
 						"<td colspan='2' class='fw-bold'>"+value[3]+"</td>" +
 						"</tr>" +
 						"<tr class='"+value[0]+"' style='padding:10px;'>" +
-						"<td><a href='message.do?command=detailMessage&sen_id="+value[0]+"' class='message'>"+value[1]+"</a></td>" +
+						"<td><a class='message'>"+value[1]+"</a></td>" +
 						"<td style='padding-left:25px;'>" +
 						"<span class='sen-id' style='display:none;'>"+value[0]+"</span>" +
 						"<img class='trash' alt='trash' src='./img/companion/trash.png'>" +
