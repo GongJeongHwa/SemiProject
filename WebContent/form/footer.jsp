@@ -1,3 +1,4 @@
+<%@page import="com.mvc.dto.UserDto"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,7 +15,9 @@
 		color : black;
 	}
 </style>
-
+<% 
+	UserDto userdto_f = (UserDto)session.getAttribute("dto");
+%>
 
 </head>
 <body>
@@ -34,10 +37,23 @@
 					<a href="<%=request.getContextPath()%>/companion/companionMain.jsp">동행 구하기</a><br><br>
 				</div>
 				<div class="col-lg-3">
-					<a href=""><b>내 정보</b></a><br><br>
-					<a href="<%=request.getContextPath()%>/user/mypage.jsp">마이페이지</a><br><br>
-					<a href="">내 여행리스트</a><br><br>
-					<a href="">내 쪽지함</a><br><br>
+										<%
+						if (userdto_f != null) {
+					%>
+						<a href=""><b>내 정보</b></a><br><br>
+						<a href="mypage.do?command=mypage">마이페이지</a><br><br>
+						<a href="mypage.do?command=myTravel">내 여행리스트</a><br><br>
+						<a href="">내 쪽지함</a><br><br>
+					<%
+						} else {
+					%>
+						<a href="login/login.jsp"><b>내 정보</b></a><br><br>
+						<a href="login/login.jsp">마이페이지</a><br><br>
+						<a href="login/login.jsp">내 여행리스트</a><br><br>
+						<a href="login/login.jsp">내 쪽지함</a><br><br>
+					<%
+						}
+					%>
 				</div>
 				<div class="col-lg-3">
 					<a href=""><b>지원</b></a><br><br>

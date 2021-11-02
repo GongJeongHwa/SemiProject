@@ -11,117 +11,108 @@
 <meta charset="UTF-8">
 
 <style type="text/css">
-	ul {
-		list-style-type : none;
-	    margin: 0px;
-	    padding: 0px;
-	    width: 200px;
-	    background-color: white;
-	}
-	li a {
-	    display: block;
-	    color: #000;
-	    padding: 8px 16px;
-	    text-decoration: none;
-	}
-	li a:hover {
-	    background-color: green;
-	    color: white;
-	    position : 
-	}
-	.flex-container{
-		display: flex;
-		float:right;
-		flex-direction: column;	
-			
-	}
-	.header, .sidebar,
-	.footer, .flex-container {
-	  display: flex;
-	  align-items: center;
-	  justify-content: center;
-	}
-	.user_list{
-		display:flex;
-		margin-left: 200px;
-		margin-bottom: 20px;
-	}
-	.sidebar {
-	  width: 15%;
-	  float: left;
-	  height: 50%;
-	}
-	form{
-		margin-left: 160px;
-	}
-	input{
-	border : 0;
-	border-bottom: 2px solid lightgrey;
-	}
 	
-	h3 {
-		padding: 0;
-		margin: 0;
-	}
-	body {
-		margin: 0;
-		padding: 0;
-	}
-#id{
-	border:0;
-	border-bottom: 2px solid;
+.flex_container{
+display: flex;
+  align-items: center; /* 수직 정렬 */
+  flex-direction: row; /* default: row */
+  justify-content: center; /* flex direction에 대해서 정렬방식 선택 */
+  margin-top: 20px;
+  margin-bottom: 20px;
+}	
+
+input{
+	border: 0;
+	border-bottom: 2px solid lightgrey;
+	width : 250px;
 }
 
 .btn {
 	padding : 5px 10px;
 	width:130px;
-	background-color: white;
 }
 .btn:hover{
 	background-color: grey;
 }
-.noti{
-	font-size: 5pt;
-	
-}
-.num{
-	border-bottom: 1px solid;
-	color : red;
-}
+
 </style>
 <script type="text/javascript">
-	function popup(){
-		window.open("unregister_1.jsp","_blank","width=300px, height=150px");
+	function idChk(){
+		var doc = document.getElementsByName("user_id")[0];
+		if(doc.value.trim()==""|| doc.value==null){
+			alert("아이디를 입력해 주세요");
+		}else{
+			var target = "loginController.do?command=idchk&id="+doc.value.trim();
+			open(target,"","width=300,height=200"); //팝업창을 거쳐 원하는 내용을 띄어줌
+		}
+	}
+	function idChkConfirm(){
+		var chk = document.getElementsByName("user_id")[0].title;
+		if(chk=="n"){
+			alert("아이디 중복체크를 해주세요");
+			document.getElementsByName("user_id")[0].focus();
+		}
 		
 	}
 	
-	var func = function(){
-		//정보얻기
-		var user_id = doc.getElementById('user_id').value;
-		var passwd = doc.getElementById('passwd').value;
-		var pw_change = doc.getElementById('pw_change').value;
-		var pw_chek = doc.getElementById('pw_chek').value;
-		
-		console.log(user_id);
-		console.log(passwd);
-		console.log(pw_change);
-		console.log(pw_chek);
-		
-		if(pw_change != pw_chek){
-			$("#pw_equal").css("color","red").text("비밀번호가 다릅니다.");
-		
-			//다를경우 비밀번호 값 비워줌
-			doc.getElementById('pw_change').value='';
-			doc.getElementById('pw_chek').value='';
-			
-			//비밀번호 수정에 커서가기
-			doc.getElementById('pw_change').focus();
-			
-			return;
-		}
-		if(passwd.length<4){
-			$("#pw_length").css("color","red").text("비밀번호는 최소 6자리 이상 작성해야 합니다.");	
-		}
+	function validate(){
+		var objID = document.getElementById("user_id"); //이름
+        var objPwd1 = document.getElementById("passwd"); //비밀번호
+        var objPwd2 = document.getElementById("pw_chek"); //비밀번호 확인
+        var objEmail = document.getElementById("email"); //이메일
+        var objName = document.getElementById("name"); //이름
+ 		var objNickname = document.getElementById("nickname"); //닉네임
+
+      	
+        var regul1 = /^[a-zA-Z0-9]{4,12}$/; //아이디, 비밀번호값 확인
+        var regul2 = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/; //이메일값 확인
+        var regul3 = /^[가-힝a-zA-Z]{2,}$/; //이름값 확인
+
+		//유효성 검사
+        if (!check(regul1,objID,"아이디는 4-12자의 대소문자와 숫자로만 입력 가능합니다.")) {
+            return false;//반환 할 곳 없이 if문 종료
+        }
+       
+        if ((objPwd1.value) == ""){
+            alert("비밀번호를 입력해 주세요");
+            objPwd1.focus();
+            return false;
+        }
+        if ((objPwd2.value=="")){
+            alert("비밀번호를 입력해 주세요");
+            objPwd2.focus();
+            return false;
+        }
+        if (!check(regul1,objPwd1,"비밀번호는 4-12자의 대소문자와 숫자로만 입력 가능합니다.")) {
+            return false;
+        }
+        if ((objPwd1.value)!=(objPwd2.value)) {
+            alert("비밀번호가 일치 하지 않습니다.");
+            objPwd1.value="";
+            objPwd2.value="";
+            return false;
+        }
+        
+        if ((objEmail.value)=="") {
+            alert("이메일을 입력해 주세요");
+            objEmail.focus();
+            return false;
+        }
+        if ((objName.value)=="") {
+            alert("이름을 입력해 주세요");
+            objName.focus();
+            return false;
+        }
+        if (!check(regul3,objName,"이름이 잘못입력되었습니다.")) {
+            return false;
+        }
+        if ((objNickname.value)=="") {
+            alert("별명을 입력해 주세요");
+            objNickname.focus();
+            return false;
+        }
+        
+        
 	}
 </script>
 
@@ -186,7 +177,7 @@
     }
 </script>
 
-<title>Insert title here</title>
+<title>회원가입</title>
 </head>
 <body>
 	<!-- 고정(헤더) -->
@@ -196,71 +187,52 @@
 	
 
 	<br>
-	<div style="text-align: center;">마이페이지</div>
+	<div style="text-align: center;"><h2>회원가입</h2></div>
 	<br>
 
-	<!-- 사이드바 -->
-	<div id="left" class="sidebar">
-		<ul>
-			<li><a href="<%=request.getContextPath()%>/mypage.do?command=mypage">내여행</a></li>
-			<hr>
-			<li><a href="<%=request.getContextPath()%>/mypage.do?command=infoupdate">정보수정</a></li>
-			<hr>
-			<li><a href="#" onclick="popup();">회원탈퇴</a></li>	
-			<hr>
-			<li><a href="<%=request.getContextPath()%>/Companion.do?command=message">채팅하기</a></li>	
-		</ul>
-	</div>
-	
-	
 	<!-- 메인 -->
 	<div id="right" class="flex_container">
 	
 		<!-- 정보수정 -->
 		<div class="user_list">
-			<form action="mypage.do" method="post">
-				<input type="hidden" name="command" value="updateUser">
-				<h3 style="text-align:center">회원정보수정</h3>
+			<form action="loginController.do" method="post" onsubmit="return validate()">
+				<input type="hidden" name="command" value="regist">
+				<h2 style="text-align:center">회원가입</h2>
 				<table>
-					<col width=150px><col width=300px>
-					<tr>
-						<td class="col1">아이디</td>
-						<td class="col2">${dto.user_id }</td>
-					</tr>
-
-					<tr>
-						<td class="col1">현재비밀번호</td>
-						<td class="col2">
-							<input type="password" id="passwd" name="passwd" maxlength="16" >
-							<p class="noti">비밀번호는<span class="num">문자,숫자,특수문자조합으로 8자리-16자리</span> 입력이 가능합니다.</p>
+					<tr class="tr">
+						<td>아이디</td>
+						<td>
+							<input type="text" name="user_id" maxlength="16" title="n" required="required">
+							<input type="button" class="btn" value="중복확인" style="border: 2px solid grey;" onclick="idChk();">
 						</td>
 					</tr>
-					<tr>
-						<td class="col1">비밀번호 수정</td>
-						<td class="col2">
-							<input type="password" id="pw_change" name="pw_change" maxlength="16">
-							<p class="pw_length"></p>
+
+					<tr class="tr">
+						<td >비밀번호</td>
+						<td>
+							<input type="password" name="passwd" onclick="idChkConfirm();" maxlength="16" >
+							<p>비밀번호는<span class="num">문자,숫자,특수문자조합으로 8자리-16자리</span> 입력이 가능합니다.</p>
+						</td>
+					</tr>
+					<tr class="tr">
+						<td >비밀번호 확인</td>
+						<td>
+							<input type="password" name="pw_check" maxlength="16">
+							<span class="pw_chk">비밀번호같다 / 다르다</span>
 						</td>	
 					</tr>
-					<tr>
-						<td class="col1">비밀번호 확인</td>
-						<td class="col2">
-							<input type="password" id="pw_chek" name="pw_check" maxlength="16">
-							<span id="pw_equal"></span>
-						</td>	
+					<tr class="tr">
+						<td >이름</td>
+						<td><input type="text" name="name"></td>
 					</tr>
-					<tr>
-						<td class="col1">이름</td>
-						<td class="col2"><input type="text" name="name" value="${dto.name }"></td>
+					<tr class="tr">
+						<td >닉네임</td>
+						<td><input type="text" name="nickname"></td>
 					</tr>
-					<tr>
-						<td class="col1">닉네임</td>
-						<td class="col2"><input type="text" name="nickname" value="${dto.nickname }"></td>
-					</tr>
-					<tr>
-						<td class="col1">이메일</td>
-						<td class="col2">
-							<input type="text" name="email" value="<%=dto.getEmail().split("@")[0] %>"> @ 
+					<tr class="tr">
+						<td >이메일</td>
+						<td>
+							<input type="text" name="email"> @ 
 							<select name="dot">
 								<option value="naver">naver.com</option>
 								<option value="daum">daum.net</option>
@@ -268,9 +240,9 @@
 							</select>
 						</td>
 					</tr>
-					<tr>
-						<td class="col1">국적</td>
-						<td class="col2">
+					<tr class="tr">
+						<td >국적</td>
+						<td>
 							<select name="nation">
 								<option value="kr">한국</option>
 								<option value="us">미국</option> 
@@ -282,11 +254,11 @@
 					</tr>
 					
 					<!-- 주소 API -->
-					<tr>
-						<td class="col1">주소</td>
-						<td class="col2">
+					<tr class="tr">
+						<td >주소</td>
+						<td>
 							<input type="text" id="postcode" name="postcode" placeholder="우편번호">
-							<input type="button" class="btn" style="border: 2px solid grey" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+							<input type="button" class="btn" style="border: 2px solid grey;" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
 							<input type="text" id="roadAddress" name="roadAddress" placeholder="도로명주소" size="60" ><br>
 							<input type="hidden" id="jibunAddress" placeholder="지번주소"  size="60">
 							<span id="guide" style="color:#999;display:none"></span>
@@ -295,30 +267,30 @@
 							<input type="hidden" id="engAddress" placeholder="영문주소"  size="60" ><br>
 						</td>
 					</tr>
-					<tr>
-						<td class="col1">성별</td>
-						<td class="col2">
+					<tr class="tr">
+						<td >성별</td>
+						<td>
 							<select name="gender">
 								<option value="M">남자</option>
 								<option value="F">여자</option>
 							</select>
 						</td>
 					</tr>
-					<tr>
-						<td class="col1">나이</td>
-						<td class="col2">
-							<input type="number" name="age" value="${dto.age }">
+					<tr class="tr">
+						<td >나이</td>
+						<td>
+							<input type="number" name="age">
 						</td>
 					</tr>
-					<tr>
-						<td class="col1">핸드폰번호</td>
-						<td class="col2"><input type="text" name="phone" value=${dto.phone }></td>
+					<tr class="tr">
+						<td >핸드폰번호</td>
+						<td><input type="text" name="phone"></td>
 					</tr>
 				</table>
 				<br><br>
 				<div style="text-align: center;">
-					<input type="submit" class="btn" style="border: 2px solid grey" value="회원정보수정">
-					<input type="button" class="btn" style="border: 2px solid grey" value="취소" onclick="location.href='index.jsp'">
+					<input type="submit" class="btn" style="border: 2px solid grey;" value="회원가입">
+					<input type="button" class="btn" style="border: 2px solid grey;" value="취소" onclick="location.href='index.jsp'">
 				</div>
 			</form>
 		</div>

@@ -40,17 +40,14 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <% 
-	UserDto userdto = new UserDto();
-	userdto.setUser_id("SUNGTAE");
-	session.setAttribute("UserDto", userdto);
-	session.setMaxInactiveInterval(30*60);
-	String profilePath = "";
-	UserDto dto = (UserDto)session.getAttribute("UserDto");
-	if(dto == null){
-		profilePath = request.getContextPath() + "/img/icons/person-circle.svg";
-	}else{
-		profilePath = request.getContextPath() + "/img/icons/person-circle.svg";
-	}
+//	UserDto userdto = new UserDto();
+//	userdto.setUser_id("SUNGTAE");
+//	session.setAttribute("UserDto", userdto);
+//	session.setMaxInactiveInterval(30*60);
+//	String profilePath = "";
+
+	UserDto dto = (UserDto)session.getAttribute("dto");
+	String profilePath = request.getContextPath() + "/img/icons/person-circle.svg";
 %>
 
 </head>
@@ -66,7 +63,12 @@
 				<%
 					if (dto != null) {
 				%>
-					<%=dto.getUser_id() %>님 환영합니다.					
+					${dto.nickname } 님, 여행을 미리 즐겨보세요.
+					
+					&nbsp;&nbsp;&nbsp;
+					<a href="<%=request.getContextPath()%>/message.do?command=message"><img src="<%=request.getContextPath()%>/img/icons/envelope.svg" alt="Bootstrap" width="24" height="24"></a>
+					&nbsp;&nbsp;&nbsp;
+					<a href=""><img src="<%=request.getContextPath()%>/img/icons/bell.svg" alt="Bootstrap" width="24" height="24"></a>
 				<%
 					} else {
 				%>
@@ -74,10 +76,7 @@
 				<%
 					}
 				%>
-				&nbsp;&nbsp;&nbsp;
-				<a href="<%=request.getContextPath()%>/message.do?command=message"><img src="<%=request.getContextPath()%>/img/icons/envelope.svg" alt="Bootstrap" width="24" height="24"></a>
-				&nbsp;&nbsp;&nbsp;
-				<a href=""><img src="<%=request.getContextPath()%>/img/icons/bell.svg" alt="Bootstrap" width="24" height="24"></a>
+				
 				&nbsp;&nbsp;
 				<div class="btn-group">
 					<button type="button" id="button-header" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
@@ -90,21 +89,31 @@
 								<%
 									if (dto != null) {
 								%>
-									로그아웃
+									<span onclick="location.href='loginController.do?command=logout'">로그아웃</span>
 								<%
 									} else {
 								%>
-									로그인
+									<span onclick="location.href='login/login.jsp'">로그인</span>
 								<%
 									}
 								%>
 							</button>
 						</li>
-						<li><button class="dropdown-item" type="button" onclick="location.href='<%=request.getContextPath()%>/user/mypage.jsp'">마이페이지
-							</button></li>
-						<li><hr class="dropdown-divider"></li>
-						<li><button class="dropdown-item" type="button">회원가입
-							</button></li>
+						
+						<%
+							if (dto != null) {
+						%>
+							<li><button class="dropdown-item" type="button" onclick="location.href='mypage.do?command=mypage'">마이페이지</button></li>
+						<%
+							} else {
+						%>
+							<li><button class="dropdown-item" type="button" onclick="location.href='<%=request.getContextPath()%>/loginController.do?command=registform'">회원가입</button></li>
+						<%
+							}
+						%>
+						
+	
+						
 					</ul>
 				</div>
 			</div>
