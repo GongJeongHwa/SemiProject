@@ -270,7 +270,7 @@ function search() {
 
   types.forEach(type => {
     var search = {
-      bounds: map.getBounds(),
+      bounds: map.getBounds(),	
       types: [type]
     };
     

@@ -43,6 +43,11 @@
 
  
 <script>
+
+let photopath = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photo_reference=';
+let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
+
+
   //컨트롤러에 넘길 배열
   let tourlist = new Array();
   let thumbnail = new Array();
@@ -153,22 +158,31 @@
 			var cityString = "";
 			
 			var placeString = "";
+			
 			$("#addlist").find("th").each(function(){
-				
-				placeString += $(this).find('input[type=time]').eq(0).val()+"|";
-				placeString += $(this).find('input[type=hidden]').eq(0).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(1).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(2).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(3).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(4).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(5).val() + "|";
-				placeString += "^";
-				
-				thumbnailString += $(this).find('input[type=hidden]').eq(3).val() + ",";
-				nationString += $(this).find('input[type=hidden]').eq(6).val() + ",";
-				cityString += $(this).find('input[type=hidden]').eq(7).val() + ",";
-				
-			});
+	            
+	            placeString += $(this).find('input[type=time]').eq(0).val()+"|";
+	            placeString += $(this).find('input[type=hidden]').eq(0).val() + "|";
+	            placeString += $(this).find('input[type=hidden]').eq(1).val() + "|";
+	            placeString += $(this).find('input[type=hidden]').eq(2).val() + "|";
+	            
+	            var tempPath = $(this).find('input[type=hidden]').eq(3).val();
+	            if(!(tempPath.includes('icons'))){
+	               var totalPath = photopath + photoRf(tempPath) + apikey;
+	               placeString += totalPath + "|";
+	               thumbnailString += totalPath + ",";
+	            }else{
+	               placeString += tempPath + "|";
+	               thumbnailString += tempPath + "|";
+	            }
+	            placeString += $(this).find('input[type=hidden]').eq(4).val() + "|";
+	            placeString += $(this).find('input[type=hidden]').eq(5).val() + "|";
+	            placeString += "^";
+	            
+	            
+	            nationString += $(this).find('input[type=hidden]').eq(6).val() + ",";
+	            cityString += $(this).find('input[type=hidden]').eq(7).val() + ",";
+	         });
 			
 			data.String = placeString;
 			tourlist.push(data);
@@ -206,6 +220,18 @@
 		}
 		
 	}
+	
+	   function photoRf(path){
+		      var temp = path.split("Photo?1s");
+		      console.log(temp);
+		      
+		      var temp2 = temp[1].split("&callback");
+		      console.log(temp2);
+		      
+		      return(temp2[0]);
+		   }
+	
+	
 	
 	//hotel , place, 등 클릭 시 첫번째 장소로 숙소를 선택하지 않았을 경우 안내문용 변수
 	let clickVal = "";
@@ -573,9 +599,9 @@
 <!-- Modal start-->
 <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="modalName" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
+    <div class="modal-content" style="text-align:center; font-family: 'Lato', sans-serif;">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalName"></h5>
+        <h5 class="modal-title" id="modalName" style="font-weight: bolder; margin-left:30px;"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -589,7 +615,7 @@
       		<hr>
       		<a href="" id="modalUrl">go to web site</a>
       		<hr>
-      		<p>review</p>
+      		<!-- <p>review</p>-->
       		
       		</div>
       		
