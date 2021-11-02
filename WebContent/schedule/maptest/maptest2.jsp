@@ -10,6 +10,8 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     
+    
+    
     <style>
 
 
@@ -23,36 +25,20 @@ tr{
 
 
 #map {height:550px;}
+
 .map-search {
   -webkit-box-align: center;
   -ms-flex-align: center;
-  align-items: center;
-  background: #fff;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  left: 0;
+  align-items: center; 
+   display: -webkit-box; 
+  left: 30;
   position: relative;
   top: 0;
-  width: 440px;
+  width: 100%;
   z-index: 1;
 }
-
-#listing {
-  position: absolute;
-  width: 200px;
-  height: 470px;
-  overflow: auto;
-  left: 442px;
-  top: 0px;
-  cursor: pointer;
-  overflow-x: hidden;
-}
-
-#findmaps {
-  font-size: 14px;
-}
-
+ 
+ 
 #locationField {
   -webkit-box-flex: 1 1 190px;
   -ms-flex: 1 1 190px;
@@ -84,59 +70,100 @@ tr{
   width: 24px;
   height: 24px;
 }
-
-#resultsTable {
-  border-collapse: collapse;
-  width: 240px;
-}
-
+ 
 #rating {
   font-size: 13px;
   font-family: Arial Unicode MS;
 }
+ 
 
-.iw_table_row {
-  height: 18px;
+
+
+.form__group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  margin-bottom:30px;
+  width: 70%;
 }
 
-.iw_attribute_name {
-  font-weight: bold;
-  text-align: right;
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid #9b9b9b;
+  outline: 0;
+  font-size: 1.3rem;
+  color: black;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+.form__field::placeholder {
+  color: transparent;
+}
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 1.3rem;
+  cursor: text;
+  top: 20px;
 }
 
-.iw_table_icon {
-  text-align: right;
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: #9b9b9b;
+}
+
+.form__field:focus {
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, #11998e, #38ef7d);
+  border-image-slice: 1;
+}
+.form__field:focus ~ .form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: #11998e;
+  font-weight: 700;
+}
+ 
+.form__field:required, .form__field:invalid {
+  box-shadow: none;
+}
+
+.form__group field {
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300vh;
+  font-size: 1.5rem; 
+  padding:20px;
 }
     </style>
   </head>
 
-  <body>
+
+<body>
  
-    <div class="map-search">
-      <div id="findmaps">
-      search:
-      </div>
-      
-      	<!-- 장소검색 -->  
-    <div id="locationField">
-      <input id="autocomplete" placeholder="Enter a city" type="text" />
-    </div>
-      <!-- area지정 국내(korea) / 국외(all) -->
-    <div id="controls">
-       <select id="country">
-        <option value="all">세계</option>
-        <option value="kr" selected>국내</option>
-      </select>
-      </div>
-    </div>
-      
-    <div id="map" class="rounded"></div>
-       
-      
-    <!--마커 클릭시 팝업 : 개별 장소 상세 info -->
-    <div style="display: none">
-      <div id="info-content">
-        <table>
+   
+ <div class="map-search">
+
+ <div class="form__group field">
+  <input type="text" class="form__field" placeholder="Name" name="name" id='autocomplete' required />
+  <label for="name" class="form__label" style="font-family: 'Noto Sans KR', sans-serif;">어디로 떠나시나요?</label>
+</div>
+ </div>
+ <div id="info-content" style="display:none;;">
+ <table>
             <tr id="iw-url-row" class="iw_table_row">
               <td id="iw-icon" class="iw_table_icon"></td>
               <td id="iw-url"></td>
@@ -158,15 +185,18 @@ tr{
               <td id="iw-website"></td>
             </tr>
           </table>
-        </div>
-      </div>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEOFLxuHpLh-ga2m0oiOm5C66luLW65QQ&libraries=places&callback=initMap" async defer></script>
-     
+  <select id="country" style="visibility:hidden">
+   <option value="all"></option>
+   <option value="kr" selected></option>
+  </select>
+ </div>
+ 
+ <div id="map" class="rounded"></div>
+       
+ <div id="floating-panel">
+ </div>
  
 
-
-
-  
 <script>
 var markerColor = {tourist_attraction:"fbfe00", lodging:"67ff58", restaurant:"fa4f2d"};
 var markerlink = "http://www.googlemapsmarkers.com/v1/";
@@ -175,9 +205,8 @@ var types = ["tourist_attraction","lodging", "restaurant"]; //명소, 호텔,식
 var map, places, infoWindow;
 var markers = [];
 var autocomplete;
-var countryRestrict = { //지도 시작시 기본 포커스 
-  'country': 'kr'
-};
+var countryRestrict = { 'country': 'kr'};
+var countries = {'kr': { center: {lat: 37.55,lng: 126.84},zoom: 12},};
 var MARKER_PATH = 'https://developers.google.com/maps/documentation/javascript/images/marker_green'; 
 var MARKER_BASEPATH = 'https://maps.google.com/mapfiles/ms/micons/'; 
 var customIcons = { //지도상에서 type별 마커를 색으로 구분 
@@ -187,7 +216,13 @@ var customIcons = { //지도상에서 type별 마커를 색으로 구분
 var hostnameRegexp = new RegExp('^https?://.+?/');
 var countries = {
   'kr': { center: {lat: 37.55,lng: 126.84},zoom: 12},};
-
+let markerOnMap = [ //drop시 찍히는 임의의 4개 마커.  
+	   { lat: 37.5720, lng: 126.9600 },
+	   { lat: 37.5630, lng: 126.9732 },
+	   { lat: 37.5686, lng: 126.9955 },
+	   { lat: 37.5724, lng: 127.0071 },
+	   ];
+	let fixedMarkers = []; //drop시 찍히는 모든 마커의 배열 
 
 
 function initMap() {
@@ -196,7 +231,6 @@ function initMap() {
     center: countries['kr'].center,
     mapTypeControl: false,
     panControl: false,
-    zoomControl: false,
     streetViewControl: false
   });
 
@@ -204,26 +238,22 @@ function initMap() {
     content: document.getElementById('info-content')
   });
 
-  // Create the autocomplete object and associate it with the UI input control.
-  // Restrict the search to the default country, and to place type "cities".
+ 
   autocomplete = new google.maps.places.Autocomplete(
-    /** @type {!HTMLInputElement} */
-    (
-      document.getElementById('autocomplete')), {
-      types: ['(cities)'],
-      componentRestrictions: countryRestrict
-    });
-  places = new google.maps.places.PlacesService(map);
+		    (
+	document.getElementById('autocomplete')), {
+	});
+	places = new google.maps.places.PlacesService(map);
 
-  autocomplete.addListener('place_changed', onPlaceChanged);
+	autocomplete.addListener('place_changed', onPlaceChanged);
+    document.getElementById('country').addEventListener('change', setAutocompleteCountry);
 
-  // Add a DOM event listener to react when the user selects a country.
-  document.getElementById('country').addEventListener(
-    'change', setAutocompleteCountry);
-}
-
-// When the user selects a city, get the place details for the city and
-// zoom the map in on the city.
+	document.getElementById("drop").addEventListener("click", drop);  
+	google.maps.event.addListener(map, "click", (event) => { 
+	addMarker(event.latLng, map);});
+	addMarker(markerOnMap, map);
+	}
+	
 function onPlaceChanged() {
   var place = autocomplete.getPlace();
   if (place.geometry) {
@@ -235,18 +265,17 @@ function onPlaceChanged() {
   }
 }
 
-// Search for hotels in the selected city, within the viewport of the map.
 function search() {
   var FirstEsecution = true;
 
   types.forEach(type => {
     var search = {
-      bounds: map.getBounds(),
+      bounds: map.getBounds(),	
       types: [type]
     };
     
 
-    places.nearbySearch(search, (function(type) { //검색 도시 주변반경 검색 
+    places.nearbySearch(search, (function(type) {
       return function(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           console.log("processing " + results.length + " for type=" + type);
@@ -255,14 +284,12 @@ function search() {
             clearMarkers();
             FirstEsecution = false;
           }
-          // Create a marker for each hotel found, and
-          // assign a letter of the alphabetic to each marker icon.
+        
           for (var i = 0; i < results.length; i++) {
             var markerLetter = String.fromCharCode(
               "A".charCodeAt(0) + (i % 26)
             );
             var markerIcon = MARKER_PATH + markerLetter + ".png";
-            // Use marker animation to drop the icons incrementally on the map.
             if (!markers[type])
               markers[type] = [];
             markers[type][i] = new google.maps.Marker({
@@ -278,8 +305,6 @@ function search() {
             });
             console.log(markers[type][i]);
             
-            // If the user clicks a hotel marker, show the details of that hotel
-            // in an info window.
             markers[type][i].placeResult = results[i];
             google.maps.event.addListener(
               markers[type][i],
@@ -308,8 +333,7 @@ function clearMarkers() {
     }
   }
 }
-// Set the country restriction based on user input.
-// Also center and zoom the map on the given country.
+
 function setAutocompleteCountry() {
   var country = document.getElementById('country').value;
   if (country == 'all') {
@@ -353,7 +377,6 @@ function addResult(result, i, type) {
 	  var markerIcon = markerlink + markerLetter + "/" + markerColor[type]; 
 	  console.log(markerIcon);
 	  var tr = document.createElement('tr');
-	  //tr.style.backgroundColor = (i % 2 === 0 ? '#F0F0F0' : '#FFFFFF'); 퐁당퐁당 배경색 일단지움..
 	  tr.onclick = function() {
 	    google.maps.event.trigger(markers[type][i], 'click');
 	  };
@@ -364,7 +387,6 @@ function addResult(result, i, type) {
 	  icon.src = markerIcon;
 	  icon.setAttribute('class', 'placeIcon');
 	  icon.setAttribute('className', 'placeIcon');
-	  //var name = document.createTextNode(type + ":" + result.name); //제목에 type표시 일단지움..
 	  var name = document.createTextNode(result.name);
 	  iconTd.appendChild(icon);
 	  nameTd.appendChild(name); 
@@ -398,8 +420,6 @@ function clearResults() {
 	  }
 }
 
-// Get the place details for a hotel. Show the information in an info window,
-// anchored on the marker for the hotel that the user selected.
 function showInfoWindow() {
   var marker = this;
   places.getDetails({
@@ -409,12 +429,54 @@ function showInfoWindow() {
       if (status !== google.maps.places.PlacesServiceStatus.OK) {
         return;
       }
-      infoWindow.open(map, marker);
+      infoWindow.close(map, marker);
       buildIWContent(place);
     });
 }
 
-// Load the place information into the HTML elements used by the info window.
+function drop() {
+clearMarkersOnMap();
+for (let i = 0; i < markerOnMap.length; i++) {
+ addMarkerWithTimeout(markerOnMap[i], i * 200);
+}
+}
+
+function addMarkerWithTimeout(position, timeout) {
+      var image='img/heartmarker2.png';
+window.setTimeout(() => {
+   fixedMarkers.push(
+   new google.maps.Marker({
+     position: position,
+     map,
+     animation: google.maps.Animation.DROP,
+     icon:image,
+   })
+ );
+}, timeout);
+}
+
+function addMarker(location, timeout) {
+      var image='img/heartmarker2.png';
+      window.setTimeout(() => {
+   fixedMarkers.push(
+   new google.maps.Marker({
+       position: location,
+       map: map,
+       icon:image,
+       animation: google.maps.Animation.DROP,
+     })
+     );
+      }, timeout);
+   }
+
+function clearMarkersOnMap() {
+for (let i = 0; i < fixedMarkers.length; i++) {
+   fixedMarkers[i].setMap(null);
+}
+fixedMarkers = [];
+
+}
+
 function buildIWContent(place) {
 	console.log(place);
 	if(place.hasOwnProperty('photos')){
@@ -441,9 +503,7 @@ function buildIWContent(place) {
     document.getElementById('modalPhone').style.display = 'none';
   }
 
-  // Assign a five-star rating to the hotel, using a black star ('&#10029;')
-  // to indicate the rating the hotel has earned, and a white star ('&#10025;')
-  // for the rating points not achieved.
+
   if (place.rating) {
     var ratingHtml = '';
     for (var i = 0; i < 5; i++) {
@@ -462,8 +522,6 @@ function buildIWContent(place) {
     document.getElementById('modalRating').style.display = 'none';
   }
 
-  // The regexp isolates the first part of the URL (domain plus subdomain)
-  // to give a short URL for displaying in the info window.
   if (place.website) {
     var fullUrl = place.website;
     var website = hostnameRegexp.exec(place.website);

@@ -243,7 +243,7 @@ public class DaoImpl implements Dao{
 		} finally {
 			closeAll(null, pstmt, null);
 		}
-		return b? 1 : 0;
+		return b? seq : 0;
 	}
 	
 	

@@ -9,8 +9,10 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -26,41 +28,24 @@
 <script src="https://unpkg.com/tippy.js@6"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+<link rel="stylesheet" type="text/css" href="schedule.css">
 <title>createSchedule</title>
-<style>    
-	#rowbelow{background-color:#FFFAF0;text-align:center;}
-	#scroll{overflow: auto;width:300px;height:500px;}
-	#scroll2{overflow: auto;width:300px;height:500px;}
-	#scroll3{overflow: auto;width:300px;height:500px;}	
-	
-.toast-success {
-	background-color: #77ca8a !important;
-	font-weight: bold !important;
-	font-size: 12pt !important;
-}
 
-.toast-error {
-	background-color: #BD362F !important;
-}
+<!-- 영문폰트 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital@1&display=swap" rel="stylesheet">
 
-.toast-info {
-	background-color: #2F96B4 !important;
-}
+<!-- 한글폰트 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
 
-.toast-warning {
-	background-color: #F89406 !important;
-}
-
-.toast-top-right {
-	top: 7%;
-}
-
-</style>
+ 
 <script>
-  //변수 두개 추가
-  let photopath = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photo_reference=';
-  let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
-  //여기까지
+let photopath = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photo_reference=';
+let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
+
 
   //컨트롤러에 넘길 배열
   let tourlist = new Array();
@@ -102,6 +87,21 @@
 <!-- date javascript -->
 <script>
 	var dateChange = () => {  
+		
+		for(var i = 0; i < tourlist.length; i++){
+			var temp = $("#datepicker").val().split("월");
+			var temp2 = temp[0] + temp[1];
+			
+			if(tourlist[i].date == temp2){
+				if(confirm("이미 해당 날짜에 일정이 있습니다. 계속 진행하시겠습니까?")){
+					break;
+				}else{
+					clearDay();
+					return;
+				}
+			}
+		}
+		
 		$("#temp").text($("#datepicker").val()+"의 일정");
 	};
 	
@@ -118,14 +118,14 @@
 			
 			var templist = [];
 			//시간순서가 다를때
- 			$("#addlist").find("th").each(function(){
-				templist.push($(this).find("input").eq(0).val());
-			});  
 /*  			$("#addlist").find("th").each(function(){
+				templist.push($(this).find("input").eq(0).val());
+			});  */ 
+			$("#addlist").find("th").each(function(){
 				if($(this).find("input").eq(0).val() != "00:00"){
 					templist.push($(this).find("input").eq(0).val());
 				}
-			});  */
+			});  
 			
 			for(var i = 0; i < templist.length-1; i++){
 				for(var j = i+1; j < templist.length; j++){
@@ -173,32 +173,30 @@
 			
 			var placeString = "";
 			
-			//여기부터
 			$("#addlist").find("th").each(function(){
-				
-				placeString += $(this).find('input[type=time]').eq(0).val()+"|";
-				placeString += $(this).find('input[type=hidden]').eq(0).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(1).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(2).val() + "|";
-				
-				var tempPath = $(this).find('input[type=hidden]').eq(3).val();
-				if(!(tempPath.includes('icons'))){
-					var totalPath = photopath + photoRf(tempPath) + apikey;
-					placeString += totalPath + "|";
-					thumbnailString += totalPath + ",";
-				}else{
-					placeString += tempPath + "|";
-					thumbnailString += tempPath + "|";
-				}
-				placeString += $(this).find('input[type=hidden]').eq(4).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(5).val() + "|";
-				placeString += "^";
-				
-				
-				nationString += $(this).find('input[type=hidden]').eq(6).val() + ",";
-				cityString += $(this).find('input[type=hidden]').eq(7).val() + ",";
-			});
-			//여기까지
+	            
+	            placeString += $(this).find('input[type=time]').eq(0).val()+"|";
+	            placeString += $(this).find('input[type=hidden]').eq(0).val() + "|";
+	            placeString += $(this).find('input[type=hidden]').eq(1).val() + "|";
+	            placeString += $(this).find('input[type=hidden]').eq(2).val() + "|";
+	            
+	            var tempPath = $(this).find('input[type=hidden]').eq(3).val();
+	            if(!(tempPath.includes('icons'))){
+	               var totalPath = photopath + photoRf(tempPath) + apikey;
+	               placeString += totalPath + "|";
+	               thumbnailString += totalPath + ",";
+	            }else{
+	               placeString += tempPath + "|";
+	               thumbnailString += tempPath + "|";
+	            }
+	            placeString += $(this).find('input[type=hidden]').eq(4).val() + "|";
+	            placeString += $(this).find('input[type=hidden]').eq(5).val() + "|";
+	            placeString += "^";
+	            
+	            
+	            nationString += $(this).find('input[type=hidden]').eq(6).val() + ",";
+	            cityString += $(this).find('input[type=hidden]').eq(7).val() + ",";
+	         });
 			
 			data.String = placeString;
 			tourlist.push(data);
@@ -236,18 +234,16 @@
 		}
 		
 	}
-	//----이부분 추가
-	function photoRf(path){
-		var temp = path.split("Photo?1s");
-		console.log(temp);
-		
-		var temp2 = temp[1].split("&callback");
-		console.log(temp2);
-		
-		return(temp2[0]);
-	}
-	//----여기까지
 	
+	   function photoRf(path){
+		      var temp = path.split("Photo?1s");
+		      console.log(temp);
+		      
+		      var temp2 = temp[1].split("&callback");
+		      console.log(temp2);
+		      
+		      return(temp2[0]);
+		   }
 	
 	
 	
@@ -256,8 +252,9 @@
 	
 	/* 숙소를 첫번째로 하지않을때 경고용 */
 	$(function(){
-		$(".table").click(function(){
-			clickVal = $(this).attr("id");		
+		$(".clickval").click(function(){
+			clickVal = $(this).attr("id");
+			console.log(clickVal);
 		});
 		
 		
@@ -398,9 +395,9 @@
 			console.log("thumbval" + $("#thumbid").val());
 			console.log(jsonData);		 */	
 			
-			location.href="javascript:document.form.submit()";
-			
-			
+			if(confirm("여행일정을 완료하시겠습니까?")){
+				location.href="javascript:document.form.submit()";
+			}
 			
 		});
 	});
@@ -452,7 +449,61 @@
 	</div>
 	
 	<br><br>
-     
+	
+      <!-- 찜테이블-->
+      
+		 
+<section class="liked-table">
+  <div class="card">
+    <h5 style="font-family: 'Noto Sans KR', sans-serif;"><a class="btn-3d red" id="drop" ><img src="img/heartmarker2.png" style="width:45%; margin-top:15px;"></a><br>찜리스트	 
+		</h5>
+    	 <div style="width:100%; height:280px; padding-left:10%; padding-right:10%;">
+		 	<table class="table table-hover" >
+  			<thead>
+    		<tr>
+      			<th colspan="2"> </th>
+      			<th colspan="2"> </th>
+    		</tr>
+  			</thead>
+  			<tbody>
+    		<tr>
+		      <td colspan="2"><img src="img/namsan.jpg" style="width:100px; height:60px;"></td>
+		      <td colspan="2"><br>남산골한옥마을</td>
+		    </tr> 
+			 <tr>
+		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
+		      <td colspan="2"><br>서울숲</td>
+		    </tr> 
+		    <tr>
+		      <td colspan="2"><img src="img/naksan.jpg" style="width:100px; height:60px;"></td>
+		      <td colspan="2"><br>낙산공원</td>
+		    </tr> 
+		   	<tr>
+		      <td colspan="2"><img src="img/musee.jpg" style="width:100px; height:60px;"></td>
+		      <td colspan="2"><br>과천 미술관</td>
+		    </tr> 
+		    <tr>
+		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
+		      <td colspan="2"><br>서울숲</td>
+		    </tr> 
+		    		    <tr>
+		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
+		      <td colspan="2"><br>서울숲</td>
+		    </tr> 
+		    		    <tr>
+		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
+		      <td colspan="2"><br>서울숲</td>
+		    </tr> 
+		    		    <tr>
+		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
+		      <td colspan="2"><br>서울숲</td>
+		    </tr> 
+			 </tbody>
+			</table>
+		 </div> 
+  </div>
+</section>
+		
      <!-- map -->
     <div class="container">
 		<div class="row">
@@ -472,15 +523,14 @@
 					<input type="hidden" name="nation" id="nationid" value="">
 					<input type="hidden" name="thumbnail" id="thumbid" value="">
 					<input type="hidden" name="value" id="valueid" value="">
-					<h5><input type="button" id="formclick" value="여행일정 확정" style="float:right" /></h5>
-					
+					<h5><input type="button" id="formclick" value="여행일정 확정" style="float:right; margin-bottom:20px; font-family: 'Noto Sans KR', sans-serif;"class="button-67" role="button" /></h5><br>
 					</td>
 				</tr>
 				<tr>
-					<td><input type="text" name="title" id="title" placeholder="여행 타이틀을 입력하세요" style="width: 100%; height: 30px;"></td>
+					<td class="travleInput"><input type="text" name="title" id="title" placeholder="여행 타이틀을 입력하세요" style="width: 100%; height: 30px; text-align:center; border:0px; font-family: 'Noto Sans KR', sans-serif;"></td>
 				</tr>
 				<tr>
-					<td><textarea rows="" cols="" name="content" id="content" placeholder="여행 내용을 입력하세요." style="height: 140px; width:100%;"></textarea></td>
+					<td class="travleInput"><textarea rows="" cols="" name="content" id="content" placeholder="여행 내용을 입력하세요." style="height: 140px; width:100%; text-align:center; padding:40px; border:0px; font-family: 'Noto Sans KR', sans-serif;"></textarea></td>
 				</tr>
 				</table>
 				</form>
@@ -495,12 +545,12 @@
 		<div class="row align-items-center">
 			<div class="col-lg-12">
 				<hr style="margin-top: 30px;">
-				<h4>여행하실 날짜를 선택 후 장소를 추가해보세요.</h4>
+				<h4 style="font-family: 'Noto Sans KR', sans-serif;">여행하실 날짜를 선택 후 장소를 추가해보세요.</h4>
 				<div style="margin-top: 30px; margin-bottom: 30px;">
 					<form>
 						<!-- datepicker -->
-						<input type="text" id="datepicker" onchange="dateChange()" placeholder="날짜를 입력하세요">&nbsp;
-      					<input id="input_submit" type="button" value="일정 추가" onclick="input();"/>
+						<input type="text" id="datepicker" onchange="dateChange()" placeholder="날짜를 입력하세요" style="font-family: 'Noto Sans KR', sans-serif;">&nbsp;
+      					<input id="input_submit" type="button" value="일정 추가" class="button-67" onclick="input();" style="font-family: 'Noto Sans KR', sans-serif;"/>
       					&nbsp;&nbsp;&nbsp;<span style="text-align: center; font-size:15pt; font-weight:bold;" id="temp"></span>
 
 					</form>
@@ -514,7 +564,7 @@
 	<!-- drop -->
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-12" style="overflow-x:scroll;">
+			<div class="col-lg-12" style="overflow-x:scroll;" id="dragdrop">
 				<%@ include file="droptest.html" %>
 			</div>
 		</div>
@@ -522,65 +572,40 @@
 	
 	
 <!-- 하단 3컬럼 -->
-	<div class="container">
-		<div class="row" id="rowbelow"> 
-		
-			<!-- 컬럼1: hotel -->
-			<div class="col" id="scroll">
-			<br><br><h3>HOTEL</h3><br>
-					 
-			<table class="table" id="hotel">
-  			<thead  id="results" data-bs-toggle="modal" data-bs-target="#Modal">
-    		<tr>
-      			<th colspan="2"><b>placename</b></th>
-    		</tr>
-  			</thead>
-  			<tbody>
-    		<tr>
-		      <td><img src=" " width=90% style="top:20px; position:relative" ></td>
-		    </tr>
-			 </tbody>
-			</table>
-			
+ 
+
+	<div class="suggestionTable"> 
+	
+	  			<!-- 컬럼3: restaurant -->
+			<div class="suggestionOpt">
+			<i class="material-icons"><img src="img/resticon.png" style="width:13%; height:13%; "></i>
+        <h1 style="font-family: 'Lato', sans-serif;">restaurant</h1>
+        <hr />
+        	<p id="results_rest" data-bs-toggle="modal" data-bs-target="#Modal" align="center" class="clickval"></p>
+        	 <hr />
+        	 
 			</div>
+ 
 		
 			<!-- 컬럼2: place -->
-			<div class="col" id="scroll2">
-				<br><br><h3>PLACE</h3><br>
-			
-			<table class="table" id="place">
-  			<thead  id="results_ta" data-bs-toggle="modal" data-bs-target="#Modal">
-    		<tr>
-      			<th colspan="2"><b>placename</b></th>
-    		</tr>
-  			</thead>
-  			<tbody>
-    		<tr>
-		      <td><img src="" width=90% style="top:20px; position:relative" ></td>
-		    </tr>
-			 </tbody>
-			</table>
-				 
-  			</div>
+			<div class="suggestionOpt">
+			<i class="material-icons"><img src="img/tourist.png" style="width:13%; height:13%"></i>
+        <h1 style="font-family: 'Lato', sans-serif;">place</h1>
+        <hr />
+        	<p id="results_ta" data-bs-toggle="modal" data-bs-target="#Modal" align="center" class="clickval"></p>
+        	 <hr />
+        	 
+			</div>
   			
-  			<!-- 컬럼3: restaurant -->
-			<div class="col" id="scroll3">
-			<br><br><h3>RESTAURANT</h3><br>
-			
-			<table class="table" id="restaurant">
-  			<thead  id="results_rest" data-bs-toggle="modal" data-bs-target="#Modal">
-    		<tr>
-      			<th colspan="2"><b>placename</b></th>
-    		</tr>
-  			</thead>
-  			<tbody>
-    		<tr>
-		      <td><img src="" width=90% style="top:20px; position:relative" ></td>
-		    </tr>
-			 </tbody>
-			</table>
-		
-		</div>
+ 			<!-- 컬럼1: hotel -->
+			<div class="suggestionOpt">
+			<i class="material-icons"><img src="img/hotel2.png" style="width:13%; height:13%"></i>
+        <h1 style="font-family: 'Lato', sans-serif;">hotel</h1>
+        <hr />
+        	<p id="results" data-bs-toggle="modal" data-bs-target="#Modal" align="center" class="clickval"></p>
+        	 <hr />
+        	 
+			</div>
 			 
 
 
@@ -588,9 +613,9 @@
 <!-- Modal start-->
 <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="modalName" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
+    <div class="modal-content" style="text-align:center; font-family: 'Lato', sans-serif;">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalName"></h5>
+        <h5 class="modal-title" id="modalName" style="font-weight: bolder; margin-left:30px;"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -604,7 +629,7 @@
       		<hr>
       		<a href="" id="modalUrl">go to web site</a>
       		<hr>
-      		<p>review</p>
+      		<!-- <p>review</p>-->
       		
       		</div>
       		
@@ -629,7 +654,6 @@
     
 		 
 		</div>
-</div>
 <script type="text/javascript">
 	function addlist(){
 		if($("#datepicker").datepicker("getDate")==null){
@@ -637,7 +661,7 @@
 			return;
 		}
 		//달력에 첫번째로 등록되지않은조건 추가
-		if(tourlist.length == 0 && $("#addlist").find("th").length == 0 && clickVal != "hotel"){
+		if(tourlist.length == 0 && $("#addlist").find("th").length == 0 && clickVal != "results"){
 			if(!confirm("여행 숙소를 선정하지 않았습니다. 계속 진행하시겠습니까?")){
 				return;
 			}

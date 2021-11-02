@@ -69,6 +69,7 @@ public class blog extends HttpServlet {
 		}
 		
 		if(command.equals("selectone")) {
+			System.out.println("넘겨받은 seq : " + request.getParameter("blogseq"));
 			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
 			String userid = request.getParameter("user_id");
 			
