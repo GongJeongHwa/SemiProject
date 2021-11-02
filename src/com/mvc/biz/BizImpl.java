@@ -45,7 +45,7 @@ public class BizImpl implements MVCBiz{
 	}
 
 	
-	//블로그관련
+	//블로그관련------------------------------------------------------------------------------
 	@Override
 	public ArrayList<blogDto> getBlogList() {
 		
@@ -72,10 +72,29 @@ public class BizImpl implements MVCBiz{
 		return res;
 	}
 	
+	@Override
+	public blogDto getblogOne(String userid, int blogseq) {
+		
+		con = getConnection();
+		int res = dao.bloghitsUp(con, userid, blogseq);
+		if(res == 0) {
+			rollback(con);
+			closeConn(con);
+			return null;
+		}
+		blogDto bdto = dao.getblogOne(con, userid, blogseq);
+		closeConn(con);
+		
+		return bdto;
+	}
 	
 	
 	
 	
+	
+	
+	
+	//찜관련------------------------------------------------------------------------------
 	
 	//특정 유저가 찜했는지 여부
 	@Override
@@ -143,6 +162,8 @@ public class BizImpl implements MVCBiz{
 		
 		return res;
 	}
+
+
 
 
 

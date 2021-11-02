@@ -57,6 +57,11 @@
 
 </style>
 <script>
+  //변수 두개 추가
+  let photopath = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photo_reference=';
+  let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
+  //여기까지
+
   //컨트롤러에 넘길 배열
   let tourlist = new Array();
   let thumbnail = new Array();
@@ -167,22 +172,33 @@
 			var cityString = "";
 			
 			var placeString = "";
+			
+			//여기부터
 			$("#addlist").find("th").each(function(){
 				
 				placeString += $(this).find('input[type=time]').eq(0).val()+"|";
 				placeString += $(this).find('input[type=hidden]').eq(0).val() + "|";
 				placeString += $(this).find('input[type=hidden]').eq(1).val() + "|";
 				placeString += $(this).find('input[type=hidden]').eq(2).val() + "|";
-				placeString += $(this).find('input[type=hidden]').eq(3).val() + "|";
+				
+				var tempPath = $(this).find('input[type=hidden]').eq(3).val();
+				if(!(tempPath.includes('icons'))){
+					var totalPath = photopath + photoRf(tempPath) + apikey;
+					placeString += totalPath + "|";
+					thumbnailString += totalPath + ",";
+				}else{
+					placeString += tempPath + "|";
+					thumbnailString += tempPath + "|";
+				}
 				placeString += $(this).find('input[type=hidden]').eq(4).val() + "|";
 				placeString += $(this).find('input[type=hidden]').eq(5).val() + "|";
 				placeString += "^";
 				
-				thumbnailString += $(this).find('input[type=hidden]').eq(3).val() + ",";
+				
 				nationString += $(this).find('input[type=hidden]').eq(6).val() + ",";
 				cityString += $(this).find('input[type=hidden]').eq(7).val() + ",";
-				
 			});
+			//여기까지
 			
 			data.String = placeString;
 			tourlist.push(data);
@@ -220,6 +236,20 @@
 		}
 		
 	}
+	//----이부분 추가
+	function photoRf(path){
+		var temp = path.split("Photo?1s");
+		console.log(temp);
+		
+		var temp2 = temp[1].split("&callback");
+		console.log(temp2);
+		
+		return(temp2[0]);
+	}
+	//----여기까지
+	
+	
+	
 	
 	//hotel , place, 등 클릭 시 첫번째 장소로 숙소를 선택하지 않았을 경우 안내문용 변수
 	let clickVal = "";
@@ -343,7 +373,6 @@
 			var thumbarr = thumbnailSorted[0].String.split(",");
 			thumbnailpath = thumbarr[0];
 			
-			console.log(thumbnailpath);
 			
 			//tourlist 날짜별정렬
 			var tourlistSorted = tourlist.sort(function(a,b){

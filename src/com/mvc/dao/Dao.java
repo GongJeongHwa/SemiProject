@@ -19,6 +19,7 @@ public interface Dao {
 	public boolean insertUser(Connection con, UserDto dto);
 	public boolean updateUser(Connection con, UserDto dto);
 	public boolean deleteUser(Connection con, int seq);
+	public int bloghitsUp(Connection con, String userid, int blogseq);
 	
 	//다른 sql문 구분
 	
@@ -27,7 +28,7 @@ public interface Dao {
 	public ArrayList<blogDto> getBlogList(Connection con);
 	public int getBlogSeq(Connection con, String userid);
 	public int addSchedule(Connection con, int seq, blogDto dto);
-	
+	public blogDto getblogOne(Connection con, String userid, int blogseq);
 	
 	
 	//search add heart(장소찜 관련)

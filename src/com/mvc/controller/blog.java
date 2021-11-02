@@ -68,7 +68,16 @@ public class blog extends HttpServlet {
 			out.print(jarray.toJSONString());
 		}
 		
-		if(command.equals("blogone")) {
+		if(command.equals("selectone")) {
+			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
+			String userid = request.getParameter("user_id");
+			
+			blogDto bdto = new BizImpl().getblogOne(userid, blogseq);
+			request.setAttribute("bdto", bdto);
+			dispatch("/blog/blog_detail_sk.jsp", request, response);
+			
+			
+			
 			
 		}
 		

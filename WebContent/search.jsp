@@ -144,6 +144,9 @@ function createMarker(place) {
 	  map.setCenter(marker.getPosition());
 }
 
+//photo관련
+let photopath = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photo_reference=';
+let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 
 
 //place관련
@@ -422,7 +425,12 @@ function getPlaceDetail(placeid){
 				}
 			}
 			var image = results.hasOwnProperty('photos')? results.photos[0].getUrl() : results.icon;
-			$("#thumbnail").val(image);
+			if(!(image.includes('icon'))){
+				var totalPath = photopath + photoRf(image) + apikey;
+				$("#thumbnail").val(totalPath);
+			}else{
+				$("#thumbnail").val(image);
+			}
 			$("#address").val(results.formatted_address);
 			$("#placename").val(results.name);
 			$("#latitude").val(results.geometry.location.lat());
@@ -526,6 +534,16 @@ function rmheart(){
 	});
 }
 
+//포토레퍼런스추출
+function photoRf(path){
+	var temp = path.split("Photo?1s");
+	console.log(temp);
+	
+	var temp2 = temp[1].split("&callback");
+	console.log(temp2);
+	
+	return(temp2[0]);
+}
 
 
 //content 클리어

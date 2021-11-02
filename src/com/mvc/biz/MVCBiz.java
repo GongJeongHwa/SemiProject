@@ -16,6 +16,7 @@ public interface MVCBiz {
 	//블로그관련
 	public ArrayList<blogDto> getBlogList();
 	public int addSchedule(blogDto dto);
+	public blogDto getblogOne(String userid, int blogseq);
 	
 	
 	//search.jsp 장소heart
