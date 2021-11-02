@@ -147,4 +147,18 @@ public class CompanionBizImpl extends JDBCTemplate implements CompanionBiz{
 		closeConn(con);
 		return list;
 	}
+
+	@Override
+	public boolean blogAskCompanion(String login_id, String con_id, String comment) {
+		int res = dao.blogAskCompanion(con, login_id, con_id, comment);
+		
+		if (res > 0) {
+			commit(con);
+		} else {
+			rollback(con);
+		}
+		closeConn(con);
+		
+		return res>0?true:false;
+	}
 }
