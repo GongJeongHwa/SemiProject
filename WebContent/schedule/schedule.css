@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-
+ 
 .toast-success {
 	background-color: #77ca8a !important;
 	font-weight: bold !important;
@@ -32,7 +32,23 @@
 .btn-3d:active {
 	top: 10px;
 }
-
+.btn-group dropstart{
+ width:300px;
+ height:300px;
+ 
+ }
+.btn-group dropstart .dropdown-menu { 
+ 
+  padding: 3px;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;	
+  position: relative;
+  box-shadow: 1px 1px 8px -4px rgba(0, 0, 0, 0.6); 
+} 
+   
+ 
 
 <!--container>
 
@@ -109,7 +125,7 @@
   border-bottom: 1px solid #f0f0f0;
 }
 .suggestionTable .suggestionOpt i {
-  font-size: 3rem;
+  font-size: 2rem;
   color: #d8d8d8;
   transition: all 0.3s ease-in-out;
 }
@@ -132,61 +148,8 @@
     margin: 30px 0 !important;
   }
 }
-
-<!--liked table-->
-
-body {  
-  text-transform: uppercase;   
-}
-.liked-table {
-  position: absolute;
-  top: 5%;
-  right: 3%; 
-  display: flex;   
-}
-.liked-table .card { 
-  height: 370px;
-  width:300px;
-  padding: 3px;
-  border-radius: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;	
-  position: relative;
-  box-shadow: 1px 1px 8px -4px rgba(0, 0, 0, 0.6); 
-} 
-   
-
-	.card{
-	 
-  overflow-y: auto;
-  overflow-x:hidden;
-  scrollbar-color: #d4aa70 #e4e4e4;
-  scrollbar-width: thin;
-  text-align:center;
-	 
-	 }
-	 
-	 
-.card::-webkit-scrollbar {
-  width: 10px; 
-  opacity:50%;
-}
-
-.card::-webkit-scrollbar-track {
-  background-color: #e4e4e4;
-  border-radius: 100px;
-  opacity:50%;
-}
-
-.card::-webkit-scrollbar-thumb {
-  border-radius: 100px;
-  background-image: linear-gradient(180deg, #36d0b6 0%, #708ad4 99%);
-  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
-  opacity:50%;
-}
-     
-     
+ 
+ 
 #dragdrop{
 	 scrollbar-color: #d4aa70 #e4e4e4;
   scrollbar-width: thin;
@@ -216,36 +179,7 @@ body {
  border-radius: 7px;
  }
  
- 
-.button-67 {
-  background-color: #fff;
-  border: 0 solid #bac4d1;
-  border-radius: 1rem;
-  box-sizing: border-box;
-  color: #0d172a;
-  cursor: pointer;
-  display: inline-block;
-  padding:15px;
-  font-size: 1.1rem;
-  line-height: 1; 
-  text-align: center; 
-  box-shadow: 3px 3px 3px rgba(166, 175, 195, 0.5);
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-.button-67:hover {
-  background-color: #8ccfc7;
-  color: #fff;
-}
-
-@media (min-width: 768px) {
-  .button-67 {
-    font-size: 1.125rem; 
-  }
-}
-
+  
 .travleInput{ 
   border-radius: 1rem;
   box-sizing: border-box;
@@ -258,8 +192,69 @@ body {
   box-shadow: 1px 1px 1px rgba(166, 175, 195, 0.5); 
   width:100%;
 }
+ 
 
- 
- 
- 
- 
+	.dropdown-menu{
+	 
+  overflow-y: auto;
+  overflow-x:hidden;
+  scrollbar-color: #d4aa70 #e4e4e4;
+  scrollbar-width: thin;
+  text-align:center;
+	width:300px; 
+	 
+	 }
+	 
+	 
+.dropdown-menu::-webkit-scrollbar {
+  width: 10px; 
+  opacity:50%;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+  opacity:50%;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(180deg, #36d0b6 0%, #708ad4 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+  opacity:50%;
+}
+     
+     
+     
+.button-67 {
+  background-color: #fff;
+  border: 0 solid #bac4d1;
+  border-radius: 1rem;
+  box-sizing: border-box; 
+  cursor: pointer; 
+  padding:5px;
+  line-height: 1; 
+  text-align: center; 
+  box-shadow: 3px 3px 3px rgba(166, 175, 195, 0.5);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation; 
+}
+
+.button-67:hover {
+  background-color: #8ccfc7;
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .button-67 {
+    font-size: 1.125rem; 
+  }
+}
+    body{font-family: 'Noto Sans KR', sans-serif; }
+    
+    
+    #modalAddress{
+    font-size:18px;
+    }
+     
