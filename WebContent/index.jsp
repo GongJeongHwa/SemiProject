@@ -53,13 +53,13 @@
 		</div>
 		<br><br>
 		<div class="row">
-			<div class="col-lg-6"><div class="rounded-start shadow-lg p-3 mb-5 bg-body rounded"><%@ include file="./maps.jsp"%></div><br></div>
-			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/journey.PNG" width="100%" height="400px"></div>
+			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/index1.PNG" width="100%" height="500px"><br></div>
+			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/index2.PNG" width="100%" height="500px"></div>
 		</div>
 		<br>
 		<div class="row">
-			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/hotel.PNG" width="100%" height="400px"><br></div>
-			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/root.PNG" width="100%" height="400px"></div>
+			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/index4.PNG" width="100%" height="500px"><br></div>
+			<div class="col-lg-6"><img class="rounded-start shadow-lg p-3 mb-5 bg-body rounded" src="img/index3.PNG" width="100%" height="500px"></div>
 		</div>
 		
 	</div>
@@ -88,9 +88,13 @@
 					</div>
 					<div class="card-body" style="padding: 15px;">
 						<p></p>
-						<div style="font-size: 11pt;">
-							<span></span><br>여행지 : <b></b>
+						<div style="font-size: 11pt;" id="period">
+							<span></span>
 						</div>
+						<div style="font-size: 11pt;" id="place">
+							여행지 : <b class="place"></b>
+						</div>
+						
 						<hr style="color: gray;">
 						<h6 class="card-title" id="title"></h6>
 						<p id="content"></p>
@@ -116,9 +120,13 @@
 					</div>
 					<div class="card-body" style="padding: 15px;">
 						<p></p>
-						<div style="font-size: 11pt;">
-							<span></span><br>여행지 : <b></b>
+						<div style="font-size: 11pt;" id="period">
+							<span></span>
 						</div>
+						<div style="font-size: 11pt;" id="place">
+							여행지 : <b class="place"></b>
+						</div>
+						
 						<hr style="color: gray;">
 						<h6 class="card-title" id="title"></h6>
 						<p id="content"></p>
@@ -144,9 +152,13 @@
 					</div>
 					<div class="card-body" style="padding: 15px;">
 						<p></p>
-						<div style="font-size: 11pt;">
-							<span></span><br>여행지 : <b></b>
+						<div style="font-size: 11pt;" id="period">
+							<span></span>
 						</div>
+						<div style="font-size: 11pt;" id="place">
+							여행지 : <b class="place"></b>
+						</div>
+						
 						<hr style="color: gray;">
 						<h6 class="card-title" id="title"></h6>
 						<p id="content"></p>

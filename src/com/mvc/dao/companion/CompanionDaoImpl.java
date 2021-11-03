@@ -325,6 +325,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 	public boolean askDenied(Connection con, String login_id, String con_id) {
 		PreparedStatement pstm = null;
 		int res = 0;
+		//uPDATE ASK_CONNECT SET PERMIT = 'N' WHERE REC_ID = ? AND SEN_ID = ?"
 		
 		try {
 			pstm = con.prepareStatement(askDenied);
@@ -417,6 +418,9 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 
 	@Override
 	public int blogAskCompanion(Connection con, String login_id, String con_id, String comment) {
+		//receive id = 받는 아이디(일정 짠 사람 -> con_id)
+		//sen_id = 보내는 아이디 (현재 세션에 로그인 되어있는 사람)
+		//INSERT INTO ASK_CONNECT VALUES(ASK_SEQ.NEXTVAL, ?, ?, ?, SYSDATE, 'D') 
 		PreparedStatement pstm = null;
 		int res = 0;
 		
@@ -434,4 +438,67 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		return res;
 	}
 
+	@Override
+	public int takeChatSerial(Connection con, String login_id, String con_id) {
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		int chat_serial = 0;
+		
+		try {
+			pstm = con.prepareStatement(takeChatSerial);
+			pstm.setString(1, login_id);
+			pstm.setString(2, con_id);
+			pstm.setString(3, con_id);
+			pstm.setString(4, login_id);
+			
+			rs = pstm.executeQuery();
+			
+			if (rs.next()) {
+				chat_serial = rs.getInt(1);
+			} else {
+				System.out.println("chat_serial 불러올 수 없음");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, pstm, rs);
+		}
+		return chat_serial;
+	}
+
+	@Override
+	public int delMessage(Connection con, int chat_serial) {
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			pstm = con.prepareStatement(delMessage);
+			pstm.setInt(1, chat_serial);
+
+			res = pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStmt(pstm);
+		}
+		return res;
+	}
+
+	@Override
+	public int delSerial(Connection con, int chat_serial) {
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			pstm = con.prepareStatement(delSerial);
+			pstm.setInt(1, chat_serial);
+			res = pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStmt(pstm);
+		}
+		return res;
+	}
 }

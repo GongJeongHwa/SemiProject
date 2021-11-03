@@ -186,6 +186,7 @@ function deleteMessageTab() {
 		success: function(msg) {
 			var json = msg;
 			$.each(json, function(key, value) {
+				console.log(value[0]);
 				$("#tbody").append(
 						"<tr class='"+value[0]+"' style='padding:10px;'>" +
 						"<td rowspan='2' style='text-align:center;'><img class='listpic' alt='profile' src='./img/user/" + value[2] + ".png'></td>" +
@@ -195,7 +196,7 @@ function deleteMessageTab() {
 						"<td><a class='message'>"+value[1]+"</a></td>" +
 						"<td style='padding-left:25px;'>" +
 						"<span class='sen-id' style='display:none;'>"+value[0]+"</span>" +
-						"<img class='trash' alt='trash' src='./img/companion/trash.png'>" +
+						"<img class='trash' alt='trash' src='./img/companion/trash.png' onclick='completeDelete(this);'>" +
 						"</td>" +
 						"</tr>"
 				);
@@ -203,6 +204,30 @@ function deleteMessageTab() {
 		}
 	});
 }
+
+function completeDelete(obj) {
+	var con_id = $(obj).siblings("span").text();
+	
+	if (confirm("상대방과의 메세지를 완전히 삭제하시겠습니까?")) {
+		$.ajax({
+			url:"message.do?command=completeDelete",
+			type:"post",
+			data: {
+				"con_id":con_id
+			},
+			success:function(msg) {
+				var cls = "."+con_id;
+				if (msg == "성공") {
+					alert("메세지를 성공적으로 삭제했습니다");
+					$(cls).css({"display":"none"});
+				} else {
+					alert("fail");
+				}
+			}
+		});
+	}
+}
+
 
 function messageTab() {
 	$("#tbody").html("");
@@ -259,7 +284,7 @@ function askPermit(obj) {
 }
 
 function askDenied(obj) {
-	var id = $(obj).parent(".fifthDiv").siblings(".thirdDiv").children("#ask_name").text();
+	var id = $(obj).parent(".fifthDiv").siblings(".secondDiv").children(".userId").text();
 	
 	$.ajax({
 		url:"message.do?command=askDenied&id="+id,

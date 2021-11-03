@@ -58,9 +58,10 @@
 	  width: 15%;
 	  float: left;
 	  height: 50%;
+	  margin-left:100px;
 	}
 	.t_list{
-		margin: 20px;
+		margin: 20px 0px;
 	}
 	h3 {
 		padding: 0;
@@ -111,10 +112,10 @@
 	
 	
 	<!-- 메인 -->
-	<div id="right" class="flex_container" style="margin-left:300px;">
+	<div id="right" class="flex_container" style="margin-left:350px;">
 		<!-- 달력 -->	
 		<div style='float:center;width:400px;height:500px;font-size:0.6em;' id='calendar'></div>
-		<br><hr><br>
+		<br><hr style="width:800px">
 	
 		<!-- 나의여행 목록 -->
 		<div class="t_list">
@@ -126,7 +127,7 @@
 				
 				<tr>
 					<th>날짜</th>
-					<th>　♡</th>
+					<th style="text-align:center">♡</th>
 					<th>여행지</th>
 				</tr>
 				<c:choose>
@@ -136,10 +137,10 @@
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:forEach items="${travel_list }" var="blogDto">
+						<c:forEach items="${travel_list }" var="blogDto" end="4">
 							<tr>
 								<td>${blogDto.blog_create_date }</td>
-								<td>${blogDto.heart_count }</td>
+								<td style="text-align:center">♥${blogDto.heart_count }</td>
 								<td>${blogDto.areaname }</td>
 							</tr>
 						</c:forEach>
@@ -148,6 +149,7 @@
 					
 			</table>
 		</div>
+		<br><hr style="width:800px">
 		
 		<!-- 찜목록 -->
 		<div class="t_list">
@@ -168,17 +170,18 @@
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:forEach items="${wished_list }" var="HeardDto">
+						<c:forEach items="${wished_list }" var="HeartDto" end="4">
 							<tr>
-								<td>${HeardDto.nation }</td>
-								<td>${HeardDto.place_name }</td>
-								<td>${HeardDto.latitude } / ${HeardDto.longtitude }</td>
+								<td>${HeartDto.nation }</td>
+								<td>${HeartDto.place_name }</td>
+								<td>${HeartDto.latitude } / ${HeardDto.longtitude }</td>
 							</tr>
 						</c:forEach>
 					</c:otherwise>
 				</c:choose>	
 			</table>
 		</div>
+		<br><hr style="width:800px">
 		
 		<!-- 약속일정 -->
 		<div class="t_list">
@@ -196,7 +199,7 @@
 				<c:choose>
 					<c:when test="${empty companion_list }">
 						<tr>
-							<td colspan="3" class="blank_list"> 약속이 없습니다.</td>
+							<td colspan="3" class="blank_list" end="4"> 약속이 없습니다.</td>
 						</tr>
 					</c:when>
 					<c:otherwise>

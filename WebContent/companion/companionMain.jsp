@@ -50,7 +50,6 @@
 	width:65%;
 	height:650px;
 	border-radius: 50px; 
-	border:1px solid #555555;
 }
 
 <!-- 슬라이드 css -->
@@ -104,40 +103,34 @@ $(document).ready(function(){
 	var list;
 	var start = 0;
 	
-	//blogdto list 가져오기
 	$.ajax({
 		url:"../blog.do?command=bloglist",
 		method: "post",
 		dataType: "json",
 		success:function(data){
+			for(var i = 0; i < data.length; i++){
 			
-			$(".card").each(function(){
-				var imgPath = "../" + data[start].path;
-				$(this).find("img").eq(0).prop("src", imgPath);
+				if(i == 3) return;
+				$(".card").eq(i).find("img").eq(0).prop("src", data[i].path);
 				var str = "";
-				for(var i = data[start].penalty; i < 3; i++){str += "★";}
-				for(var i = 0; i < data[start].penalty; i++){str += "☆";}
-				$(this).find("p").eq(0).html(data[start].userid + "&nbsp;" + str);
-				$(this).find("span").eq(0).html(data[start].mindate + " ~ " + data[start].maxdate);
-				$(this).find("b").eq(0).html(data[start].area);
-				$(this).find("h6").html(data[start].title);
-				$(this).find("p").eq(1).html(data[start].content);
-				$(this).find("button").attr("onclick","location.href='blog.do?command=selectone&blogseq=" + data[start].blogseq + "&user_id=" + data[start].userid + "'");
-				$(this).find("span").eq(1).html(data[start].blogheart);
-				$(this).find("span").eq(2).html(data[start].comment);
-				$(this).find("span").eq(3).html(data[start].hits);
-				start = (start+1)==data.length? 0 : (start+1);
-			});
-			start = 0;	
-			list = data;
-			
+				for(var j = data[i].penalty; j < 3; j++){str += "★";}
+				for(var j = 0; j < data[i].penalty; j++){str += "☆";}
+				$(".card").eq(i).find("p").eq(0).html(data[i].userid + "&nbsp;" + str);
+				$(".card").eq(i).find("span").eq(0).html(data[i].mindate + " ~ " + data[i].maxdate);
+				$(".card").eq(i).find("b").eq(0).html(data[i].area);
+				$(".card").eq(i).find("h6").html(data[i].title);
+				$(".card").eq(i).find("p").eq(1).html(data[i].content);
+				$(".card").eq(i).find("button").attr("onclick","location.href='../blog.do?command=selectone&blogseq=" + data[i].blogseq + "&user_id=" + data[i].userid + "'");
+				$(".card").eq(i).find("span").eq(1).html(data[i].blogheart);
+				$(".card").eq(i).find("span").eq(2).html(data[i].comment);
+				$(".card").eq(i).find("span").eq(3).html(data[i].hits);
+			}
 		}
 	});
-	$("#one").attr("checked", true);
 });
 
 function findCompanion() {
-	location.href = "#";
+	location.href = "../blog/blog_main.jsp";
 }
 </script>
 

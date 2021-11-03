@@ -13,7 +13,7 @@
 	blogDto bdto = (blogDto)request.getAttribute("bdto");
 	String userid = bdto.getUser_id();
 	int penalty = bdto.getUser_penalty();
-	Date createdate = (Date)bdto.getBlog_create_date();
+	String createdate = bdto.getBlog_create_date().toString().split("\\.")[0];
 	String title = bdto.getTitle();
 	String content = bdto.getContent();
 	String thumbnail = bdto.getThumbnailPath();
@@ -35,12 +35,28 @@
 		string[idx] = entry.getValue();
 		idx++;
 	}
+	
+	UserDto userdto = (UserDto)session.getAttribute("dto");
+	String sessionId = "";
+	int sessionPenalty = -1;//세션 유저의 페널티
+	if(userdto != null){
+		sessionId = userdto.getUser_id();
+		sessionPenalty = userdto.getPanalty();
+	}
+	String None = "none";
+	String Yes = "display";
+	
+	System.out.println(userid);
+	System.out.println(sessionId);
 %>
     
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
@@ -50,12 +66,35 @@
 }
 
 .bottomBtn {
+	border: 1px solid gray;
 	text-align: center;
 	background-color: white;
-	border-radius: 23px;
+	border-radius: 22px;
 	padding: 8px;
+	margin-bottom: 5px;
 }
 
+.toast-success {
+	background-color: #77ca8a !important;
+	font-weight: bold !important;
+	font-size: 12pt !important; 
+}
+
+.toast-error {
+	background-color: #BD362F !important;
+}
+
+.toast-info {
+	background-color: #2F96B4 !important;
+}
+
+.toast-warning {
+	background-color: #F89406 !important;
+}
+
+.toast-top-right {
+	top: 7%;
+}
 
 </style>
 
@@ -524,6 +563,7 @@ let Data = new Array();
 
 <script type="text/javascript">
 let dayandplace = new Array();
+let key = "73ba5abe8af88dbcd7e38268a7747f94";
 
 	$(function(){
 		
@@ -596,6 +636,27 @@ let dayandplace = new Array();
 		$(".events").eq(0).find("a").eq(0).attr("class","selected");
 		$(".events-content").eq(0).find("li").eq(0).attr("class","selected");
 		
+		//날씨데이터추가
+		$(".events-content").eq(0).find("li").each(function(){
+			
+			var date = $(this).find("h3").html().split("의")[0];
+			
+			$(this).find(".row").each(function(){
+			
+				var lat = $(this).find("input[name=lat]").val();
+				var lng = $(this).find("input[name=lng]").val();
+				var location = $(this);
+				
+				getWeather(location, date, lat, lng);
+				
+			});
+			
+		});
+		
+		
+		
+		
+		
 	});
 
 	function visitTime(time){
@@ -632,11 +693,91 @@ let dayandplace = new Array();
 	
 	function createDetail(i, placename, addr, time, src, url, lat, lng){
 		var html = "";
-		html = "<div class='row'><div class='col-lg-1'></div><div class='col-lg-6'><img class='img-thumbnail rounded' src='"+ src +"' style='width:100%;'></div><div class='col-lg-4'><h3><b>"+ i +". "+ placename +"</b></h3><h5>"+ addr +"</h5><br><h4><b>방문예정 시각 : "+ time +"</b></h4><br><a href='"+ url +"' style='font-size:12pt; text-decoration:none; color:black;'><img src='<%=request.getContextPath()%>/img/icons/caret-right-fill.svg' alt='Bootstrap'>상세정보</a></div><div class='col-lg-1'></div></div>" +
+		html = "<div class='row'><div class='col-lg-1'></div><div class='col-lg-6'><img class='img-thumbnail rounded' src='"+ src +"' style='width:100%;'></div><div class='col-lg-4'><h3><b>"+ i +". "+ placename +"</b></h3><h5>"+ addr +"</h5><span id='weather' style='font-size: 15pt; color:rgb(31,210,127);'></span><br><br><h4><b>방문예정 시각 : "+ time +"</b></h4><br><a href='"+ url +"' style='font-size:12pt; text-decoration:none; color:black;'><img src='<%=request.getContextPath()%>/img/icons/caret-right-fill.svg' alt='Bootstrap'>상세정보</a></div><div class='col-lg-1'></div>" +
                "<input type = 'hidden' name='lat' value='"+ lat +"'>" + 
-               "<input type = 'hidden' name='lng' value='"+ lng +"'><br><br>"; 
+               "<input type = 'hidden' name='lng' value='"+ lng +"'></div><br><br>"; 
 		return html;
 	}
+	
+	function getWeather(location, date, lat, lng){
+		
+		let weatherIcon = {
+ 				'01' : 'fas fa-sun',
+ 				'02' : 'fas fa-cloud-sun',
+ 				'03' : 'fas fa-cloud',
+ 				'04' : 'fas fa-cloud-meatball',
+ 				'09' : 'fas fa-cloud-sun-rain',
+ 				'10' : 'fas fa-cloud-showers-heavy',
+ 				'11' : 'fas fa-poo-storm',
+ 				'13' : 'far fa-snowflake',
+ 				'50' : 'fas fa-smog'
+ 		};
+		let url = "https://api.openweathermap.org/data/2.5/onecall?lat="+ lat +"&lon="+ lng +"&appid="+key+"&exclude=hourly,minutely&units=metric";
+		
+		$.ajax({
+			url : url,
+			dataType : "json",
+			method : "GET",
+			success : function(resp) {
+				
+				console.log(resp);
+				
+				var idx = -1;
+				
+				for(var i = 0; i < resp.daily.length; i++){
+					
+					var dt = resp.daily[i].dt;
+					var dtdate = new Date(dt*1000);
+					if(date == dtdate.toISOString().split("T")[0]){
+						idx = i;
+						console.log(date);
+						console.log(dtdate.toISOString().split("T")[0]);
+						break;
+					}
+				}
+				
+				if(idx == -1){
+					return;
+				}
+
+				var icon = (resp.daily[idx].weather[0].icon).substring(0,2);
+				var desc = resp.daily[idx].weather[0].description;
+				var maxtemp = Math.floor(resp.daily[idx].temp.max) + "º";
+				var mintemp = Math.floor(resp.daily[idx].temp.min) + "º";
+				
+				let temphtml = "";
+				
+				temphtml += '<i class="' + weatherIcon[icon] + '"></i> &nbsp;';
+				temphtml += desc + "&nbsp;";
+				temphtml += "↑" + maxtemp + "&nbsp;";
+				temphtml += "↓" + mintemp;
+				
+				location.find("span").eq(0).html(temphtml);
+				return;
+				
+			},
+			error : function(){
+				alert("실패");
+			}
+		});
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </script>
 
@@ -1000,9 +1141,10 @@ jQuery(document).ready(function($){
 	<div class="container" style="font-size: 12pt;">
 		<div class="row">
 			<div class="col-lg-12" style="text-align: right;">
-				&nbsp;<input type="button" class="bottomBtn" value="동행신청하기" onclick="func_prompt()" />
-				&nbsp;<input type="button" class="bottomBtn" value="블로그 메인" onclick="" />
-				&nbsp;<button type="button" class="bottomBtn" onclick="" ><img src="<%=request.getContextPath()%>/img/icons/suit-heart.svg" alt="Bootstrap">추가</button>
+				<span>&nbsp;<input type="button" class="bottomBtn" value="블로그 메인" onclick="location.href='<%=request.getContextPath()%>/blog/blog_main.jsp'" /></span>
+				<span style="display: <%=(sessionId.equals(userid))? None:Yes %>;">&nbsp;<input type="button" class="bottomBtn" value="동행신청하기" onclick="func_prompt()"/></span>
+				<span style="display: <%=(sessionId.equals(userid))? None:Yes %>;">&nbsp;<button type="button" class="bottomBtn" onclick="addheart();"><img src="<%=request.getContextPath()%>/img/icons/suit-heart.svg" alt="Bootstrap">추가</button></span>
+				<span style="display: <%=(sessionId.equals(userid))? Yes:None %>;">&nbsp;<button type="button" class="bottomBtn" onclick="delBlog();"><img src="<%=request.getContextPath()%>/img/icons/trash.svg" alt="Bootstrap">삭제</button></span>
 			</div>
 		</div>
 		<div class="row">
@@ -1021,7 +1163,23 @@ jQuery(document).ready(function($){
 	<script type="text/javascript">
 //건든 내용
    function func_prompt () {
-      var comment = prompt("메시지를 입력해주세요.");
+	
+	  //세션없으면 로그인필요안내
+	  var sessionid = "<%=sessionId %>";
+	  if(sessionid == ""){
+	  	  toastr.options.positionClass = "toast-top-right";
+		  toastr.warning("로그인이 필요합니다.");
+		  return;
+	  }
+	
+	  //세션유저의 페널티가 3이면 동행신청 불가
+	  var sessionpenalty = <%=sessionPenalty %>;
+	  if(sessionpenalty == 3){
+		  alert("페널티가 3이므로 동행 신청이 불가합니다.");
+		  return;
+	  }
+	
+      var comment = prompt("상대방에 동행신청을 남겨주세요!");
         console.log(comment);
         
         //유효성검사
@@ -1030,7 +1188,7 @@ jQuery(document).ready(function($){
            return;
         }
         //현재 페이지의 작성자 아이디 가져와야함. 페이지 상에서 DISPLAY NONE으로 TEXT값 넣어줘서 만들어놔야함
-        var con_id = "ILNAM"; 
+        var con_id = "<%=userid %>"; 
         console.log(con_id);
         
         $.ajax({
@@ -1040,11 +1198,12 @@ jQuery(document).ready(function($){
               "con_id":con_id,
               "comment":comment
            },
-           success:function(data) {
-              console.log(data);
-              if (data == 1) {
+           success:function(msg) {
+        	  console.log(typeof msg);
+              console.log(msg);
+              if (msg == "성공") {
                  alert("동행 신청을 완료했습니다.\n상대방 수락 시 채팅창이 연결됩니다!");
-              } else if (data == -1) {
+              } else {
                alert("동행 신청을 실패했습니다.")                 
               }
            },

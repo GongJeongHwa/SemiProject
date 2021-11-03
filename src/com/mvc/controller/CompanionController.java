@@ -34,13 +34,8 @@ public class CompanionController extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		HttpSession session = request.getSession();
 		CompanionBizImpl biz = new CompanionBizImpl();
-//		UserDto login_id = (UserDto)session.getAttribute("user_id");
+		UserDto login_id = (UserDto)session.getAttribute("dto");
 
-		UserDto login_id = new UserDto();
-		login_id.setUser_id("ADMIN");
-		login_id.setUser_img("user1");
-		login_id.setName("관리자");
-		session.setAttribute("login_id", login_id);
 		System.out.println("로그인 아이디 : " + login_id.getUser_id());
 		
 		if (login_id.getUser_id() == null || login_id.getUser_id().trim().equals("")) {
@@ -143,7 +138,6 @@ public class CompanionController extends HttpServlet {
 			
 		} else if (command.equals("promise")) {
 			String con_id = request.getParameter("con_id");
-			System.out.println(con_id);
 			String loc = request.getParameter("loc");
 			String date = request.getParameter("date");
 			String comment = request.getParameter("comment");
@@ -169,7 +163,11 @@ public class CompanionController extends HttpServlet {
 			String comment = request.getParameter("comment");
 			
 			boolean flag = biz.blogAskCompanion(login_id.getUser_id(), con_id, comment);
-			response.getWriter().write(flag?1:-1);
+			response.getWriter().write(flag?"성공":"실패");
+		} else if (command.equals("completeDelete")) {
+			String con_id = request.getParameter("con_id");
+			int res = biz.completeDelete(login_id.getUser_id(), con_id);
+			response.getWriter().write(res>0?"성공":"실패");
 		}
 	}
 	
