@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 import com.mvc.dto.BlognewsboardDto;
+import com.mvc.dto.blogDto;
 
 import common.JDBCTemplate;
 
@@ -305,7 +306,83 @@ public class BlogDao extends JDBCTemplate{
 		return res;
 	}
 	
-	
+	//블로그 게시판 
+	public List<blogDto> scheduleboardlist(){
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		List<blogDto> res = new ArrayList<blogDto>();
+		
+		String sql = " SELECT * FROM V_BLOG_LIST_DESC ";
+		
+		try {
+			pstm = con.prepareStatement(sql);
+			System.out.println("03.query 준비: "+sql);
+			
+			rs = pstm.executeQuery(sql);
+			System.out.println("04. query 실행 및 리턴");
+			
+			while(rs.next()) {
+				blogDto tmp = new blogDto();
+				tmp.setBlog_seq(rs.getInt(3));
+				tmp.setUser_id(rs.getString(1));
+				tmp.setTitle(rs.getString(5));
+				tmp.setMindate(rs.getDate(8));
+				tmp.setMaxdate(rs.getDate(9));
+				tmp.setThumbnailPath(rs.getString(10));
+				
+				res.add(tmp);
+			}
+		} catch (SQLException e) {
+			System.out.println("3/4단계 오류");
+			e.printStackTrace();
+		}finally {
+			closeAll(con,pstm,rs);
+			System.out.println("05. db종료\n");
+		}
+		
+		return res;
+	}
+	//블로그 게시판 베스트
+	public List<blogDto> bestlist(){
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		List<blogDto> res = new ArrayList<blogDto>();
+		
+		String sql = " SELECT * FROM V_BLOG_LIST ";
+		
+		try {
+			pstm = con.prepareStatement(sql);
+			System.out.println("03.query 준비: "+sql);
+			
+			rs = pstm.executeQuery(sql);
+			System.out.println("04. query 실행 및 리턴");
+			
+			while(rs.next()) {
+				blogDto tmp = new blogDto();
+				tmp.setBlog_seq(rs.getInt(3));
+				tmp.setUser_id(rs.getString(1));
+				tmp.setTitle(rs.getString(5));
+				tmp.setMindate(rs.getDate(8));
+				tmp.setMaxdate(rs.getDate(9));
+				tmp.setThumbnailPath(rs.getString(10));
+				tmp.setHeart_count(rs.getInt(11));
+				tmp.setComment(rs.getInt(12));
+				tmp.setHits(rs.getInt(13));
+				
+				res.add(tmp);
+			}
+		} catch (SQLException e) {
+			System.out.println("3/4단계 오류");
+			e.printStackTrace();
+		}finally {
+			closeAll(con,pstm,rs);
+			System.out.println("05. db종료\n");
+		}
+		
+		return res;
+	}	
 	
 	
 	

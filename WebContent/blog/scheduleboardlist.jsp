@@ -2,7 +2,12 @@
     pageEncoding="UTF-8"%>
     
 <% request.setCharacterEncoding("UTF-8"); %>
-<% response.setContentType("text/html; charset=UTF-8"); %>    
+<% response.setContentType("text/html; charset=UTF-8"); %>  
+
+<%@ page import="java.util.List" %>
+<%@ page import="com.mvc.dto.blogDto" %>
+ <%@ page import="com.mvc.dao.BlogDao" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 
 <!DOCTYPE html>
 <html>
@@ -45,43 +50,33 @@ background-color:#DCE2F0;
 	<br>
 	
 	<table class="table table-bordered" style="width:800px; margin-left:250px;">
-		
 		<col width="100"><col width="100"><col width="500"><col width="100"><col width="100">
 		<thead align="center">
 		<tr align="center">
 			<th >번호</th>
-			<th >작성자</th>
+			<th >유저명</th>
 			<th >일정명</th>
-			<th>조회수</th>
-			<th>등록날짜</th>
+			<th>여행시작일</th>
+			<th>여행종료일</th>
 		</tr>
 		</thead>
+<%
+	BlogDao dao = new BlogDao();
+	List<blogDto> list = dao.scheduleboardlist();
+	for(int i=0; i<list.size(); i++){
+%>
+		<tr align="center">
+		<td><%=list.get(i).getBlog_seq()%></td>
+		<td><%=list.get(i).getUser_id()%></td>
+		<td><a href="<%=request.getContextPath() %>/blog.do?command=selectone&user_id=<%=list.get(i).getUser_id()%>&blogseq=<%=list.get(i).getBlog_seq()%>"><%=list.get(i).getTitle() %></a></td>
+		<td><%=list.get(i).getMindate() %></td>
+		<td><%=list.get(i).getMaxdate() %></td>
+	</tr>
 		
-		<tbody align="center">
-		<tr>
-			<td>2</td>
-			<td>관리자</td>
-			<td>남산서울타워 전망대를 가보지 않은 그대에게</td>
-			<td>581</td>
-			<td>2021.10.01</td>
-		</tr>
+<%
+	}
+%>		
 		
-		<tr>
-			<td>2</td>
-			<td>관리자</td>
-			<td>남산서울타워 전망대를 가보지 않은 그대에게</td>
-			<td>581</td>
-			<td>2021.10.01</td>
-		</tr>
-		
-		<tr>
-			<td>2</td>
-			<td>관리자</td>
-			<td>남산서울타워 전망대를 가보지 않은 그대에게</td>
-			<td>581</td>
-			<td>2021.10.01</td>
-		</tr>
-		</tbody>
 		
 	</table>
 		<input type = "button" value="돌아가기" onclick="location.href='blog_main.jsp'" 

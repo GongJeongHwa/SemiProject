@@ -1138,7 +1138,7 @@ jQuery(document).ready(function($){
 
 
 
-	<div class="container" style="font-size: 12pt;">
+<div class="container" style="font-size: 12pt;">
 		<div class="row">
 			<div class="col-lg-12" style="text-align: right;">
 				<span>&nbsp;<input type="button" class="bottomBtn" value="블로그 메인" onclick="location.href='<%=request.getContextPath()%>/blog/blog_main.jsp'" /></span>
