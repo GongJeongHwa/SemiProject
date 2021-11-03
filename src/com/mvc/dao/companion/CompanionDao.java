@@ -80,4 +80,17 @@ public interface CompanionDao {
 	//블로그 디테일 -> 동행 신청하기
 	String blogAskCompanion = " INSERT INTO ASK_CONNECT VALUES(ASK_SEQ.NEXTVAL, ?, ?, ?, SYSDATE, 'D') ";
 	public int blogAskCompanion(Connection con, String login_id, String con_id, String comment);
+	
+	//완전삭제 과정
+	String takeChatSerial = " SELECT CHAT_SERIAL FROM M_MESSAGE "
+			+ "WHERE REC_ID = ? AND SEN_ID = ? "
+			+ "UNION "
+			+ "SELECT CHAT_SERIAL FROM M_MESSAGE "
+			+ "WHERE REC_ID = ? AND SEN_ID = ? ";
+	String delMessage = " DELETE FROM M_MESSAGE WHERE CHAT_SERIAL = ? "; 
+	String delSerial = " DELETE FROM CHAT_LIST WHERE CHAT_SERIAL = ? ";
+	public int takeChatSerial(Connection con, String login_id, String con_id);
+	public int delMessage(Connection con, int chat_serial);
+	public int delSerial(Connection con, int chat_serial);
+	
 }

@@ -161,4 +161,26 @@ public class CompanionBizImpl extends JDBCTemplate implements CompanionBiz{
 		
 		return res>0?true:false;
 	}
+
+	@Override
+	public int completeDelete(String login_id, String con_id) {
+		int chat_serial = dao.takeChatSerial(con, login_id, con_id);
+		int res = dao.delMessage(con, chat_serial);
+		
+		if (res > 0) {
+			commit(con);
+			res = dao.delSerial(con, chat_serial);
+			
+			if (res > 0) {
+				commit(con);
+			} else {
+				rollback(con);
+			}
+		} else {
+			rollback(con);
+		}
+		closeConn(con);
+		
+		return res;
+	}
 }
