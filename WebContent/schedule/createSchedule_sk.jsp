@@ -1,7 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
-<% response.setContentType("text/html; charset=UTF-8"); %>       
+<% response.setContentType("text/html; charset=UTF-8"); %>
+<%@ page import="com.mvc.dto.UserDto" %>   
+<% 
+   UserDto userdto = (UserDto)session.getAttribute("dto");
+   String user_id = "";
+   if(userdto != null){
+	   user_id = userdto.getUser_id();
+   }
+%>    
     
 <!DOCTYPE html>
 <html>
@@ -9,6 +17,8 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" type="text/css" href="schedule.css">
 
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,8 +37,7 @@
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="schedule.css">
+ 
 <title>createSchedule</title>
 
 <!-- 영문폰트 -->
@@ -42,10 +51,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
 
  
+ 
 <script>
 let photopath = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photo_reference=';
 let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 
+  //userid
+  let userid = "<%=user_id %>";
 
   //컨트롤러에 넘길 배열
   let tourlist = new Array();
@@ -261,6 +273,13 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 		//form
 		$("#formclick").click(function(){
 			
+			if(userid == ""){
+				toastr.options.positionClass = "toast-top-right";
+				toastr.warning("로그인이 필요합니다.");
+				return;
+			} 
+			
+			
 			if(tourlist.length == 0){
 				alert("일정이 담겨있지 않습니다.");
 				return;
@@ -450,14 +469,17 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 	
 	<br><br>
 	
-      <!-- 찜테이블-->
-      
-		 
-<section class="liked-table">
-  <div class="card">
-    <h5 style="font-family: 'Noto Sans KR', sans-serif;"><a class="btn-3d red" id="drop" ><img src="img/heartmarker2.png" style="width:45%; margin-top:15px;"></a><br>찜리스트	 
+         <!-- 찜테이블-->
+ 
+ <div class="btn-group dropstart" style="position:absolute; top:200px; right:15px;">
+  <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px; padding:4px;">
+   <img src="img/heartmarker2.png" style="width:40%; ">찜
+  </button>
+  <div class="dropdown-menu" style="width:300px; height:370px; text-align:center;">
+ 
+    <h5 style="font-size:15px;"><a class="btn-3d red" id="drop" ><img src="img/heartmarker2.png" style="width:10%; margin-top:15px; "></a><br>찜리스트	 
 		</h5>
-    	 <div style="width:100%; height:280px; padding-left:10%; padding-right:10%;">
+    	 <div style="padding-left:10%; padding-right:10%;">
 		 	<table class="table table-hover" >
   			<thead>
     		<tr>
@@ -502,8 +524,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 			</table>
 		 </div> 
   </div>
-</section>
-		
+</div> 
      <!-- map -->
     <div class="container">
 		<div class="row">
@@ -523,14 +544,14 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 					<input type="hidden" name="nation" id="nationid" value="">
 					<input type="hidden" name="thumbnail" id="thumbid" value="">
 					<input type="hidden" name="value" id="valueid" value="">
-					<h5><input type="button" id="formclick" value="여행일정 확정" style="float:right; margin-bottom:20px; font-family: 'Noto Sans KR', sans-serif;"class="button-67" role="button" /></h5><br>
+					<h5><input type="button" id="formclick" value="여행일정 확정" style="float:right; margin-bottom:20px; font-size:17px; padding:10px;"class="button-67" role="button" /></h5><br>
 					</td>
 				</tr>
 				<tr>
-					<td class="travleInput"><input type="text" name="title" id="title" placeholder="여행 타이틀을 입력하세요" style="width: 100%; height: 30px; text-align:center; border:0px; font-family: 'Noto Sans KR', sans-serif;"></td>
+					<td class="travleInput"><input type="text" name="title" id="title" placeholder="여행 타이틀을 입력하세요" style="width: 100%; height: 30px; text-align:center; border:0px;"></td>
 				</tr>
 				<tr>
-					<td class="travleInput"><textarea rows="" cols="" name="content" id="content" placeholder="여행 내용을 입력하세요." style="height: 140px; width:100%; text-align:center; padding:40px; border:0px; font-family: 'Noto Sans KR', sans-serif;"></textarea></td>
+					<td class="travleInput"><textarea rows="" cols="" name="content" id="content" placeholder="여행 내용을 입력하세요." style="height: 140px; width:100%; text-align:center; padding:40px; border:0px;"></textarea></td>
 				</tr>
 				</table>
 				</form>
@@ -545,12 +566,12 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 		<div class="row align-items-center">
 			<div class="col-lg-12">
 				<hr style="margin-top: 30px;">
-				<h4 style="font-family: 'Noto Sans KR', sans-serif;">여행하실 날짜를 선택 후 장소를 추가해보세요.</h4>
+				<h4 style="font-size:20px;">여행하실 날짜를 선택 후 장소를 추가해보세요.</h4>
 				<div style="margin-top: 30px; margin-bottom: 30px;">
 					<form>
 						<!-- datepicker -->
-						<input type="text" id="datepicker" onchange="dateChange()" placeholder="날짜를 입력하세요" style="font-family: 'Noto Sans KR', sans-serif;">&nbsp;
-      					<input id="input_submit" type="button" value="일정 추가" class="button-67" onclick="input();" style="font-family: 'Noto Sans KR', sans-serif;"/>
+						<input type="text" id="datepicker" onchange="dateChange()" placeholder="날짜를 입력하세요" >&nbsp;
+      					<input id="input_submit" type="button" value="일정 추가" class="button-67" onclick="input();" style="font-size:17px; padding:10px;"/>
       					&nbsp;&nbsp;&nbsp;<span style="text-align: center; font-size:15pt; font-weight:bold;" id="temp"></span>
 
 					</form>
@@ -579,7 +600,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 	  			<!-- 컬럼3: restaurant -->
 			<div class="suggestionOpt">
 			<i class="material-icons"><img src="img/resticon.png" style="width:13%; height:13%; "></i>
-        <h1 style="font-family: 'Lato', sans-serif;">restaurant</h1>
+        <h1 style="font-family: 'Lato', sans-serif; font-size:30px;">restaurant</h1>
         <hr />
         	<p id="results_rest" data-bs-toggle="modal" data-bs-target="#Modal" align="center" class="clickval"></p>
         	 <hr />
@@ -590,7 +611,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 			<!-- 컬럼2: place -->
 			<div class="suggestionOpt">
 			<i class="material-icons"><img src="img/tourist.png" style="width:13%; height:13%"></i>
-        <h1 style="font-family: 'Lato', sans-serif;">place</h1>
+        <h1 style="font-family: 'Lato', sans-serif; font-size:30px;">place</h1>
         <hr />
         	<p id="results_ta" data-bs-toggle="modal" data-bs-target="#Modal" align="center" class="clickval"></p>
         	 <hr />
@@ -600,7 +621,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
  			<!-- 컬럼1: hotel -->
 			<div class="suggestionOpt">
 			<i class="material-icons"><img src="img/hotel2.png" style="width:13%; height:13%"></i>
-        <h1 style="font-family: 'Lato', sans-serif;">hotel</h1>
+        <h1 style="font-family: 'Lato', sans-serif; font-size:30px;">hotel</h1>
         <hr />
         	<p id="results" data-bs-toggle="modal" data-bs-target="#Modal" align="center" class="clickval"></p>
         	 <hr />
@@ -621,11 +642,11 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
       <div class="modal-body">
       		<div>
       		<br> 
-      		<p id="modalimage"></p><br>
-      		<p id="modalRating"></p><br>
-      		<p id="modalAddress"></p><br>
-      		<p id="modalPhone"></p><br>
-      		<p id="modaldetailpage"></p><br>
+      		<p id="modalimage"></p> 
+      		<p id="modalRating"></p> 
+      		<p id="modalAddress"></p> 
+      		<p id="modalPhone"></p> 
+      		<p id="modaldetailpage"></p> 
       		<hr>
       		<a href="" id="modalUrl">go to web site</a>
       		<hr>

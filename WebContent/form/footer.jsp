@@ -41,8 +41,8 @@
 						if (userdto_f != null) {
 					%>
 						<a href=""><b>내 정보</b></a><br><br>
-						<a href="mypage.do?command=mypage">마이페이지</a><br><br>
-						<a href="mypage.do?command=myTravel">내 여행리스트</a><br><br>
+						<a href="<%=request.getContextPath()%>/mypage.do?command=mypage">마이페이지</a><br><br>
+						<a href="<%=request.getContextPath()%>/mypage.do?command=myTravel">내 여행리스트</a><br><br>
 						<a href="">내 쪽지함</a><br><br>
 					<%
 						} else {

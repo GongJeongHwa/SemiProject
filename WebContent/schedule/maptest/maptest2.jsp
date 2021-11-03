@@ -206,7 +206,7 @@ var map, places, infoWindow;
 var markers = [];
 var autocomplete;
 var countryRestrict = { 'country': 'kr'};
-var countries = {'kr': { center: {lat: 37.55,lng: 126.84},zoom: 12},};
+var countries = {'kr': { center: {lat: 37.52,lng: 126.97},zoom: 12},};
 var MARKER_PATH = 'https://developers.google.com/maps/documentation/javascript/images/marker_green'; 
 var MARKER_BASEPATH = 'https://maps.google.com/mapfiles/ms/micons/'; 
 var customIcons = { //지도상에서 type별 마커를 색으로 구분 
@@ -215,7 +215,7 @@ var customIcons = { //지도상에서 type별 마커를 색으로 구분
   restaurant: {icon: MARKER_BASEPATH + "red.png"}};
 var hostnameRegexp = new RegExp('^https?://.+?/');
 var countries = {
-  'kr': { center: {lat: 37.55,lng: 126.84},zoom: 12},};
+  'kr': { center: {lat: 37.52,lng: 126.97},zoom: 12},};
 let markerOnMap = [ //drop시 찍히는 임의의 4개 마커.  
 	   { lat: 37.5720, lng: 126.9600 },
 	   { lat: 37.5630, lng: 126.9732 },
@@ -508,9 +508,9 @@ function buildIWContent(place) {
     var ratingHtml = '';
     for (var i = 0; i < 5; i++) {
       if (place.rating < (i + 0.5)) {
-        ratingHtml += '&#10025;';
+        ratingHtml += '<img src="img/starhalf.png" style="width:3%;">';
       } else {
-        ratingHtml += '&#10029;';
+        ratingHtml += '<img src="img/star.png" style="width:3%;">';
       }
       document.getElementById('iw-rating-row').style.display = '';
       document.getElementById('iw-rating').innerHTML = ratingHtml;

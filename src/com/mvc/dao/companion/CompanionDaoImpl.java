@@ -475,6 +475,7 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		try {
 			pstm = con.prepareStatement(delMessage);
 			pstm.setInt(1, chat_serial);
+
 			res = pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
