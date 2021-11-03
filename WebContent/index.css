@@ -57,6 +57,18 @@
 	background-color: rgb(105, 231, 175);
 }
 
+#period{
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#place{
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #title{
 	font-weight:bold;
     white-space: nowrap;
