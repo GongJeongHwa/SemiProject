@@ -46,7 +46,7 @@
 	}
 
 	.t_list{
-		margin: 20px;
+		margin: 0px 20px;
 	}
 	h3 {
 		padding: 0;
@@ -84,7 +84,6 @@
 
 	<br>
 	<div style="text-align: center;">마이페이지</div>
-	<br>
 
 	<!-- 사이드바 -->
 	<div id="left" class="sidebar">
@@ -101,7 +100,18 @@
 	
 	
 	<!-- 메인 -->
-	<div id="right" class="flex_container" style="margin-left:250px; height:400px;">
+	<div id="right" class="flex_container" style="margin-left:250px; height:550px;">
+	
+	<!--<jsp:include page="/paging/paging.jsp">
+    <jsp:param value="${paging.page}" name="page"/>
+    <jsp:param value="${paging.beginPage}" name="beginPage"/>
+    <jsp:param value="${paging.endPage}" name="endPage"/>
+    <jsp:param value="${paging.prev}" name="prev"/>
+    <jsp:param value="${paging.next}" name="next"/>
+	</jsp:include> -->
+
+
+	
 	
 		<!-- 나의약속 목록 -->
 		<div class="t_list">
@@ -113,29 +123,30 @@
 			</div>
 			
 			<table class="table" style="width:750px;">
-				<col width="60px">
-				<col width="60px">
-				<col width="450px">
+				<col width="120px">
+				<col width="160px">
+				<col width="300px">
 				<col width="30px">
 				<tr>
-					<th>날짜</th>
-					<th>♡</th>
-					<th>여행지</th>
+					<th>국가</th>
+					<th>장소이름</th>
+					<th>위도 / 경도</th>
 					<th>　</th>
 				</tr>
 				<c:choose>
 					<c:when test="${empty wished_list }">
 						<tr>
-							<td colspan="4" class="blank_list"> 여행일정이 없습니다.</td>
+							<td colspan="43" class="blank_list"> 여행일정이 없습니다.</td>
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:forEach items="${wished_list }" var="t_dto">
+						<c:forEach items="${wished_list }" var="HeartDto">
 							<tr>
-								<td>${t_dto.tdate }</td>
-								<td>${t_dto.heart }</td>
-								<td>${t_dto.location }</td>
-								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>
+								<td>${HeartDto.nation }</td>
+								<td>${HeartDto.place_name }</td>
+								<td>${HeartDto.latitude } / ${HeardDto.longtitude }</td>
+								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>	
+								
 							</tr>
 						</c:forEach>
 					</c:otherwise>
