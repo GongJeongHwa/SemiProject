@@ -1001,7 +1001,8 @@ jQuery(document).ready(function($){
 		<div class="row">
 			<div class="col-lg-12" style="text-align: right;">
 				&nbsp;<input type="button" class="bottomBtn" value="동행신청하기" onclick="func_prompt()" />
-				&nbsp;<input type="button" class="bottomBtn" value="블로그 메인" onclick="" />
+				&nbsp;<input type="button" class="bottomBtn" value="블로그 메인" onclick="" >
+				&nbsp;<input type="button" class="bottomBtn" value="목록" onclick="" >
 				&nbsp;<button type="button" class="bottomBtn" onclick="" ><img src="<%=request.getContextPath()%>/img/icons/suit-heart.svg" alt="Bootstrap">추가</button>
 			</div>
 		</div>

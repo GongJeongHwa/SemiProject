@@ -19,7 +19,6 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
-
 </style>
 
 <title>Insert title here</title>
