@@ -55,7 +55,7 @@ $(document).ready(function(){
 	$(".partner").click(function(){
 		var val = $(this).val();
 		seq = (parseInt(val)+1)==6? 1 : (parseInt(val)+1);
-		var src ="img/partner2/part_" + val + ".png";
+		var src ="img/partner2/donghang" + val + ".PNG";
 		$("#partner_img").hide();
 		$("#partner_img").prop("src",src);
 		
@@ -140,7 +140,7 @@ function changePicture() {
 //picture변환2
 function changePicture_2(){
 	
-	var src ="img/partner2/part_" + seq + ".png";
+	var src ="img/partner2/donghang" + seq + ".PNG";
 	$("#partner_img").hide();
 	$("#partner_img").prop("src",src);
 	$(".partner").each(function(){

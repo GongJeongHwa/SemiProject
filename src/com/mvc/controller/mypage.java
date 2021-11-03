@@ -17,6 +17,7 @@ import com.mvc.dao.DaoImpl;
 import com.mvc.dao.mypage.MypageDao;
 import com.mvc.dao.mypage.MypageDaoImpl;
 import com.mvc.dto.HeartDto;
+import com.mvc.dto.Paging;
 import com.mvc.dto.PromiseDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
@@ -30,6 +31,27 @@ public class mypage extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		MypageDao m_dao = new MypageDaoImpl();
 		Dao	u_dao = new DaoImpl();
+//		Paging paging = new Paging();
+//		//페이징
+//		int page = 1;
+//		
+//		int count = m_dao.wishedCount();
+//		paging.setTotalCount(count);
+//		
+//		paging.setPage(page);
+//		
+//		if(request.getParameter("page")!= null) {
+//			page=Integer.parseInt(request.getParameter("page"));
+//		}
+//		
+//		List<HeartDto> plist = m_dao.selectWishedSql_paging(page);
+//		
+//		request.setAttribute("plist", plist);
+//		request.setAttribute("paging", paging);
+//		
+//		dispatch("user/save_travel.jsp", request, response);
+//		
+//		
 		
 		HttpSession session = request.getSession();
 		UserDto user = (UserDto) session.getAttribute("dto");
@@ -43,7 +65,7 @@ public class mypage extends HttpServlet {
 			
 			if (user == null || user.getUser_id().trim().equals("")) {
 				System.out.println("로그인확인!!!");
-				jsResponse("로그인이 필요합니다", "login/login.jsp", response);
+				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
 			} else {
 				//내여행 리스트
 				List<blogDto> travel_list =  m_dao.selectTravelSql(user.getUser_id());
@@ -52,6 +74,7 @@ public class mypage extends HttpServlet {
 				//내가 찜한 여행지 + 일정
 				List<HeartDto> wished_list =  m_dao.selectWishedSql(user.getUser_id());
 				request.setAttribute("wished_list", wished_list);
+				
 				//동행 리스트
 				List<PromiseDto> companion_list = m_dao.selectCompanionSql(user.getUser_id());
 				request.setAttribute("companion_list", companion_list);
@@ -61,32 +84,34 @@ public class mypage extends HttpServlet {
 		}else if(command.equals("myTravel")){
 			if (user == null || user.getUser_id().trim().equals("")) {
 				System.out.println("로그인확인!!!");
-				jsResponse("로그인이 필요합니다", "login/login.jsp", response);
+				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
 
 			} else {
 				//내여행 리스트
 				List<blogDto> travel_list =  m_dao.selectTravelSql(user.getUser_id());
 				request.setAttribute("travel_list", travel_list);
-				
 				dispatch("user/my_travel.jsp", request, response);
 			}
 		}else if(command.equals("wishedTravel")) {
-			dispatch("user/save_travel.jsp", request, response);
+			if (user == null || user.getUser_id().trim().equals("")) {
+				System.out.println("로그인확인!!!");
+				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
+
+			} else {
+				//내가 찜한 여행지 + 일정
+				List<HeartDto> wished_list =  m_dao.selectWishedSql(user.getUser_id());
+				request.setAttribute("wished_list", wished_list);
+				dispatch("user/save_travel.jsp", request, response);
+			}
+			
 		}else if(command.equals("myCompanion")) {
 			if (user == null || user.getUser_id().trim().equals("")) {
 				System.out.println("로그인확인!!!");
-				jsResponse("로그인이 필요합니다", "login/login.jsp", response);
+				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
 			} else {
-				//내여행 리스트
-				List<blogDto> travel_list =  m_dao.selectTravelSql(user.getUser_id());
-				request.setAttribute("travel_list", travel_list);
-				
-				//내가 찜한 여행지 + 일정
-				
 				//동행 리스트
 				List<PromiseDto> companion_list = m_dao.selectCompanionSql(user.getUser_id());
 				request.setAttribute("companion_list", companion_list);
-				
 				dispatch("user/my_companion.jsp", request, response);
 			}
 		}else if(command.equals("infoUpdate")) {

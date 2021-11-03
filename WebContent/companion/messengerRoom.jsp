@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
 
 <%
-	UserDto login_id = (UserDto)session.getAttribute("login_id");
+	UserDto login_id = (UserDto)session.getAttribute("dto");
 	List<MessageDto> list = (List<MessageDto>)request.getAttribute("detailList");
 	MessageDto con_id = list.get(list.size()-1);
 %>
@@ -523,7 +523,7 @@ function transPromise() {
 				"comment":comment
 			},
 			success:function(msg) {
-				alert(msg);
+				alert("약속 요청을 " + msg + " 했습니다.");
 				$(".promise-table").css("display", "none");
 			}
 		});
@@ -547,7 +547,6 @@ function reportUser() {
 		$.ajax({
 			url:"message.do?command=reportUser&con_id=" + con_id,
 			success:function(msg) {
-				alert(msg);
 				location.href="message.do?command=message";
 			}
 		});
@@ -571,14 +570,12 @@ function reportUser() {
 				</colgroup>
 				<tr style="height: 70px;">
 					<td><a id="promiseTab" class="nav-tab fw-bold" onclick="openPromise();">약속잡기</a></td>
-					<!-- 자기 자신 여행 url전송 -->
 					<td><a class="nav-tab fw-bold" onclick="openPromiseTab()">약속 확인하기</a></td>
 					<td><a id="refresh" class="nav-tab fw-bold" onclick="refreshMassage();">새로고침</a></td>
 				</tr>
 			</table>
 		</div>
 		<div class="messenger-table">
-		
 			<div id="check-promise">
 				<img id="close-button" alt="close" src="./img/companion/close.png" onclick="closeButton(this);">
 				<ul class="check-ul">	
@@ -588,11 +585,11 @@ function reportUser() {
 					<li id="promiseList">
 	    			</li>
 	    			<li class="check-li-goMy">
-	    				<a id="goMyPromise" onclick="">나의 약속 확인하러가기></a>
+	    				<!-- 마이페이지로 이동 -->
+	    				<a id="goMyPromise" href="<%=request.getContextPath()%>/mypage.do?command=myCompanion">나의 약속 확인하러가기></a>
 	    			</li>
 	    		</ul>
 			</div>
-			
 			<div class="promise-table">
 				<img id="close-button" alt="close" src="./img/companion/close.png" onclick="closeButton(this);">
 				<div style="width: 100%; height: 90%">

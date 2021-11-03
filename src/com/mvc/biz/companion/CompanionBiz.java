@@ -22,4 +22,6 @@ public interface CompanionBiz {
 	//블로그 디테일 동행신청
 	public boolean blogAskCompanion(String login_id, String con_id, String comment);
 	
+	public int completeDelete(String login_id, String con_id);
+	
 }

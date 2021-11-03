@@ -89,11 +89,11 @@
 								<%
 									if (dto != null) {
 								%>
-									<span onclick="location.href='loginController.do?command=logout'">로그아웃</span>
+									<span onclick="location.href='<%=request.getContextPath()%>/loginController.do?command=logout'">로그아웃</span>
 								<%
 									} else {
 								%>
-									<span onclick="location.href='login/login.jsp'">로그인</span>
+									<span onclick="location.href='<%=request.getContextPath()%>/login/login.jsp'">로그인</span>
 								<%
 									}
 								%>
@@ -103,7 +103,7 @@
 						<%
 							if (dto != null) {
 						%>
-							<li><button class="dropdown-item" type="button" onclick="location.href='mypage.do?command=mypage'">마이페이지</button></li>
+							<li><button class="dropdown-item" type="button" onclick="location.href='<%=request.getContextPath()%>/mypage.do?command=mypage'">마이페이지</button></li>
 						<%
 							} else {
 						%>

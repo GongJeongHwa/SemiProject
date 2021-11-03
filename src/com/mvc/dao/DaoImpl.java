@@ -276,7 +276,7 @@ public class DaoImpl implements Dao{
 					bdto.setUser_id(rs.getString(1));
 					bdto.setUser_penalty(rs.getInt(2));
 					bdto.setBlog_seq(rs.getInt(3));
-					bdto.setBlog_create_date(rs.getDate(4));
+					bdto.setBlog_create_date(rs.getTimestamp(4));
 					bdto.setTitle(rs.getString(5));
 					bdto.setContent(rs.getString(6));
 					bdto.setThumbnailPath(rs.getString(7));
