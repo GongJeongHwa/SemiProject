@@ -164,11 +164,43 @@ public class CompanionController extends HttpServlet {
 			
 			boolean flag = biz.blogAskCompanion(login_id.getUser_id(), con_id, comment);
 			response.getWriter().write(flag?"성공":"실패");
+			
 		} else if (command.equals("completeDelete")) {
 			String con_id = request.getParameter("con_id");
 			int res = biz.completeDelete(login_id.getUser_id(), con_id);
 			response.getWriter().write(res>0?"성공":"실패");
+			
+		} else if (command.equals("promiseWithUs")) {
+			response.getWriter().write(jsonGetPromiseList(login_id.getUser_id()));
+			
+		} else if (command.equals("denyMessage")) {
+			String con_id = request.getParameter("con_id");
+			int chat_serial = Integer.parseInt(request.getParameter("chat_serial"));
+			int res = biz.sendDenyMessage(login_id.getUser_id(), con_id, chat_serial);
+			response.getWriter().write(res>0?"성공":"실패");
+			
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String jsonGetPromiseList(String login_id) {
+		CompanionBizImpl biz = new CompanionBizImpl();
+		List<PromiseDto> list = biz.getPromiseList(login_id);
+		JSONObject json = new JSONObject();
+
+		for (int i = 0; i < list.size(); i++) {
+			JSONArray array = new JSONArray();
+			array.add(list.get(i).getSen_id());
+			array.add(list.get(i).getP_loc());
+			array.add(list.get(i).getP_time());
+			array.add(list.get(i).getP_comment());
+			array.add(list.get(i).getUser_img());
+			array.add(list.get(i).getUser_name());
+
+			json.put("result" + i, array);
+		}
+		return json.toJSONString();
+		
 	}
 	
 	@SuppressWarnings("unchecked")

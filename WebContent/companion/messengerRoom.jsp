@@ -299,6 +299,7 @@ $(function() {
 });
 
 function openPromiseTab() {
+	$(".promise-table").css("display","none");
 	$("#promiseList").html("");
 	$.ajax({
 		url:"message.do?command=getPromise",
@@ -332,7 +333,8 @@ function openPromiseTab() {
 }
 
 function denyPromise(obj) {
-	var id = $(obj).parent().siblings(".check-infodiv").children("#ask-name").text();
+	var id = $(obj).parent().siblings(".check-infodiv").children("#ask-id").text();
+	console.log(id);
 	var loc = $(obj).parent().siblings(".check-infodiv").children("#ask-loc").text();
 	if (confirm("약속을 거절하시겠습니까?")) {
 		$.ajax({
@@ -345,9 +347,28 @@ function denyPromise(obj) {
 			},
 			success:function(msg){
 				$(obj).parent().parent(".check-imgdiv").css("display","none");
+				alert("약속을 거절하셨습니다.");
+				denyMessage(id);
 			}
 		});
 	}
+}
+
+function denyMessage(id) {
+	var chat_serial = document.getElementById("chat_serial").innerText;
+	$.ajax({
+		url:"message.do?command=denyMessage",
+		type:"post",
+		data:{
+			"con_id":id,
+			"chat_serial":chat_serial
+		},
+		success:function(msg) {
+			if (msg == "성공") {
+				console.log(msg);
+			}
+		}
+	})
 }
 
 function permitPromise(obj) {
@@ -466,14 +487,12 @@ function transPromise() {
 		$(".input:eq(1)").focus();
 		return;
 	}
-	
 	//날짜 유효성 검사
-	if ($(".input:eq(2)").val().length != 10) {
-		alert("날짜를 형식에 알맞게 입력해주세요. ex) 2021/10/29 ");
+	if ($(".input:eq(2)").val().length < 13 || $(".input:eq(2)").val().length > 15) {
+		alert("날짜를 형식에 알맞게 입력해주세요. ex) 2021/10/29/16시 ");
 		$(".input:eq(2)").focus();
 		return;
 	}
-	
 	if ($(".input:eq(2)").val() == null || $(".input:eq(2)").val().trim() == "") {
 		alert("날짜를 정확하게 입력해주세요.");
 		$(".input:eq(2)").focus();
@@ -484,21 +503,46 @@ function transPromise() {
 	var today = new Date();
 	var year = today.getFullYear();
 	var month = today.getMonth() + 1;
+	var date = today.getDate();
+	var time = "";
 	
-	for (var i = 0; i < 3; i++) {
+	for (var i = 0; i < 4; i++) {
 		if (temp[0] < year) {
 			alert("이미 지난 해에는 약속을 잡을 수 없어요! ");
 			$(".input:eq(2)").focus();
 			return;
-		} else if ((temp[1] > 12 || temp[1] < 1) || temp[1] < month ) {
+		} else if (temp[1] > 12 || temp[1] < 1) {
 			alert("월을 잘못 입력하셨습니다. 다시 입력해주세요.");
+			$(".input:eq(2)").focus();
+			return;
+		} else if (temp[0] == year && temp[1] < month) {
+			alert("이미 지난 달에는 약속을 잡을 수 없어요!");
 			$(".input:eq(2)").focus();
 			return;
 		} else if (temp[2] < 1 || temp[2] > 31) {
 			alert("날짜를 잘못 입력하셨습니다. 다시 입력해주세요.");
 			$(".input:eq(2)").focus();
 			return;
+		} else if (temp[1] == month && temp[2] < date) {
+			alert("이미 지난 날에는 약속을 잡을 수 없어요!");
+			$(".input:eq(2)").focus();
+			return;
+		} else if (temp[3].length > 4) {
+			alert("시간을 잘못 입력하셨습니다. 다시 입력해주세요.");
+			$(".input:eq(2)").focus();
+			return;
 		}
+	}
+	for (var i = 0; i < temp[3].length; i++) {
+		console.log(temp[3][i]);
+		if (!isNaN(temp[3][i])){
+            time += temp[3][i];
+        }
+	}
+	if (time < 0 || time > 24) {
+		alert("시간을 잘못 입력하셨습니다. 다시 입력해주세요.");
+		$(".input:eq(2)").focus();
+		return;
 	}
 	
 	if ($(".input:eq(3)").val() == null || $(".input:eq(3)").val().trim() == "") {
@@ -525,14 +569,19 @@ function transPromise() {
 			success:function(msg) {
 				alert("약속 요청을 " + msg + " 했습니다.");
 				$(".promise-table").css("display", "none");
+				$(".input:eq(1)").val("");
+				$(".input:eq(2)").val("");
+				$(".input:eq(3)").val("");
 			}
 		});
 	} else {
 		alert("취소");
+		$(".input:eq(3)").focus();
 	}
 }
 
 function openPromise() {
+	$("#check-promise").css("display", "none");
 	$(".promise-table").css("display", "block");
 }
 
@@ -615,7 +664,7 @@ function reportUser() {
 							<tr class="promise-tr">
 								<td class="promise-td text-center"><b>언제?</b></td>
 								<td><textarea class="input" rows="1" name="date"
-										placeholder="연/월/일 입력(ex: 2021/05/21)" style="letter-spacing:3px; width:90%;"></textarea></td>
+										placeholder="연/월/일/시 입력(ex: 2021/05/21/16시)" style="letter-spacing:3px; width:90%;"></textarea></td>
 							</tr>
 							<tr class="promise-tr">
 								<td class="promise-td text-center"><b>무엇을?</b></td>

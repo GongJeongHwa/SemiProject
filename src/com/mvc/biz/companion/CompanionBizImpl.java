@@ -99,18 +99,10 @@ public class CompanionBizImpl extends JDBCTemplate implements CompanionBiz{
 		} 
 		res += dao.promiseChoice(con, login_id, con_id, loc, permit);
 		
-		if (permit.equals("Y")) {
-			if (res == 2) {
-				commit(con);
-			} else {
-				rollback(con);
-			}
+		if (res>0) {
+			commit(con);
 		} else {
-			if (res == 1) {
-				commit(con);
-			} else {
-				rollback(con);
-			}
+			rollback(con);
 		}
 		closeConn(con);
 		
@@ -180,6 +172,26 @@ public class CompanionBizImpl extends JDBCTemplate implements CompanionBiz{
 			rollback(con);
 		}
 		closeConn(con);
+		
+		return res;
+	}
+
+	@Override
+	public List<PromiseDto> getPromiseList(String login_id) {
+		List<PromiseDto> list = dao.getPromiseList(con, login_id);
+		closeConn(con);
+		return list;
+	}
+
+	@Override
+	public int sendDenyMessage(String login_id, String con_id, int chat_serial) {
+		int res = dao.sendDenyMessage(con, login_id, con_id, chat_serial);
+		
+		if (res > 0) {
+			commit(con);
+		} else {
+			rollback(con);
+		}
 		
 		return res;
 	}
