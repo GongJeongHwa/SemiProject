@@ -24,38 +24,7 @@ public class DaoImpl implements Dao{
 	CallableStatement cstmt;
 	ResultSet rs;
 	
-	@Override
-	public UserDto selectUser(Connection con) {
-		
-		
-		
-		return null;
-	}
-	@Override
-	public boolean insertUser(Connection con, UserDto dto) {
-		
-		
-		
-		return false;
-	}
-	@Override
-	public boolean updateUser(Connection con, UserDto dto) {
-		
-		
-		
-		return false;
-	}
-	@Override
-	public boolean deleteUser(Connection con, int seq) {
-		
-		
-		
-		return false;
-	}
-	
-	
 	//USER
-	
 	@Override
 	public UserDto login(String id, String pw) {
 		Connection con = getConnection();
@@ -88,6 +57,7 @@ public class DaoImpl implements Dao{
 				res.setGender(rs.getString("GENDER"));
 				res.setActive(rs.getString("ACTIVE"));
 				res.setPanalty(rs.getInt("PENALTY"));
+				res.setUser_img(rs.getString("USER_IMG"));
 			}
 			
 		} catch (SQLException e) {
@@ -100,7 +70,7 @@ public class DaoImpl implements Dao{
 		return res;
 	}
 	@Override
-	public UserDto login(String id) {
+	public UserDto naverLogin(String id) {
 		
 		return null;
 	}
@@ -199,6 +169,8 @@ public class DaoImpl implements Dao{
 			
 			if(res>0) {
 				commit(con);
+			}else {
+				rollback(con);
 			}
 		} catch (SQLException e) {
 			System.out.println("3/4 단계 오류");
@@ -212,7 +184,35 @@ public class DaoImpl implements Dao{
 		return res;
 	}
 	
-	
+	@Override
+	public int deleteUser(String id) {
+		Connection con =getConnection();
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			pstm = con.prepareStatement(deleteUserSql);
+			pstm.setString(1, id);
+			System.out.println("03. query준비 : "+deleteUserSql);
+			
+			res= pstm.executeUpdate();
+			System.out.println("04. query 실행 및 리턴");
+			
+			if(res>0) {
+				commit(con);
+			}else {
+				rollback(con);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("3/4단계 에러");
+			e.printStackTrace();
+		}finally {
+			closeStmt(pstm);
+			closeConn(con);
+		}
+		return res;
+	}
 	
 	
 	
@@ -557,6 +557,7 @@ public class DaoImpl implements Dao{
 		}
 		return res;
 	}
+
 
 
 

@@ -80,49 +80,79 @@
 .btn:hover{
 	background-color: grey;
 }
-.noti{
-	font-size: 5pt;
-	
-}
+
 .num{
 	border-bottom: 1px solid;
 	color : red;
 }
+span, .noti{
+	font-size: 5pt;
+}
 </style>
 <script type="text/javascript">
+	function passwdChk(){
+		var pw = document.getElementsByName("rPasswd")[0]; //db에 저장된 현재비밀번호
+		var pw1 = document.getElementsByName("passwd")[0]; //입력한 현재 비밀번호
+		
+		if(pw1.value.trim()==""|| pw1.value==null){
+			alert("현재비밀번호를 입력해 주세요");
+		}else if(pw.value.trim() != pw1.value.trim()){
+			document.getElementById("pw_equal").innerHTML = "<b><font color='red'>"+"비밀번호가 다릅니다."+"</font></b>";
+		}else if(pw.value.trim() == pw1.value.trim()){
+			document.getElementById("pw_equal").innerHTML = "";
+		}
+		
+	}
+	
+	function beforeSubmit(){
+		var pw1 = document.getElementsByName("pw_change")[0]; //수정할 비밀번호
+		var pw2 = document.getElementsByName("pw_check")[0]; //비밀번호 확인
+		var name = document.getElementsByName("name")[0]; //
+		var nickname = document.getElementsByName("nickname")[0];
+		var addr = document.getElementById("extraAddress");
+		var email = document.getElementsByName("email")[0];
+		
+		var pattern1 = /[0-9]/;
+        var pattern2 = /[a-zA-Z]/;
+        var pattern3 = /[~!@\#$%<>^&*]/; 
+		
+		if(pw1.value.trim()==""|| pw1.value==null){
+			alert("비밀번호를 입력해 주세요");
+            return false;
+		}else if(pw2.value.trim()==""|| pw2.value==null){
+			alert("비밀번호 확인을 입력해 주세요");
+            return false;
+		}else if(!pattern1.test(pw1.value.trim())||!pattern2.test(pw1.value.trim())||!pattern3.test(pw1.value.trim())||pw1.value.trim().length<4||pw1.value.trim().length>17){
+            alert("영문+숫자+특수기호 5-16자리로 구성하여야 합니다.");
+            return false;	
+		}else if(name.value.trim()==""|| name.value==null){
+			alert("이름을 입력해 주세요");
+            return false;
+		}else if(nickname.value.trim()==""|| nickname.value==null){
+			alert("닉네임을 입력해 주세요");
+            return false;
+		}else if(addr.value.trim()==""|| addr.value==null){
+			alert("주소를 입력해 주세요");
+            return false;
+		}else if(email.value.trim()==""|| email.value==null){
+			alert("메일을 입력해 주세요");
+            return false;
+		}else if(pw1.value.trim() != pw2.value.trim()){
+			document.getElementById("pw_msg").innerHTML = "<b><font color='red'>"+"비밀번호가 다릅니다."+"</font></b>";
+            return false;
+		}else if(pw1.value.trim() == pw2.value.trim()){
+			document.getElementById("pw_msg").innerHTML = "비밀번호가같습니다.";
+			return true; //모든 값 확인 후 리턴
+		}
+	}
+
 	function popup(){
 		window.open("unregister_1.jsp","_blank","width=300px, height=150px");
 		
 	}
 	
-	var func = function(){
-		//정보얻기
-		var user_id = doc.getElementById('user_id').value;
-		var passwd = doc.getElementById('passwd').value;
-		var pw_change = doc.getElementById('pw_change').value;
-		var pw_chek = doc.getElementById('pw_chek').value;
-		
-		console.log(user_id);
-		console.log(passwd);
-		console.log(pw_change);
-		console.log(pw_chek);
-		
-		if(pw_change != pw_chek){
-			$("#pw_equal").css("color","red").text("비밀번호가 다릅니다.");
-		
-			//다를경우 비밀번호 값 비워줌
-			doc.getElementById('pw_change').value='';
-			doc.getElementById('pw_chek').value='';
-			
-			//비밀번호 수정에 커서가기
-			doc.getElementById('pw_change').focus();
-			
-			return;
-		}
-		if(passwd.length<4){
-			$("#pw_length").css("color","red").text("비밀번호는 최소 6자리 이상 작성해야 합니다.");	
-		}
-	}
+
+	
 </script>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
@@ -206,7 +236,7 @@
 			<hr>
 			<li><a href="<%=request.getContextPath()%>/mypage.do?command=infoupdate">정보수정</a></li>
 			<hr>
-			<li><a href="#" onclick="popup();">회원탈퇴</a></li>	
+			<li><a href="javascript:popup();">회원탈퇴</a></li>	
 			<hr>
 			<li><a href="<%=request.getContextPath()%>/Companion.do?command=message">채팅하기</a></li>	
 		</ul>
@@ -218,40 +248,41 @@
 	
 		<!-- 정보수정 -->
 		<div class="user_list">
-			<form action="mypage.do" method="post">
+			<form action="mypage.do" method="post" onsubmit="return beforeSubmit();">
 				<input type="hidden" name="command" value="updateUser">
 				<h3 style="text-align:center">회원정보수정</h3>
 				<table>
 					<col width=150px><col width=300px>
 					<tr>
 						<td class="col1">아이디</td>
-						<td class="col2">${dto.user_id }</td>
+						<td class="col2"><input type="text" name="user_id" value="${dto.user_id }" readonly="readonly"></td>
 					</tr>
 
 					<tr>
 						<td class="col1">현재비밀번호</td>
 						<td class="col2">
+							<input type="hidden" id="rPasswd" name="rPasswd" value="${dto.passwd }">
 							<input type="password" id="passwd" name="passwd" maxlength="16" >
-							<p class="noti">비밀번호는<span class="num">문자,숫자,특수문자조합으로 8자리-16자리</span> 입력이 가능합니다.</p>
+							<span id="pw_equal"></span>
 						</td>
 					</tr>
 					<tr>
 						<td class="col1">비밀번호 수정</td>
 						<td class="col2">
-							<input type="password" id="pw_change" name="pw_change" maxlength="16">
-							<p class="pw_length"></p>
+							<input type="password" id="pw_change" name="pw_change" maxlength="16" onclick="passwdChk();">
+							<p class="noti">비밀번호는<span class="num">문자,숫자,특수문자조합으로 5자리-16자리</span> 입력이 가능합니다.</p>
 						</td>	
 					</tr>
 					<tr>
 						<td class="col1">비밀번호 확인</td>
 						<td class="col2">
 							<input type="password" id="pw_chek" name="pw_check" maxlength="16">
-							<span id="pw_equal"></span>
+							<span id="pw_msg"></span>
 						</td>	
 					</tr>
 					<tr>
 						<td class="col1">이름</td>
-						<td class="col2"><input type="text" name="name" value="${dto.name }"></td>
+						<td class="col2"><input type="text" name="name" value="${dto.name }" onclick="passwdChk();"></td>
 					</tr>
 					<tr>
 						<td class="col1">닉네임</td>
@@ -262,9 +293,9 @@
 						<td class="col2">
 							<input type="text" name="email" value="<%=dto.getEmail().split("@")[0] %>"> @ 
 							<select name="dot">
-								<option value="naver">naver.com</option>
-								<option value="daum">daum.net</option>
-								<option value="google">google.com</option>
+								<option value="naver.com">naver.com</option>
+								<option value="daum.net">daum.net</option>
+								<option value="google.com">google.com</option>
 							</select>
 						</td>
 					</tr>
@@ -312,7 +343,7 @@
 					</tr>
 					<tr>
 						<td class="col1">핸드폰번호</td>
-						<td class="col2"><input type="text" name="phone" value=${dto.phone }></td>
+						<td class="col2"><input type="text" name="phone" value=${dto.phone } ></td>
 					</tr>
 				</table>
 				<br><br>
