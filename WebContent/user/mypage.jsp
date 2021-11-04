@@ -80,7 +80,7 @@
 </style>
 <script type="text/javascript">
 	function popup(){
-		window.open("unregister_1.jsp","_blank","width=300px, height=150px");
+		window.open("user/unregister_1.jsp","_blank","width=300px, height=150px");
 		
 	}
 </script>
@@ -100,13 +100,13 @@
 	<!-- 사이드바 -->
 	<div id="left" class="sidebar">
 		<ul>
-			<li><a href="mypage.do?command=mypage">내여행</a></li>
+			<li><a href="<%=request.getContextPath()%>/mypage.do?command=mypage">내여행</a></li>
 			<hr>
-			<li><a href="mypage.do?command=infoUpdate">정보수정</a></li>
+			<li><a href="<%=request.getContextPath()%>/mypage.do?command=infoUpdate">정보수정</a></li>
 			<hr>
-			<li><a href="#" onclick="popup();">회원탈퇴</a></li>	
+			<li><a href="javascript:popup();">회원탈퇴</a></li>	
 			<hr>
-			<li><a href="#">채팅하기</a></li>	
+			<li><a href="<%=request.getContextPath()%>/Companion.do?command=message">채팅하기</a></li>	
 		</ul>
 	</div>
 	

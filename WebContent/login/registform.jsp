@@ -34,7 +34,9 @@ input{
 .btn:hover{
 	background-color: grey;
 }
-
+p,span{
+	font-size: 5pt;
+}
 </style>
 <script type="text/javascript">
 	function idChk(){
@@ -52,68 +54,51 @@ input{
 			alert("아이디 중복체크를 해주세요");
 			document.getElementsByName("user_id")[0].focus();
 		}
+	}
+	function beforeSubmit(){
+		var pw1 = document.getElementsByName("passwd")[0];
+		var pw2 = document.getElementsByName("pw_check")[0];
+		var name = document.getElementsByName("name")[0];
+		var nickname = document.getElementsByName("nickname")[0];
+		var addr = document.getElementById("extraAddress");
+		var email = document.getElementsByName("email")[0];
+
+		var pattern1 = /[0-9]/;
+        var pattern2 = /[a-zA-Z]/;
+        var pattern3 = /[~!@\#$%<>^&*]/; 
 		
+		if(pw1.value.trim()==""|| pw1.value==null){
+			alert("비밀번호를 입력해 주세요");
+            return false;
+		}else if(pw2.value.trim()==""|| pw2.value==null){
+			alert("비밀번호 확인을 입력해 주세요");
+            return false;
+		}else if(!pattern1.test(pw1.value.trim())||!pattern2.test(pw1.value.trim())||!pattern3.test(pw1.value.trim())||pw1.value.trim().length<4||pw1.value.trim().length>17){
+            alert("영문+숫자+특수기호 5-16자리로 구성하여야 합니다.");
+            return false;         
+		}else if(name.value.trim()==""|| name.value==null){
+			alert("이름을 입력해 주세요");
+            return false;
+		}else if(nickname.value.trim()==""|| nickname.value==null){
+			alert("닉네임을 입력해 주세요");
+            return false;
+		}else if(addr.value.trim()==""|| addr.value==null){
+			alert("주소를 입력해 주세요");
+            return false;
+		}else if(email.value.trim()==""|| email.value==null){
+			alert("메일을 입력해 주세요");
+            return false;
+		}else if(pw1.value.trim() != pw2.value.trim()){
+			document.getElementById("pw_msg").innerHTML = "<b><font color='red'>"+"비밀번호가 다릅니다."+"</font></b>";
+			return false;
+		}else if(pw1.value.trim() == pw2.value.trim()){
+			document.getElementById("pw_msg").innerHTML = "비밀번호가같습니다.";
+			return true; //모든값 확인 후 리턴
+		}
+
 	}
 	
-	function validate(){
-		var objID = document.getElementById("user_id"); //이름
-        var objPwd1 = document.getElementById("passwd"); //비밀번호
-        var objPwd2 = document.getElementById("pw_chek"); //비밀번호 확인
-        var objEmail = document.getElementById("email"); //이메일
-        var objName = document.getElementById("name"); //이름
- 		var objNickname = document.getElementById("nickname"); //닉네임
-
-      	
-        var regul1 = /^[a-zA-Z0-9]{4,12}$/; //아이디, 비밀번호값 확인
-        var regul2 = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/; //이메일값 확인
-        var regul3 = /^[가-힝a-zA-Z]{2,}$/; //이름값 확인
-
-		//유효성 검사
-        if (!check(regul1,objID,"아이디는 4-12자의 대소문자와 숫자로만 입력 가능합니다.")) {
-            return false;//반환 할 곳 없이 if문 종료
-        }
-       
-        if ((objPwd1.value) == ""){
-            alert("비밀번호를 입력해 주세요");
-            objPwd1.focus();
-            return false;
-        }
-        if ((objPwd2.value=="")){
-            alert("비밀번호를 입력해 주세요");
-            objPwd2.focus();
-            return false;
-        }
-        if (!check(regul1,objPwd1,"비밀번호는 4-12자의 대소문자와 숫자로만 입력 가능합니다.")) {
-            return false;
-        }
-        if ((objPwd1.value)!=(objPwd2.value)) {
-            alert("비밀번호가 일치 하지 않습니다.");
-            objPwd1.value="";
-            objPwd2.value="";
-            return false;
-        }
-        
-        if ((objEmail.value)=="") {
-            alert("이메일을 입력해 주세요");
-            objEmail.focus();
-            return false;
-        }
-        if ((objName.value)=="") {
-            alert("이름을 입력해 주세요");
-            objName.focus();
-            return false;
-        }
-        if (!check(regul3,objName,"이름이 잘못입력되었습니다.")) {
-            return false;
-        }
-        if ((objNickname.value)=="") {
-            alert("별명을 입력해 주세요");
-            objNickname.focus();
-            return false;
-        }
-        
-        
-	}
+	
 </script>
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
@@ -195,9 +180,8 @@ input{
 	
 		<!-- 정보수정 -->
 		<div class="user_list">
-			<form action="loginController.do" method="post" onsubmit="return validate()">
+			<form action="loginController.do" method="post" onsubmit="return beforeSubmit()">
 				<input type="hidden" name="command" value="regist">
-				<h2 style="text-align:center">회원가입</h2>
 				<table>
 					<tr class="tr">
 						<td>아이디</td>
@@ -211,19 +195,19 @@ input{
 						<td >비밀번호</td>
 						<td>
 							<input type="password" name="passwd" onclick="idChkConfirm();" maxlength="16" >
-							<p>비밀번호는<span class="num">문자,숫자,특수문자조합으로 8자리-16자리</span> 입력이 가능합니다.</p>
+							<p>비밀번호는<span class="num">문자,숫자,특수문자조합으로 4자리이상</span> 입력이 가능합니다.</p>
 						</td>
 					</tr>
 					<tr class="tr">
 						<td >비밀번호 확인</td>
 						<td>
 							<input type="password" name="pw_check" maxlength="16">
-							<span class="pw_chk">비밀번호같다 / 다르다</span>
+							<span id="pw_msg"></span>
 						</td>	
 					</tr>
 					<tr class="tr">
 						<td >이름</td>
-						<td><input type="text" name="name"></td>
+						<td><input type="text" name="name" onclick="passwdChk();"></td>
 					</tr>
 					<tr class="tr">
 						<td >닉네임</td>
@@ -234,9 +218,9 @@ input{
 						<td>
 							<input type="text" name="email"> @ 
 							<select name="dot">
-								<option value="naver">naver.com</option>
-								<option value="daum">daum.net</option>
-								<option value="google">google.com</option>
+								<option value="naver.com">naver.com</option>
+								<option value="daum.net">daum.net</option>
+								<option value="google.com">google.com</option>
 							</select>
 						</td>
 					</tr>
@@ -284,7 +268,7 @@ input{
 					</tr>
 					<tr class="tr">
 						<td >핸드폰번호</td>
-						<td><input type="text" name="phone"></td>
+						<td><input type="text" name="phone" onclick="allChk();"></td>
 					</tr>
 				</table>
 				<br><br>

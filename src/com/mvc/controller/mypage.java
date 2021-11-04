@@ -117,6 +117,7 @@ public class mypage extends HttpServlet {
 		}else if(command.equals("infoUpdate")) {
 			dispatch("user/info_update.jsp", request, response);
 		}else if(command.equals("updateUser")) {
+			String user_id = request.getParameter("user_id");
 			String passwd = request.getParameter("pw_check");
 			String name = request.getParameter("name");
 			String nickname = request.getParameter("nickname");
@@ -130,9 +131,10 @@ public class mypage extends HttpServlet {
 			String postcode = request.getParameter("postcode");
 			String roadAddr = request.getParameter("roadAddress");
 			String detailAddr = request.getParameter("detailAddress");
-			String addr = postcode+roadAddr+detailAddr;
+			String addr = postcode+" "+roadAddr+" "+detailAddr;
 			
 			UserDto dto = new UserDto();
+			dto.setUser_id(user_id);
 			dto.setPasswd(passwd);
 			dto.setName(name);
 			dto.setNickname(nickname);
@@ -144,8 +146,21 @@ public class mypage extends HttpServlet {
 			dto.setAddress(addr);
 			
 			int res = u_dao.info_update(dto);
+
+			session.removeAttribute("dto"); //세션삭제
 			
+			session.setAttribute("dto", dto); //세션 다시 등록
+			session.setMaxInactiveInterval(60*60); //세션 유지 시간 - 1시간
 			jsResponse("정보수정성공", "user/mypage.jsp", response);
+		}else if(command.equals("deleteUser")){
+			String user_id = request.getParameter("user_id");
+			int res = u_dao.deleteUser(user_id);
+			if(res>0) {
+				dispatch("user/unregister_2.jsp", request, response);
+			}else {
+				jsResponse("회원탈퇴실패", "user/mypage.jsp", response);
+			}
+			
 		}
 	}
 

@@ -84,35 +84,22 @@
 						<img src="<%=profilePath %>" alt="Bootstrap" width="27" height="27">
 					</button>
 					<ul class="dropdown-menu dropdown-menu-lg-end">
-						<li>
-							<button class="dropdown-item" type="button">
-								<%
-									if (dto != null) {
-								%>
-									<span onclick="location.href='<%=request.getContextPath()%>/loginController.do?command=logout'">로그아웃</span>
-								<%
-									} else {
-								%>
-									<span onclick="location.href='<%=request.getContextPath()%>/login/login.jsp'">로그인</span>
-								<%
-									}
-								%>
-							</button>
-						</li>
 						
 						<%
 							if (dto != null) {
 						%>
+							<li><button class="dropdown-item" type="button" onclick="location.href='<%=request.getContextPath()%>/loginController.do?command=logout'">로그아웃</button></li>
 							<li><button class="dropdown-item" type="button" onclick="location.href='<%=request.getContextPath()%>/mypage.do?command=mypage'">마이페이지</button></li>
 						<%
 							} else {
 						%>
+							<li><button class="dropdown-item" type="button" onclick="location.href='<%=request.getContextPath()%>/login/login.jsp'">로그인</button></li>
 							<li><button class="dropdown-item" type="button" onclick="location.href='<%=request.getContextPath()%>/loginController.do?command=registform'">회원가입</button></li>
+						
+
 						<%
 							}
 						%>
-						
-	
 						
 					</ul>
 				</div>

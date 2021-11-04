@@ -45,7 +45,7 @@ public class loginController extends HttpServlet {
 				dispatch("index.jsp", request, response);
 
 			}else {
-				jsResponse("로그인실패", request.getContextPath()+"/user/login.jsp", response);
+				jsResponse("로그인실패", request.getContextPath()+"/login/login.jsp", response);
 			}
 		}else if(command.equals("logout")) {
 			
@@ -94,7 +94,7 @@ public class loginController extends HttpServlet {
 			String postcode = request.getParameter("postcode");
 			String roadAddr = request.getParameter("roadAddress");
 			String detailAddr = request.getParameter("detailAddress");
-			String addr = postcode+roadAddr+detailAddr;
+			String addr = postcode+" "+roadAddr+" "+detailAddr;
 			
 			UserDto dto = new UserDto();
 			dto.setUser_id(user_id);
