@@ -25,18 +25,6 @@ CREATE TABLE BLOG_DETAIL(
 );
 delete FROM BLOG_DETAIL;
 
---PK : ID + BLOGSEQ + COMMENTSEQ
-CREATE TABLE BLOG_COMMENT(
-	USER_ID VARCHAR2(50) NOT NULL,
-	BLOG_SEQ NUMBER NOT NULL,
-	COMMENT_SEQ NUMBER NOT NULL,
-	COMMENT_DATE DATE NOT NULL,
-	COMMENT_ID VARCHAR2(50) NOT NULL,
-	COMMENT_CONTENT VARCHAR2(500) NOT NULL,
-	CONSTRAINT FK_BLOG_COMMENT_USERID FOREIGN KEY(USER_ID) REFERENCES T_USER(USER_ID),
-	CONSTRAINT PK_BLOG_COMMENT PRIMARY KEY(USER_ID, BLOG_SEQ, COMMENT_SEQ)
-);
-
 
 --------BLOG SELECT ONE--------
 CREATE OR REPLACE VIEW V_BLOG_ONE
@@ -95,6 +83,53 @@ AS
 SELECT * FROM V_BLOG_LIST_DESC;
 
 -------------------------------------------------------------------------
+----블로그 selectone
+CREATE OR REPLACE PROCEDURE BLOG_SELECTONE
+(
+	P_BLOGID IN VARCHAR2,
+	P_BLOGSEQ IN NUMBER,
+	p_cursor OUT SYS_REFCURSOR
+)
+IS
+BEGIN 
+	UPDATE BLOG_DETAIL 
+	SET HITS_COUNT = HITS_COUNT + 1
+	WHERE USER_ID = P_BLOGID
+	AND BLOG_SEQ = P_BLOGSEQ;
+
+	OPEN p_cursor FOR
+	SELECT *
+	FROM V_BLOG_ONE
+	WHERE USER_ID = P_BLOGID
+	AND BLOG_SEQ = P_BLOGSEQ;
+	EXCEPTION
+		 WHEN no_data_found THEN
+        dbms_output.put_line('does not exits.');
+    	ROLLBACK;
+    COMMIT;
+END;
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------댓글
+--PK : ID + BLOGSEQ + COMMENTSEQ
+CREATE TABLE BLOG_COMMENT(
+	USER_ID VARCHAR2(50) NOT NULL,
+	BLOG_SEQ NUMBER NOT NULL,
+	COMMENT_SEQ NUMBER NOT NULL,
+	COMMENT_DATE DATE NOT NULL,
+	COMMENT_ID VARCHAR2(50) NOT NULL,
+	COMMENT_CONTENT VARCHAR2(500) NOT NULL,
+	CONSTRAINT FK_BLOG_COMMENT_USERID FOREIGN KEY(USER_ID) REFERENCES T_USER(USER_ID),
+	CONSTRAINT PK_BLOG_COMMENT PRIMARY KEY(USER_ID, BLOG_SEQ, COMMENT_SEQ)
+);
+
 -----------블로그에 댓글달면 댓글생성 및 블로그테이블의 댓글카운트가 증가하는 프로시저 (이클립스에서는 아래 프로시저 생성안됨 디비버에서 생성완료)
 CREATE OR REPLACE PROCEDURE BLOG_COMMENT_INPUT
 (
@@ -132,44 +167,21 @@ BEGIN BLOG_COMMENT_INPUT('USER3',1,'USER5','HELLO EVERYONE'); END;
 SELECT * FROM BLOG_DETAIL;
 ------------------------------------------------------------------------------
 
-------------------------------------------------------------------------------
---블로그 조회수 관련 프로시저 (뷰에 조회수 있으므로 블로그가 클릭될때마다 HITCOUNT 증가시켜야함)
-
-CREATE OR REPLACE PROCEDURE BLOG_HITSUP
-(
-	P_BLOGID IN VARCHAR2,
-	P_BLOGSEQ IN NUMBER
-)
-IS
-BEGIN
-	DECLARE
-		SEQ NUMBER;
-	BEGIN
-		SELECT MAX(HITS_COUNT) INTO SEQ 
-		FROM BLOG_DETAIL
-		WHERE USER_ID = P_BLOGID
-		AND BLOG_SEQ = P_BLOGSEQ;
-		SEQ := SEQ + 1;
-	
-		UPDATE BLOG_DETAIL
-		SET HITS_COUNT = SEQ
-		WHERE USER_ID = P_BLOGID
-		AND BLOG_SEQ = P_BLOGSEQ;
-		
-		COMMIT;
-   	END;
-END;
-/
---------------------------------------------------------------------------
-BEGIN BLOG_HITSUP('USER3',2); END;
---------------------------------------------------------------------------
 
 
 
 
 
 
--------------------------블로그찜테이블(USERID, BLOGID, BLOGSEQ)
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------블로그찜
 --pk (userid, blogid, blogseq)
 CREATE TABLE BLOG_HEART(
 	USER_ID VARCHAR2(50) NOT NULL,
@@ -194,7 +206,16 @@ CREATE TABLE BLOG_HEART(
 
 
 
---------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------장소찜
 -----------------------장소찜테이블
 CREATE TABLE PLACE_HEART(
 	USER_ID VARCHAR2(50) NOT NULL,
@@ -215,7 +236,7 @@ SELECT * FROM T_USER;
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
------장소찜하기 프로시저
+-----유저장소찜 추가 프로시저
 CREATE OR REPLACE PROCEDURE ADDHEART
 (
 	P_USERID IN VARCHAR2,
@@ -245,7 +266,7 @@ END;
 /
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
------찜삭제 프로시저
+-----유저장소찜 삭제 프로시저
 CREATE OR REPLACE PROCEDURE RMHEART
 (
 	P_USERID IN VARCHAR2,
@@ -269,7 +290,7 @@ END;
 /
 
 --------------------------------------------------------------------------------
------찜여부 확인
+-----초반에 찜여부 확인
 CREATE OR REPLACE PROCEDURE CONFIRM_HEART
 (
 	P_USERID IN VARCHAR2,
@@ -287,7 +308,7 @@ END;
 /
 
 --------------------------------------------------------------------------------
------heart count 가져오기
+-----초반에 heart count 가져오기
 CREATE OR REPLACE PROCEDURE GETHEARTCOUNT
 (
 	P_PLACEID IN VARCHAR2,

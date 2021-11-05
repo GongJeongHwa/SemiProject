@@ -378,13 +378,13 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 			cityarr = Array.from(new Set(cityarr));
 			
 			for(var i = 0; i < nationarr.length; i++){
-				nations_citys += nationarr[i] + " ";
+				nations_citys += nationarr[i] + ",";
 			}
 			for(var i = 0; i < cityarr.length; i++){
-				nations_citys += cityarr[i] + " ";
+				nations_citys += cityarr[i] + ",";
 			}
-			
-			console.log("최종:" + nations_citys);
+			nations_citys = nations_citys.slice(0,-1);
+
 			
 			var thumbarr = thumbnailSorted[0].String.split(",");
 			thumbnailpath = thumbarr[0];

@@ -17,7 +17,9 @@
 	String title = bdto.getTitle();
 	String content = bdto.getContent();
 	String thumbnail = bdto.getThumbnailPath();
-	String area = bdto.getAreaname();
+	String area[] = bdto.getAreaname().split(",");
+	String areaFull = "";
+	for(String s : area){areaFull += s + " ";}
 	int heartcount = bdto.getHeart_count();
 	int commentcount = bdto.getComment();
 	int hits = bdto.getHits();
@@ -57,6 +59,7 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="<%=request.getContextPath() %>/json/country.json" type="text/javascript"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
@@ -82,14 +85,20 @@
 
 .toast-error {
 	background-color: #BD362F !important;
+	font-weight: bold !important;
+	font-size: 12pt !important; 
 }
 
 .toast-info {
 	background-color: #2F96B4 !important;
+	font-weight: bold !important;
+	font-size: 12pt !important; 
 }
 
 .toast-warning {
 	background-color: #F89406 !important;
+	font-weight: bold !important;
+	font-size: 12pt !important; 
 }
 
 .toast-top-right {
@@ -563,10 +572,19 @@ let Data = new Array();
 
 <script type="text/javascript">
 let dayandplace = new Array();
+//날씨변수
 let key = "73ba5abe8af88dbcd7e38268a7747f94";
+//코로나 api 변수
+let covid;
+let tripCountry = "<%=bdto.getAreaname() %>";
+let tripCountryList = tripCountry.split(",");
+let KrCode = new Array();
+let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
+
 
 	$(function(){
 		
+		//------------------------데이터 입력
 		for(var i = 0; i < Data.length; i++){
 			
 			var tempObj = new Object();
@@ -599,8 +617,8 @@ let key = "73ba5abe8af88dbcd7e38268a7747f94";
 		
 		console.log(dayandplace);
 		
-		//------------------------데이터 입력
-		//날짜
+		
+		//날짜생성--------------------------------------------------------------------------------
 		var length = dayandplace.length;
 		for(var i = 0; i < length; i++){
 			
@@ -608,7 +626,7 @@ let key = "73ba5abe8af88dbcd7e38268a7747f94";
 			$(".events-content").eq(0).find("ol").append(createLi(toDate(dayandplace[i].date)));
 		}
 		
-		//날짜에 해당하는 데이터
+		//날짜에 해당하는 데이터--------------------------------------------------------------------------------
 		
 		for(var i = 0; i < length; i++){
 
@@ -653,6 +671,64 @@ let key = "73ba5abe8af88dbcd7e38268a7747f94";
 			
 		});
 		
+		//코로나 데이터 추가--------------------------------------------------------------------------------
+		
+		var settings = {
+				  "url": "https://api.covid19api.com/summary",
+				  "method": "GET",
+				  "timeout": 0,
+				  "async":false,
+				};
+
+				$.ajax(settings).done(function (response) {
+				  covid = response;
+				});
+		
+		let index = [];
+		for (let x in jsonData) { 
+			index.push(x); 
+		}
+		
+		for(var i = 0; i < tripCountryList.length; i++){
+			for(var j = 0; j < index.length; j++){
+				if(jsonData[index[j]].CountryNameKR == tripCountryList[i]){
+					var str = jsonData[index[j]]["2digitCode"];
+					KrCode.push(str);
+				}
+			}
+		}
+		
+		//date
+		$(".reportdate").each(function(){
+			$(this).html(covid.Global.Date.split("T")[0]);
+		});
+		
+		//totalreport
+		var html = createTotalTr(covid.Global.TotalConfirmed.toLocaleString(),
+				   covid.Global.TotalDeaths.toLocaleString(),
+				   covid.Global.NewConfirmed.toLocaleString(),
+				   covid.Global.NewDeaths.toLocaleString());
+		$("#totalCountry").append(html);
+		
+		//visitreport
+		for(var i = 0; i < covid.Countries.length; i++){
+			for(var j = 0; j < KrCode.length; j++){
+				if(covid.Countries[i].CountryCode == KrCode[j]){
+					var html2 = createTr(covid.Countries[i].Country,
+										covid.Countries[i].TotalConfirmed,
+										covid.Countries[i].NewConfirmed,
+										covid.Countries[i].TotalDeaths,
+										covid.Countries[i].NewDeaths);
+					$("#visitCountry").append(html2);
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -693,7 +769,7 @@ let key = "73ba5abe8af88dbcd7e38268a7747f94";
 	
 	function createDetail(i, placename, addr, time, src, url, lat, lng){
 		var html = "";
-		html = "<div class='row'><div class='col-lg-1'></div><div class='col-lg-6'><img class='img-thumbnail rounded' src='"+ src +"' style='width:100%;'></div><div class='col-lg-4'><h3><b>"+ i +". "+ placename +"</b></h3><h5>"+ addr +"</h5><span id='weather' style='font-size: 15pt; color:rgb(31,210,127);'></span><br><br><h4><b>방문예정 시각 : "+ time +"</b></h4><br><a href='"+ url +"' style='font-size:12pt; text-decoration:none; color:black;'><img src='<%=request.getContextPath()%>/img/icons/caret-right-fill.svg' alt='Bootstrap'>상세정보</a></div><div class='col-lg-1'></div>" +
+		html = "<div class='row'><div class='col-lg-1'></div><div class='col-lg-6'><img class='img-thumbnail rounded' src='"+ src +"' style='width:100%; border-radius:10px !important;'></div><div class='col-lg-4'><h3><b>"+ i +". "+ placename +"</b></h3><h5>"+ addr +"</h5><span id='weather' style='font-size: 15pt; color:rgb(31,210,127);'></span><br><br><h4><b>방문예정 시각 : "+ time +"</b></h4><br><a href='"+ url +"' style='font-size:12pt; text-decoration:none; color:black;'><img src='<%=request.getContextPath()%>/img/icons/caret-right-fill.svg' alt='Bootstrap'>상세정보</a></div><div class='col-lg-1'></div>" +
                "<input type = 'hidden' name='lat' value='"+ lat +"'>" + 
                "<input type = 'hidden' name='lng' value='"+ lng +"'></div><br><br>"; 
 		return html;
@@ -763,21 +839,26 @@ let key = "73ba5abe8af88dbcd7e38268a7747f94";
 		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	function createTotalTr(totalCo, totalDe, newCo, newDe){
+		var html = "";
+		html = "<tr>" + 
+			   "<td>"+ totalCo +"<br><span style='color:red'>"+ newCo +"▲</span></td>" + 
+			   "<td>"+ totalDe +"<br><span style='color:red'>"+ newDe +"▲</span></td>" + 
+			   "</tr>";		   
+		return html;
+	}
+
+	function createTr(Country, totalCo, newCo, totalDe, newDe){
+		var html = "";
+		html = "<tr>" + 
+			   "<th>"+ Country.toLocaleString() +"</th>" +
+			   "<td>"+ totalCo.toLocaleString() +"</td>" +
+			   "<td><span style='color:red'>"+ newCo +"▲</span></td>" +		   
+			   "<td>"+ totalDe.toLocaleString() +"<br>("+ ((totalDe/totalCo)*100).toFixed(1) +"%)</td>" +		   
+			   "<td><span style='color:red'>"+ newDe.toLocaleString() +"▲</span></td>" +		   
+			   "</tr>";
+		return html;
+	}
 	
 </script>
 
@@ -1099,7 +1180,7 @@ jQuery(document).ready(function($){
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<br><p id="title" style="text-align: center; font-size:20pt;">여행지 : <%=area %></p><br>
+				<br><p id="title" style="text-align: center; font-size:20pt;">여행지 : <%=areaFull %></p><br>
 			</div>
 			<div class="col-lg-12">
 				<br><p id="title" style="text-align: center; font-size:30pt;"><%=title %></p><br>
@@ -1136,6 +1217,65 @@ jQuery(document).ready(function($){
 	</section>
 	<!--  -->
 
+
+
+	<br><br><br>
+	
+	<!-- 코로나 -->
+	<div class="container" style="font-size:12pt !important;">
+	<div class="row">
+		<div class="col-lg-3"></div>
+		<div class="col-lg-6" style="text-align: left;">
+			<h3 style="font-size:20pt !important;">※Global covid-19 report&nbsp;(<span class="reportdate" style="color:blue; font-size:15pt;"></span>)</h3>
+		</div>
+		<div class="col-lg-3"></div>
+	</div>
+	<div class="row">
+		<div class="col-lg-3"></div>
+		<div class="col-lg-6">
+		<table class="table" style="text-align: center;">
+			<thead class="table-dark">
+				<tr>
+					<th>확진환자</th>
+					<th>사망자</th>
+				</tr>
+			</thead>
+			<tbody id="totalCountry">
+			</tbody>
+		</table>
+		</div>
+		<div class="col-lg-3"></div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-lg-3"></div>
+		<div class="col-lg-6" style="text-align: left;">
+			<h3 style="font-size:20pt !important;">※Travel Area covid-19 report&nbsp;(<span class="reportdate" style="color:blue; font-size:15pt;"></span>)</h3>
+		</div>
+		<div class="col-lg-3"></div>
+	</div>
+	<div class="row">
+		<div class="col-lg-3"></div>
+		<div class="col-lg-6">
+		<table class="table" style="text-align: center;">
+			<thead class="table-dark">
+				<tr>
+					<th>방문국가명</th>
+					<th>누적확진자</th>
+					<th>일일확진자</th>
+					<th>누적사망자</th>
+					<th>일일사망자</th>
+				</tr>
+			</thead>
+			<tbody id="visitCountry" style="vertical-align: middle;">
+			</tbody>
+		</table>
+		</div>
+		<div class="col-lg-3"></div>
+	</div>
+	</div> 
+	
+	<br><br><br><br><br>
 
 
 <div class="container" style="font-size: 12pt;">
@@ -1214,7 +1354,6 @@ jQuery(document).ready(function($){
    }
 </script>         
 	
-	 
 	
 
 
