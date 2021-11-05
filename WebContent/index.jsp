@@ -84,7 +84,7 @@
 			<div class="col-lg-3" style="float: none; margin: 0 auto;" >
 				<div class="card img-thumbnail" id="left_thumbnail">
 					<div class="embed-responsive embed-responsive-4by3">
-						<img src="" class="card-img-top embed-responsive-item" width="100%" height="350px;">
+						<img src="" class="card-img-top embed-responsive-item" width="100%" height="350px;" style="border-radius:10px !important;">
 					</div>
 					<div class="card-body" style="padding: 15px;">
 						<p></p>
@@ -116,7 +116,7 @@
 			<div class="col-lg-3" style="float: none; margin: 0 auto;" >
 				<div class="card img-thumbnail" >
 					<div class="embed-responsive embed-responsive-4by3">
-						<img src="" class="card-img-top embed-responsive-item" width="100%" height="350px;">
+						<img src="" class="card-img-top embed-responsive-item" width="100%" height="350px;" style="border-radius:10px !important;">
 					</div>
 					<div class="card-body" style="padding: 15px;">
 						<p></p>
@@ -148,7 +148,7 @@
 			<div class="col-lg-3" style="float: none; margin: 0 auto;" >
 				<div class="card img-thumbnail" id="right_thumbnail">
 					<div class="embed-responsive embed-responsive-4by3">
-						<img src="" class="card-img-top embed-responsive-item" width="100%" height="350px;">
+						<img src="" class="card-img-top embed-responsive-item" width="100%" height="350px;" style="border-radius:10px !important;">
 					</div>
 					<div class="card-body" style="padding: 15px;">
 						<p></p>

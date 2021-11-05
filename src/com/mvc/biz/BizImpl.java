@@ -76,12 +76,6 @@ public class BizImpl implements MVCBiz{
 	public blogDto getblogOne(String userid, int blogseq) {
 		
 		con = getConnection();
-		int res = dao.bloghitsUp(con, userid, blogseq);
-		if(res == 0) {
-			rollback(con);
-			closeConn(con);
-			return null;
-		}
 		blogDto bdto = dao.getblogOne(con, userid, blogseq);
 		closeConn(con);
 		
@@ -96,7 +90,7 @@ public class BizImpl implements MVCBiz{
 	
 	//찜관련------------------------------------------------------------------------------
 	
-	//특정 유저가 찜했는지 여부
+	//OPEN 시 특정 유저가 찜했는지 여부
 	@Override
 	public boolean confirmheart(String userid, String placeid) {
 		
@@ -106,6 +100,18 @@ public class BizImpl implements MVCBiz{
 		
 		return res;
 	}
+	
+	//OPEN 시 특정 장소를 찜한 사람 수 반환 (매개변수 : placeid)
+	@Override
+	public int getheartCount(String placeid) {
+		
+		con = getConnection();
+		int res = dao.getheartCount(con, placeid);
+		closeConn(con);
+		
+		return res;
+	}
+	
 	
 	//add heart(장소 찜)
 	@Override
@@ -141,7 +147,7 @@ public class BizImpl implements MVCBiz{
 	
 	
 	
-	//찜 목록 가져오기 (heart dto 리스트) 매개변수 : userid
+	//찜 목록 가져오기 (heart dto 리스트) 매개변수 : userid NATION/CITY
 	@Override
 	public ArrayList<HeartDto> getHeart(String userid) {
 		
@@ -152,16 +158,7 @@ public class BizImpl implements MVCBiz{
 		return heartlist;
 	}
 
-	//특정 장소를 찜한 사람 수 반환 (매개변수 : placeid)
-	@Override
-	public int getheartCount(String placeid) {
-		
-		con = getConnection();
-		int res = dao.getheartCount(con, placeid);
-		closeConn(con);
-		
-		return res;
-	}
+
 
 
 

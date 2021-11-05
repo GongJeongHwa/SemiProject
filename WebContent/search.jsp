@@ -555,7 +555,7 @@ function clear(){
 function addDiv(image, title, value){
 	var html = "";
 	html = "<div class='col' style='position:relative; padding-bottom:30px;'>" + 
-		   "<img class='rounded' src='"+ image +"' width='100%' height='350px'>" +
+		   "<img src='"+ image +"' width='100%' height='350px' style='border-radius:15px;'>" +
 		   "<figcaption style='font-weight:bold; font-size:13pt; font-family:Consolas;'>"+ title +"</figcaption>" +
 		   "<div style='position: absolute; top:5%; left:8%'>" +
 		   "<button class='btn_heart' onclick='modal(this.value)' data-bs-toggle='modal' data-bs-target='#staticBackdrop' value='"+ value +"'><img class='img'  src='./img/icons/suit-heart.svg' alt='Bootstrap' width='20' height='20'></button>" +

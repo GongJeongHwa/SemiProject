@@ -260,13 +260,16 @@ public class DaoImpl implements Dao{
 	public blogDto getblogOne(Connection con, String userid, int blogseq) {
 		
 		blogDto bdto = new blogDto();
-		String query = "SELECT * FROM V_BLOG_ONE WHERE USER_ID = ? AND BLOG_SEQ = ?";
+		String query = "BEGIN BLOG_SELECTONE(?,?,?); END;";
 		
 		try {
-			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, userid);
-			pstmt.setInt(2, blogseq);
-			rs = pstmt.executeQuery();
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, userid);
+			cstmt.setInt(2, blogseq);
+			cstmt.registerOutParameter(3, oracle.jdbc.OracleTypes.CURSOR);
+			cstmt.execute();
+			rs = (ResultSet)cstmt.getObject(3);
+			System.out.println("프로시저호출 selectone");
 			
 			while(rs.next()) {
 				
@@ -293,40 +296,10 @@ public class DaoImpl implements Dao{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeAll(null, pstmt, rs);
+			closeAll(null, cstmt, rs);
 		}
 		return bdto;
 	}
-	
-	@Override
-	public int bloghitsUp(Connection con, String userid, int blogseq) {
-		
-		String query = "BEGIN BLOG_HITSUP(?,?); END;";
-		int res = 0;
-		
-		try {
-			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, userid);
-			pstmt.setInt(2, blogseq);
-			res = pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeAll(null, pstmt, null);
-		}
-		return res;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	@Override
@@ -407,7 +380,7 @@ public class DaoImpl implements Dao{
 	
 	
 	
-	//특정유저 하트여부 확인(프로시저)
+	//특정유저 하트여부 확인(프로시저) --초반호출
 	@Override
 	public boolean confirmheart(Connection con, String userid, String placeid) {
 		
@@ -532,7 +505,7 @@ public class DaoImpl implements Dao{
 		return heartlist;
 	}
 	
-	//특정 장소를 찜한 사람 수(프로시저)
+	//특정 장소를 찜한 사람 수(프로시저) --초반호출
 	@Override
 	public int getheartCount(Connection con, String placeid) {
 		
@@ -559,20 +532,6 @@ public class DaoImpl implements Dao{
 	}
 
 
-
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }
 
