@@ -133,6 +133,29 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		}
 		return res;
 	}
+	
+	@Override
+	public int sendDenyMessage(Connection con, String login_id, String con_id, int chat_serial) {
+		PreparedStatement pstm = null;
+		String message = login_id + "님이 " + con_id + "님의 약속을 거절하셨습니다.";
+		int res = 0;
+
+		try {
+			pstm = con.prepareStatement(sendMessage);
+			pstm.setInt(1, chat_serial);
+			pstm.setString(2, con_id);
+			pstm.setString(3, login_id);
+			pstm.setString(4, message);
+
+			res = pstm.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStmt(pstm);
+		}
+		return res;
+	}
 
 	@Override
 	public List<AskConnect> getAskConnect(String login_id) {
@@ -500,5 +523,36 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 			closeStmt(pstm);
 		}
 		return res;
+	}
+
+	@Override
+	public List<PromiseDto> getPromiseList(Connection con, String login_id) {
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		List<PromiseDto> list = new ArrayList<>();
+		
+		try {
+			pstm = con.prepareStatement(getPromiseList);
+			pstm.setString(1, login_id);
+			pstm.setString(2, login_id);
+			
+			rs = pstm.executeQuery();
+			
+			while (rs.next()) {
+				PromiseDto dto = new PromiseDto();
+				dto.setSen_id(rs.getString(1));
+				dto.setP_loc(rs.getString(2));
+				dto.setP_time(rs.getString(3));
+				dto.setP_comment(rs.getString(4));
+				dto.setUser_name(rs.getString(5));
+				dto.setUser_img(rs.getString(6));
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, pstm, rs);
+		}
+		return list;
 	}
 }

@@ -93,4 +93,18 @@ public interface CompanionDao {
 	public int delMessage(Connection con, int chat_serial);
 	public int delSerial(Connection con, int chat_serial);
 	
+	//메신저-> 현재 성사된 약속목록 불러오기
+	String getPromiseList = " SELECT SEN_ID,P_LOC,P_TIME,P_COMMENT,NAME,USER_IMG FROM M_PROMISE "
+			+ "JOIN T_USER ON(SEN_ID = USER_ID) WHERE REC_ID = ? AND PERMIT = 'Y' "
+			+ "UNION "
+			+ "SELECT REC_ID,P_LOC,P_TIME,P_COMMENT,NAME,USER_IMG FROM M_PROMISE "
+			+ "JOIN T_USER ON(REC_ID = USER_ID) WHERE SEN_ID = ? AND PERMIT = 'Y' "
+			+ "ORDER BY P_TIME ";
+	public List<PromiseDto> getPromiseList(Connection con, String login_id);
+	
+	//거절메세지 발송
+	String sendDenyMessage = " INSERT INTO M_MESSAGE VALUES("
+			+ "MESSAGE_SEQ.NEXTVAL, ?, ?, ?, ?, SYSDATE"
+			+ ")" ;
+	public int sendDenyMessage(Connection con, String login_id, String con_id, int chat_serial);
 }
