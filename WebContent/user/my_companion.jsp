@@ -83,7 +83,7 @@
 	
 
 	<br>
-	<div style="text-align: center;">마이페이지</div>
+	<div style="text-align: center;">나의 약속</div>
 	<br>
 
 	<!-- 사이드바 -->
@@ -104,46 +104,18 @@
 	<div id="right" class="flex_container" style="margin-left:250px; height:400px;">
 	
 		<!-- 나의약속 목록 -->
-		<div class="t_list">
-			<h3>나의 약속</h3>
-			
+		 
 			<!-- 날짜검색 -->
 			<div class="date">
-				<%@ include file="datepicker.jsp"%>
+				<%@ include file="my_companion_picker.jsp"%>
 			</div>
 			
-			<table class="table" style="width:750px;">
-				<col width="60px">
-				<col width="60px">
-				<col width="500px">
-				<col width="30px">
-				<tr>
-					<th>날짜</th>
-					<th>시간</th>
-					<th>comment</th>
-					<th>　</th>
-				</tr>
-				<c:choose>
-					<c:when test="${empty companion_list }">
-						<tr>
-							<td colspan="4" class="blank_list"> 약속이 없습니다.</td>
-						</tr>
-					</c:when>
-					<c:otherwise>
-						<c:forEach items="${companion_list }" var="PromiseDto">
-							<tr>
-								<td>${PromiseDto.p_time }</td>
-								<td>${PromiseDto.p_loc }</td>
-								<td>${PromiseDto.p_comment }</td>
-								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>	
-							</tr>
-						</c:forEach>
-					</c:otherwise>
-				</c:choose>	
-			</table>
-		</div>
+		</div> 
+		
+	<div id="blank" style="width:900px;height:700px;">
 	</div>
-
+		
+		
 	<!-- 고정(푸터) -->
 	<div id="footer">
 		<%@ include file="/form/footer.jsp"%>

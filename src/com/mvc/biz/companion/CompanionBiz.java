@@ -24,4 +24,8 @@ public interface CompanionBiz {
 	
 	public int completeDelete(String login_id, String con_id);
 	
+	public List<PromiseDto> getPromiseList(String login_id);
+	
+	public int sendDenyMessage(String login_id, String con_id, int chat_serial);
+	
 }

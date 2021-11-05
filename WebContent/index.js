@@ -41,7 +41,8 @@ $(document).ready(function(){
 				for(var j = 0; j < data[i].penalty; j++){str += "☆";}
 				$(".card").eq(i).find("p").eq(0).html(data[i].userid + "&nbsp;" + str);
 				$(".card").eq(i).find("span").eq(0).html(data[i].mindate + " ~ " + data[i].maxdate);
-				$(".card").eq(i).find("b").eq(0).html(data[i].area);
+				var area = data[i].area.split(",").join(" ");
+				$(".card").eq(i).find("b").eq(0).html(area);
 				$(".card").eq(i).find("h6").html(data[i].title);
 				$(".card").eq(i).find("p").eq(1).html(data[i].content);
 				$(".card").eq(i).find("button").attr("onclick","location.href='blog.do?command=selectone&blogseq=" + data[i].blogseq + "&user_id=" + data[i].userid + "'");
@@ -174,7 +175,8 @@ function left(){
 		for(var i = 0; i < list[start].penalty; i++){str += "☆";}
 		$(this).find("p").eq(0).html(list[start].userid + "&nbsp;" + str);
 		$(this).find("span").eq(0).html(list[start].mindate + " ~ " + list[start].maxdate);
-		$(this).find("b").eq(0).html(list[start].area);
+		var area = list[start].area.split(",").join(" ");
+		$(this).find("b").eq(0).html(area);
 		$(this).find("h6").html(list[start].title);
 		$(this).find("p").eq(1).html(list[start].content);
 		$(this).find("button").attr("onclick","location.href='blog.do?command=selectone&blogseq=" + list[start].blogseq + "&user_id=" + list[start].userid + "'");
@@ -208,7 +210,8 @@ function right(){
 		for(var i = 0; i < list[start].penalty; i++){str += "☆";}
 		$(this).find("p").eq(0).html(list[start].userid + "&nbsp;" + str);
 		$(this).find("span").eq(0).html(list[start].mindate + " ~ " + list[start].maxdate);
-		$(this).find("b").eq(0).html(list[start].area);
+		var area = list[start].area.split(",").join(" ");
+		$(this).find("b").eq(0).html(area);
 		$(this).find("h6").html(list[start].title);
 		$(this).find("p").eq(1).html(list[start].content);
 		$(this).find("button").attr("onclick","location.href='blog.do?command=selectone&blogseq=" + list[start].blogseq + "&user_id=" + list[start].userid + "'");

@@ -26,7 +26,6 @@ public interface Dao {
 	public int deleteUser(String id);
 	
 	
-	public int bloghitsUp(Connection con, String userid, int blogseq);
 	
 	//다른 sql문 구분
 	

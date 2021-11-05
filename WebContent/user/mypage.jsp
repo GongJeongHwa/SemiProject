@@ -188,7 +188,7 @@
 			<h3>나의 약속<a href="mypage.do?command=myCompanion"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
 			<table class="table" style="width:750px;">
 				<col width="100px">
-				<col width="60px">
+				<col width="80px">
 				<col width="400px">
 				
 				<tr>

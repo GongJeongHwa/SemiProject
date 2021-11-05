@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
 
 <style type="text/css">
 .trash:hover {
@@ -22,7 +23,7 @@ table {
 	width:100%;
 }
 
-#bell {
+#bell, #promise {
 	width:25px;
 	height:25px;
 }
@@ -74,7 +75,7 @@ tr {
 	background-color:white;
 	border:none;
 }
-#close-button {
+#close-button, #close-button-promise {
 	width:15px;
 	height:15px;
 	margin-left:95%;
@@ -83,6 +84,9 @@ tr {
 	cursor:pointer;
 }
 #bell:hover{
+	cursor:pointer;
+}
+#promise:hover{
 	cursor:pointer;
 }
 #deleteTab:hover {
@@ -127,6 +131,46 @@ li {
 .title-asking {
 	letter-spacing:3px; font-size:x-large; font-family: 'Nanum Gothic', sans-serif; font-weight:bold;
 }
+
+.promiseWithUs{
+	z-index:1;
+	width:75%; 
+	height:auto; 
+	background-color:rgb(184, 210, 240); 
+	position:absolute; 
+	margin-left:6%;
+	margin-top:8%;
+	display:none;
+	border-radius:10px;
+	padding-bottom:15px;
+
+}
+
+.firstProDiv {
+	width:100%; height:auto; background-color:rgb(184, 210, 240); border-radius:10px;
+}
+
+.connect-prom-pic {
+	width:35px;
+	height:35px;
+	float:left;
+	margin-top:9%;
+	margin-left:25%;
+}
+
+.ask_locSpan {
+	margin-left:20px; font-size:12px;
+}
+
+.ask_nameSpanPro {
+	font-size:18px; letter-spacing:2px; font-weight:bold;
+}
+
+.fourthDivPro {
+	width:80%; height:auto; margin-left:17%; font-size:20px; letter-spacing:2px;
+	font-family: 'Nanum Pen Script', cursive;
+}
+
 </style>
 <script type="text/javascript">
 function deleteMessage(obj) {
@@ -150,7 +194,13 @@ $(function() {
 		$(".alert-message").css("display","none");
 	});
 	
+	$("#close-button-promise").click(function() {
+		$(".promiseWithUs").css("display","none");
+	});
+	
+	
 	$("#bell").click(function() {
+		$(".promiseWithUs").css("display","none");
 		$(".alert-message").css("display","block");
 		$("#liTitle").html("");
 		$.ajax({
@@ -161,7 +211,7 @@ $(function() {
 				
 				$.each(json, function(key, value) {
 					$("#liTitle").append(
-							"<li> <div class='firstDiv'> <div class='secondDiv'>" + 
+							"<li'> <div class='firstDiv'> <div class='secondDiv'>" + 
 							"<div class='userImg' style='display:none;'>" + value[3] + "</div>" +
 							"<div class='userName' style='display:none;'>" + value[4] + "</div>" +
 							"<div class='userId' style='display:none;'>" + value[0] + "</div>" +
@@ -171,6 +221,48 @@ $(function() {
 							"<div id='ask_comment' class='fourthDiv'>" + value[1] + "</div> <div class='fifthDiv'>" + 
 							"<button class='alert-button' onclick='askPermit(this);'>수락</button> <button class='alert-button' onclick='askDenied(this);'>거절</button>" +
 							"</div></div></li>"
+					);
+				});
+			}
+		});
+	});
+	
+	//약속 확인버튼
+	$("#promise").click(function() {
+		$(".alert-message").css("display","none");
+		$(".promiseWithUs").css("display","block");
+		$("#promiseTitle").html("");
+		$.ajax({
+			url: "message.do?command=promiseWithUs",
+			dataType: "json",
+			success: function(msg) {
+				var json = msg;
+				$.each(json, function(key, value) {
+					var temp = value[2].split("/");
+					var time = temp[3];
+					var date = "";
+					for (var i = 0; i < temp.length - 1; i++) {
+						if (i != 2) {
+							date += temp[i] + "/";
+						} else {
+							date += temp[i];
+						}
+					}
+					$("#promiseTitle").append(
+							"<li style='margin-bottom:0px;> <div class='firstProDiv'> <div class='secondDiv'>" + 
+							"<div class='userImg' style='display:none;'>" + value[4] + "</div>" +
+							"<div class='userName' style='display:none;'>" + value[5] + "</div>" +
+							"<div class='userId' style='display:none;'>" + value[0] + "</div>" +
+							"<img class='connect-prom-pic' alt='user' src='./img/user/" + value[4] + ".png'>" +
+							"</div>" + 
+							"<div class='thirdDiv'>" + 
+							"<span id='ask_name' class='ask_nameSpanPro'><b>" + value[5] + "</b></span>" + 
+							"<span id='ask_loc' class='ask_locSpan'>" + value[1] + "</span>" +
+							"<span id='ask_time' class='ask_timeSpan'>" + date + "</span>" + 
+							"</div>" +
+							"<div id='ask_comment' class='fourthDivPro'>" + "<b style='font-size:20px;'>" + time +
+							"</b>&nbsp;&nbsp;" + value[3] + "</div>" + 
+							"</div></li>"
 					);
 				});
 			}
@@ -190,11 +282,11 @@ function deleteMessageTab() {
 				$("#tbody").append(
 						"<tr class='"+value[0]+"' style='padding:10px;'>" +
 						"<td rowspan='2' style='text-align:center;'><img class='listpic' alt='profile' src='./img/user/" + value[2] + ".png'></td>" +
-						"<td colspan='2' class='fw-bold'>"+value[3]+"</td>" +
+						"<td colspan='3' class='fw-bold'>"+value[3]+"</td>" +
 						"</tr>" +
 						"<tr class='"+value[0]+"' style='padding:10px;'>" +
 						"<td><a class='message'>"+value[1]+"</a></td>" +
-						"<td style='padding-left:25px;'>" +
+						"<td style='padding-left:105px;' colspan='3'>" +
 						"<span class='sen-id' style='display:none;'>"+value[0]+"</span>" +
 						"<img class='trash' alt='trash' src='./img/companion/trash.png' onclick='completeDelete(this);'>" +
 						"</td>" +
@@ -240,11 +332,11 @@ function messageTab() {
 				$("#tbody").append(
 						"<tr class='"+value[0]+"' style='padding:10px;'>" +
 						"<td rowspan='2' style='text-align:center;'><img class='listpic' alt='profile' src='./img/user/" + value[2] + ".png'></td>" +
-						"<td colspan='2' class='fw-bold'>"+value[3]+"</td>" +
+						"<td colspan='3' class='fw-bold'>"+value[3]+"</td>" +
 						"</tr>" +
 						"<tr class='"+value[0]+"' style='padding:10px;'>" +
 						"<td><a href='message.do?command=detailMessage&sen_id="+value[0]+"' class='message'>"+value[1]+"</a></td>" +
-						"<td style='padding-left:25px;'>" +
+						"<td style='padding-left:105px;' colspan='2'>" +
 						"<span class='sen-id' style='display:none;'>"+value[0]+"</span>" +
 						"<img class='trash' alt='trash' src='./img/companion/trash.png' onclick='deleteMessage(this);'>" +
 						"</td>" +
@@ -315,10 +407,21 @@ function askDenied(obj) {
 	    			</li>
 	    		</ul>
 	    	</div>
+	    	<div class="promiseWithUs">
+	    		<img id="close-button-promise" alt="close" src="./img/companion/close.png">
+	    		<ul style="list-style:none; padding-left:0px; margin-bottom:3px; border-radius:10px;">	
+	    			<li style="text-align:center; margin:2%;">
+	    				<span class="title-asking">깐부와의 약속</span>
+	    			</li>
+	    			<li id="promiseTitle">
+	    			</li>
+	    		</ul>
+	    	</div>
 		        <table>
 		        	<colgroup>
 		        		<col width="10%">
-		        		<col width="80%">
+		        		<col width="70%">
+		        		<col width="10%">
 		        		<col width="10%">
 		        	</colgroup>
 		        	<thead>
@@ -328,6 +431,9 @@ function askDenied(obj) {
 		        			</td>
 		        			<td style="padding:25px;">
 		        				<a class="navbar-brand" id="deleteTab" style="color:black;" onclick="deleteMessageTab();">삭제된 메세지</a>
+		        			</td>
+		        			<td style="padding:25px; padding-left:25px;">
+		        				<img id="promise" alt="promise" src="./img/companion/promise.png">
 		        			</td>
 		        			<td style="padding:25px;">
 		        				<img id="bell" alt="bell" src="./img/companion/idea.png">
@@ -341,13 +447,13 @@ function askDenied(obj) {
 		        			<td rowspan="2" style="text-align:center;">
 		        				<img class="listpic" alt="profile" src="./img/user/${list.sender_img}.png">
 		        			</td>
-		        			<td colspan="2" class="fw-bold">${list.user_name}</td>
+		        			<td colspan="3" class="fw-bold">${list.user_name}</td>
 		        		</tr>
 		        		<tr class="${list.sen_id}" style="padding:10px;">
 		        			<td>
 		        				<a href="message.do?command=detailMessage&sen_id=${list.sen_id}" class="message">${list.message}</a>
 		        			</td>
-		        			<td style="padding-left:25px;">
+		        			<td style="padding-left:105px;" colspan="2">
 		        				<span class="sen-id" style="display:none;">${list.sen_id}</span>
 		        				<img class="trash" alt="trash" src="./img/companion/trash.png" onclick="deleteMessage(this);">
 		        			</td>
