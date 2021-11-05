@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mvc.dto.HeartDto;
-import com.mvc.dto.Paging;
+//import com.mvc.dto.Paging;
 import com.mvc.dto.PromiseDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
@@ -185,44 +185,45 @@ public class MypageDaoImpl extends JDBCTemplate implements MypageDao{
 	//페이징
 	@Override
 	public List<HeartDto> selectWishedSql_paging(int page) {
-		Connection con = getConnection();
-		PreparedStatement pstm = null;
-		ResultSet rs = null;
-		List<HeartDto> list = new ArrayList<HeartDto>();
-		Paging paging = new Paging();
-				
-		int startNum = paging.getStartNum();
-		int endNum = paging.getEndNum();
-		
-		try {
-			pstm = con.prepareStatement(selectWishedSql_paging);
-			pstm.setInt(1, startNum);
-			pstm.setInt(2, endNum);
-			
-			rs = pstm.executeQuery();
-			
-			while(rs.next()) {
-				HeartDto tmp = new HeartDto();
-				tmp.setUserid(rs.getString("USER_ID"));
-				tmp.setPlace_id(rs.getString("PLACE_ID"));
-				tmp.setThumbnail(rs.getString("THUMBNAIL"));
-				tmp.setPlace_name(rs.getString("PLACE_NAME"));
-				tmp.setLatitude(rs.getString("LATITUDE"));
-				tmp.setLongtitude(rs.getString("LONGITUDE"));
-				tmp.setPlace_address(rs.getString("PLACE_ADDRESS"));
-				tmp.setNation(rs.getString("NATION"));
-				tmp.setCity(rs.getString("CITY"));
-				
-				list.add(tmp);
-
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			closeAll(con, pstm, rs);
-		}
+//		Connection con = getConnection();
+//		PreparedStatement pstm = null;
+//		ResultSet rs = null;
+//		List<HeartDto> list = new ArrayList<HeartDto>();
+//		//Paging paging = new Paging();
+//				
+//		//int startNum = paging.getStartNum();
+//		//int endNum = paging.getEndNum();
+//		
+//		try {
+//			pstm = con.prepareStatement(selectWishedSql_paging);
+//			pstm.setInt(1, startNum);
+//			pstm.setInt(2, endNum);
+//			
+//			rs = pstm.executeQuery();
+//			
+//			while(rs.next()) {
+//				HeartDto tmp = new HeartDto();
+//				tmp.setUserid(rs.getString("USER_ID"));
+//				tmp.setPlace_id(rs.getString("PLACE_ID"));
+//				tmp.setThumbnail(rs.getString("THUMBNAIL"));
+//				tmp.setPlace_name(rs.getString("PLACE_NAME"));
+//				tmp.setLatitude(rs.getString("LATITUDE"));
+//				tmp.setLongtitude(rs.getString("LONGITUDE"));
+//				tmp.setPlace_address(rs.getString("PLACE_ADDRESS"));
+//				tmp.setNation(rs.getString("NATION"));
+//				tmp.setCity(rs.getString("CITY"));
+//				
+//				list.add(tmp);
+//
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}finally {
+//			closeAll(con, pstm, rs);
+//		}
 	
-		return list;
+//		return list;
+		return null;
 	}
 
 	@Override

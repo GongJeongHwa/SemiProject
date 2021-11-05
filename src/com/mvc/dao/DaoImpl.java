@@ -13,8 +13,10 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import com.mvc.dto.HeartDto;
+import com.mvc.dto.SnsUserDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
+import com.sun.net.httpserver.Authenticator.Result;
 
 import static common.JDBCTemplate.*;
 
@@ -69,11 +71,7 @@ public class DaoImpl implements Dao{
 			
 		return res;
 	}
-	@Override
-	public UserDto naverLogin(String id) {
-		
-		return null;
-	}
+
 	@Override
 	public String idChk(String id) {
 		Connection con = getConnection();
@@ -120,9 +118,10 @@ public class DaoImpl implements Dao{
 			pstm.setString(8, dto.getAddress());
 			pstm.setString(9, dto.getU_national());
 			pstm.setString(10, dto.getGender());
+			pstm.setString(11, dto.getSns());
 			
 			System.out.println(dto.getUser_id()+ " // " +dto.getName()+ " // " + dto.getPhone() +" // " + dto.getEmail() +" // "+ dto.getPasswd() );
-			System.out.println(dto.getNickname()+ " // " +dto.getAge()+ " // " + dto.getAddress() +" // " + dto.getU_national() +" // "+ dto.getGender() );
+			System.out.println(dto.getNickname()+ " // " +dto.getAge()+ " // " + dto.getAddress() +" // " + dto.getU_national() +" // "+ dto.getGender()+"//"+dto.getSns() );
 			System.out.println("03.query 준비 : " + insertUserSql);
 			
 			res = pstm.executeUpdate();

@@ -101,7 +101,9 @@
 	
 	
 	<!-- 메인 -->
-	<div id="right" class="flex_container" style="margin-left:250px; height:400px;">
+
+	<div id="right" class="flex_container" style="margin-left:250px; height:550px;">
+	
 	
 		<!-- 나의약속 목록 -->
 		 

@@ -17,7 +17,7 @@ import com.mvc.dao.DaoImpl;
 import com.mvc.dao.mypage.MypageDao;
 import com.mvc.dao.mypage.MypageDaoImpl;
 import com.mvc.dto.HeartDto;
-import com.mvc.dto.Paging;
+//import com.mvc.dto.Paging;
 import com.mvc.dto.PromiseDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;

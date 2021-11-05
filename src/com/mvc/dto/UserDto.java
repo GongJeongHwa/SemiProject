@@ -19,6 +19,38 @@ public class UserDto {
 	private String active;
 	private int panalty;
 	private String user_img;
+	private String sns;
+
+	public String getSns() {
+		return sns;
+	}
+
+	public void setSns(String sns) {
+		this.sns = sns;
+	}
+
+	public UserDto(String user_id, int seq, Date join_date, Date leave_date, String name, String phone, String email,
+			String passwd, String nickname, int age, String address, String u_national, String gender, String active,
+			int panalty, String user_img, String sns) {
+		super();
+		this.user_id = user_id;
+		this.seq = seq;
+		this.join_date = join_date;
+		this.leave_date = leave_date;
+		this.name = name;
+		this.phone = phone;
+		this.email = email;
+		this.passwd = passwd;
+		this.nickname = nickname;
+		this.age = age;
+		this.address = address;
+		this.u_national = u_national;
+		this.gender = gender;
+		this.active = active;
+		this.panalty = panalty;
+		this.user_img = user_img;
+		this.sns = sns;
+	}
 
 	public UserDto() {
 		super();

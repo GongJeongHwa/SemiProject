@@ -34,8 +34,11 @@ input{
 .btn:hover{
 	background-color: grey;
 }
-p,span{
+p{
 	font-size: 5pt;
+}
+span{
+	font-size: 8pt;
 }
 </style>
 <script type="text/javascript">
