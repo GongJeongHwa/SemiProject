@@ -31,15 +31,15 @@
 	<table class="table" style="align:center; font-size:15px; width:900px; height: 500px; margin-left:auto; margin-right:auto;">
 		<tr>
 			<th>작성자</th>
-			<td><input type="text" name="myname"></td>
+			<td><input type="text" name="writer"></td>
 		</tr>
 		<tr>
 			<th>제목</th>
-			<td><input type="text" name="mytitle"></td>
+			<td><input type="text" name="title"></td>
 		</tr>
 		<tr>
 			<th>내용</th>
-			<td><textarea rows="20" cols="100" name="mycontent"></textarea></td>
+			<td><textarea rows="20" cols="100" name="content"></textarea></td>
 		</tr>
 	</table>
 	

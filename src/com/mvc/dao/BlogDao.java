@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import com.mvc.dto.BlognewsboardDto;
 import com.mvc.dto.blogDto;
@@ -20,7 +20,7 @@ public class BlogDao extends JDBCTemplate{
 		Connection con = getConnection();
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
-		List<BlognewsboardDto> res = new ArrayList<BlognewsboardDto>();
+	    List<BlognewsboardDto> res = new ArrayList<BlognewsboardDto>();
 		
 		String sql = " SELECT * FROM BLOG_NEWSBOARD ORDER BY SEQ DESC ";
 		
@@ -36,8 +36,12 @@ public class BlogDao extends JDBCTemplate{
 				tmp.setSeq(rs.getInt(1));
 				tmp.setWriter(rs.getString(2));
 				tmp.setTitle(rs.getString(3));
+				tmp.setContent(rs.getString(4));
 				tmp.setRegdate(rs.getDate(5));
 				tmp.setViewcnt(rs.getInt(6));
+				tmp.setRef(rs.getInt(7));
+				tmp.setRe_step(rs.getInt(8));
+				tmp.setRe_level(rs.getInt(9));
 				
 				res.add(tmp);
 			}
@@ -196,28 +200,28 @@ public class BlogDao extends JDBCTemplate{
 	}
 	
 	//모든 게시글 리턴
-	public Vector<BlognewsboardDto> getAllBoard(int start, int end){
+	public List<BlognewsboardDto> selectAll(int startRow, int endRow){
 		Connection con = getConnection();
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
-		Vector<BlognewsboardDto> v = new Vector<>();
+	    List<BlognewsboardDto> res = new ArrayList<BlognewsboardDto>();
 		
-		
+		String sql = " SELECT * FROM (SELECT A.*,ROWNUM RNUM FROM (SELECT * FROM BLOG_NEWSBOARD ORDER BY SEQ DESC)A) WHERE RNUM >=? AND RNUM <=? ";
 		
 		try {
-			 String sql = "select * from (select A.*, Rownum Rnum from (select * from BLOG_NEWSBOARD order by ref desc, re_step asc)A)"
-	                 + "where Rnum >= ? and Rnum <= ?";
 			pstm = con.prepareStatement(sql);
-			pstm.setInt(1, start);
-			pstm.setInt(2, end+1);
-			System.out.println("03. query 준비: " + sql);
+			pstm.setInt(1, startRow);
+			pstm.setInt(2, endRow);
+			
+			rs = pstm.executeQuery();
+			System.out.println("03.query 준비: "+sql);
 			
 			rs = pstm.executeQuery();
 			System.out.println("04. query 실행 및 리턴");
 			
-			while(rs.next()){
+			
+			while(rs.next()) {
 				BlognewsboardDto tmp = new BlognewsboardDto();
-				
 				tmp.setSeq(rs.getInt(1));
 				tmp.setWriter(rs.getString(2));
 				tmp.setTitle(rs.getString(3));
@@ -228,20 +232,19 @@ public class BlogDao extends JDBCTemplate{
 				tmp.setRe_step(rs.getInt(8));
 				tmp.setRe_level(rs.getInt(9));
 				
-				
-				
-				v.add(tmp);
+				res.add(tmp);
 			}
 		} catch (SQLException e) {
-			System.out.println("3/4 단계 오류");
+			System.out.println("3/4단계 오류");
+			
 			e.printStackTrace();
 		}finally {
-			closeConn(con);
-			System.out.println("05. db 종료\n");
-			
+			closeAll(con,pstm,rs);
+			System.out.println("05. db종료\n");
 		}
-		return v;
 		
+		return res;
+				
 	}
 	//전체 글 갯수 리턴
 	public int getAllCount() {
@@ -264,8 +267,6 @@ public class BlogDao extends JDBCTemplate{
 		}finally {
 			closeAll(con,pstm,rs);
 		}
-		
-		
 		return count;
 	}
 	
@@ -324,12 +325,16 @@ public class BlogDao extends JDBCTemplate{
 			
 			while(rs.next()) {
 				blogDto tmp = new blogDto();
-				tmp.setBlog_seq(rs.getInt(3));
 				tmp.setUser_id(rs.getString(1));
+				tmp.setUser_penalty(rs.getInt(2));
+				tmp.setBlog_seq(rs.getInt(3));
 				tmp.setTitle(rs.getString(5));
 				tmp.setMindate(rs.getDate(8));
 				tmp.setMaxdate(rs.getDate(9));
 				tmp.setThumbnailPath(rs.getString(10));
+				tmp.setHeart_count(rs.getInt(11));
+				tmp.setComment(rs.getInt(12));
+				tmp.setHits(rs.getInt(13));
 				
 				res.add(tmp);
 			}
@@ -343,6 +348,7 @@ public class BlogDao extends JDBCTemplate{
 		
 		return res;
 	}
+
 	//블로그 게시판 베스트
 	public List<blogDto> bestlist(){
 		Connection con = getConnection();
@@ -384,8 +390,72 @@ public class BlogDao extends JDBCTemplate{
 		return res;
 	}	
 	
+	//블로그상세리스트 페이징
+	public List<blogDto> scheduleboardlist(int startRow,int endRow){
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		List<blogDto> res = new ArrayList<blogDto>();
+		String sql = " SELECT * FROM (SELECT A.*,ROWNUM RNUM FROM (SELECT * FROM V_BLOG_LIST ORDER BY HITS_COUNT DESC)A) WHERE RNUM >=? AND RNUM <=? ";
+		
+		try {
+			pstm = con.prepareStatement(sql);
+			pstm.setInt(1, startRow);
+			pstm.setInt(2, endRow);
+			
+			rs = pstm.executeQuery();
+			
+			while(rs.next()) {
+				blogDto tmp = new blogDto();
+				tmp.setUser_id(rs.getString(1));
+				tmp.setUser_penalty(rs.getInt(2));
+				tmp.setBlog_seq(rs.getInt(3));
+				tmp.setTitle(rs.getString(5));
+				tmp.setMindate(rs.getDate(8));
+				tmp.setMaxdate(rs.getDate(9));
+				tmp.setThumbnailPath(rs.getString(10));
+				tmp.setHeart_count(rs.getInt(11));
+				tmp.setComment(rs.getInt(12));
+				tmp.setHits(rs.getInt(13));
+				
+				res.add(tmp);
+			}
+		} catch (SQLException e) {
+			System.out.println("3/4단계 오류");
+			e.printStackTrace();
+		}finally {
+			closeAll(con,pstm,rs);
+			System.out.println("05. db종료\n");
+		}
+		
+		return res;
+	}
+	//전체 글 갯수 리턴
+	public int ScheduleboardAllCount() {
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		int count = 0;
+		
+		String sql = " SELECT COUNT(*) FROM V_BLOG_LIST_DESC ";
+		
+		try {
+			pstm = con.prepareStatement(sql);
+			rs = pstm.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			closeAll(con,pstm,rs);
+		}
+		return count;
+	}
 	
 	
+
 	
 	
 	

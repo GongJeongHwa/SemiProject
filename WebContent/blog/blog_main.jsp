@@ -9,9 +9,13 @@
  <%@ page import="com.mvc.dto.UserDto" %>
  <%@ page import="com.mvc.dao.Dao" %>
  <%@ page import="com.mvc.dao.DaoImpl" %>
+ <%@ page import="com.mvc.dao.mypage.MypageDaoImpl" %>
+  <%@ page import="com.mvc.dao.mypage.MypageDao" %>
  <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
  <%@ page import="com.mvc.dto.blogDto" %>
  <%@ page import="com.mvc.dao.BlogDao" %>
+ <%@ page import="java.util.Date" %>
+ 
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,7 +67,7 @@ font-size:15px;
 	
 
 
-<body style="font-family: 'Jeju Gothic', sans-serif;">
+<body style="font-family: 'Jeju Gothic', sans-serif; margin: auto; ">
 		<!-- 고정(헤더) -->
 	<div id="header">
 		<%@ include file="/form/header.jsp"%>
@@ -157,7 +161,7 @@ font-size:15px;
 	<h1 class="title"><strong>나의 일정&nbsp;💬</strong></h1>
 	<br>
 	<br>
-	
+
 	
 	
 	<%
@@ -168,10 +172,11 @@ font-size:15px;
 	<div style=
 	"margin-left:200px;  background:#DCE2F0; height: 200px; width: 900px; text-align:center;
 	font-size:15px; color:#50586C;" >
-	<br>
-	다가오는 여행 일정을 확인해보세요.
+	<br><br><br><br>
+	<a href="<%=request.getContextPath() %>/mypage.do?command=mypage">다가오는 여행 일정을 확인해보세요.</a>
 	<br>
 	</div>
+	
 
 <%
 	}else{	
