@@ -281,6 +281,7 @@ $(document).ready(function() {
 					);
 					idx = (idx+1)==json.length? 0 : (idx+1);
 				});
+				$(".messenger-table").scrollTop($("#tbody")[0].scrollHeight);
 			}
 		});
 	}, 15000);
@@ -441,18 +442,23 @@ function messageFunction() {
 	$.ajax({
 		url:"message.do?command=sendMessage&message="+message+"&con_id="+con_id+"&chat_serial="+chat_serial,
 		success: function(){
-			$("#tbody").append(
-				"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + user_img + ".png'></td>" +
-				"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + user_name + "</span>" +
-				"<span id='m_time' class='spanTime'>" + dateString + "</span>" +
-				"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
-				"</td></tr>" +
-				"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + message + "</div>" +
-				"</td></tr>"
-			);
+			console.log(전송완료);
 		}
 	});
+	
+	$("#tbody").append(
+			"<tr> <td rowspan='2' class='firstTd'> <img id='pic' alt='profile' src='./img/user/" + user_img + ".png'></td>" +
+			"<td colspan='2'> <span id='sender' class='fw-bold spanSender'>" + user_name + "</span>" +
+			"<span id='m_time' class='spanTime'>" + dateString + "</span>" +
+			"<img class='reportIcon' alt='report' src='./img/companion/report2.png' onclick='reportUser();'>" +
+			"</td></tr>" +
+			"<tr><td colspan='3' class='secondTd'><div id='getMessage' class='message'>" + message + "</div>" +
+			"</td></tr>"
+	);
 	document.getElementById("inputMessage").value = "";
+	
+	// 스크롤 처리
+	$(".messenger-table").scrollTop($("#tbody")[0].scrollHeight);
 }
 
 function refreshMassage() {
@@ -476,6 +482,7 @@ function refreshMassage() {
 				);
 				idx = (idx+1)==json.length? 0 : (idx+1);
 			});
+			$(".messenger-table").scrollTop($("#tbody")[0].scrollHeight);
 		}
 	});
 }
