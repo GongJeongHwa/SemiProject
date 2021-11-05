@@ -48,19 +48,56 @@ public class loginController extends HttpServlet {
 				jsResponse("로그인실패", request.getContextPath()+"/login/login.jsp", response);
 			}
 		}else if(command.equals("logout")) {
+		
 			
 			session.removeAttribute("dto");
 			dispatch("index.jsp", request, response);
 
 		}else if(command.equals("naverLogin")) {
 			String id = request.getParameter("id");
+			String pw = "naver";
 			String name = request.getParameter("name");
 			String email = request.getParameter("email");
 			String nickname = request.getParameter("nickname");
-			String birthday = request.getParameter("birthday");
+			String gender = request.getParameter("gender");			
 			
-			System.out.println(id+"/"+name+"/"+email+"/"+nickname+"/"+birthday); 
+			UserDto dto = new UserDto();
 			
+			dto = dao.login(id, pw);
+			
+			if(dto.getUser_id() != null) {
+				System.out.println("success!!");
+				session.setAttribute("dto", dto);
+				session.setMaxInactiveInterval(60*60); //세션 유지 시간 - 1시간
+				
+			}else {				
+				dto.setUser_id(id);
+				dto.setPasswd(pw);
+				dto.setName(name);
+				dto.setNickname(nickname);
+				dto.setU_national("");
+				dto.setGender(gender);
+				dto.setEmail(email);
+				dto.setAge(0);
+				dto.setPhone("");
+				dto.setAddress("");
+				dto.setSns("naver"); //네이버 구별값
+				
+				
+				int res = dao.register(dto);
+				
+				if(res>0) {
+					dto = dao.login(id, pw);
+					if(dto.getUser_id() != null) {
+						System.out.println("success!!!!!");
+						session.setAttribute("dto", dto);
+						session.setMaxInactiveInterval(60*60); //세션 유지 시간 - 1시간
+						
+					}
+				}
+			}
+			
+			dispatch("index.jsp", request, response);
 			
 		}else if(command.equals("registform")) {
 			dispatch("login/registform.jsp", request, response);
@@ -107,7 +144,7 @@ public class loginController extends HttpServlet {
 			dto.setAge(age);
 			dto.setPhone(phone);
 			dto.setAddress(addr);
-			
+			dto.setSns(null);
 			int res = dao.register(dto);
 			
 			jsResponse("회원가입성공!", request.getContextPath()+"/index.jsp", response);

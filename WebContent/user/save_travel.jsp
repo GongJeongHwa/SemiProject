@@ -102,14 +102,6 @@
 	<!-- 메인 -->
 	<div id="right" class="flex_container" style="margin-left:250px; height:550px;">
 	
-	<!--<jsp:include page="/paging/paging.jsp">
-    <jsp:param value="${paging.page}" name="page"/>
-    <jsp:param value="${paging.beginPage}" name="beginPage"/>
-    <jsp:param value="${paging.endPage}" name="endPage"/>
-    <jsp:param value="${paging.prev}" name="prev"/>
-    <jsp:param value="${paging.next}" name="next"/>
-	</jsp:include> -->
-
 
 	
 	
