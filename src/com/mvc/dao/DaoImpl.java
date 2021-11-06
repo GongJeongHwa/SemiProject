@@ -484,7 +484,7 @@ public class DaoImpl implements Dao{
 				blogHeartDto dto = new blogHeartDto();
 				dto.setRegdate(rs.getDate(1));
 				dto.setUserid(userid); //userid (찜한 유저) - 현재 세션유저라고 봐도무방 (필요한 변수는아님)
-				dto.setBlogid(query); //찜대상 블로그 주인 로그인ID (필수)
+				dto.setBlogid(rs.getString(3)); //찜대상 블로그 주인 로그인ID (필수)
 				dto.setBlogseq(rs.getInt(4)); // (필수) - 버튼링크  = blog.do?command=selectone&blogid=<%=dto.getBlogid%>&blogseq=<%=dto.getBlogseq%>
 				dto.setTitle(rs.getString(5)); //찜한 블로그의 제목 
 				dto.setBlogNickname(rs.getString(6)); //찜한블로그의 주인의 닉네임 
