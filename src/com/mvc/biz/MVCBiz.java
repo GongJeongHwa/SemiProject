@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
+import com.mvc.dto.blogHeartDto;
 
 public interface MVCBiz {
 	
@@ -17,6 +18,11 @@ public interface MVCBiz {
 	public ArrayList<blogDto> getBlogList();
 	public int addSchedule(blogDto dto);
 	public blogDto getblogOne(String userid, int blogseq);
+	public int delblog(String userid, int blogseq);
+	public boolean confirmblogheart(String userid, String blogid, int blogseq);
+	public int addblogheart(String userid, String blogid, int blogseq, String title);
+	public int rmblogheart(String userid, String blogid, int blogseq);
+	public ArrayList<blogHeartDto> getBlogHeart(String userid);
 	
 	
 	//search.jsp 장소heart

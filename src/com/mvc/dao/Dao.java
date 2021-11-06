@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.mvc.dto.HeartDto;
-import com.mvc.dto.SnsUserDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
+import com.mvc.dto.blogHeartDto;
 
 public interface Dao {
 	
@@ -35,7 +35,11 @@ public interface Dao {
 	public int getBlogSeq(Connection con, String userid);
 	public int addSchedule(Connection con, int seq, blogDto dto);
 	public blogDto getblogOne(Connection con, String userid, int blogseq);
-	
+	public int delblog(Connection con, String userid, int blogseq);
+	public boolean confirmblogheart(Connection con, String userid, String blogid, int blogseq);
+	public int addblogheart(Connection con, String userid, String blogid, int blogseq, String title);
+	public int rmblogheart(Connection con, String userid, String blogid, int blogseq);
+	public ArrayList<blogHeartDto> getBlogHeart(Connection con, String userid);	
 	
 	//search add heart(장소찜 관련)
 	public int addheart(Connection con, HeartDto dto);
@@ -43,4 +47,5 @@ public interface Dao {
 	public int getheartCount(Connection con, String placeid);
 	public boolean confirmheart(Connection con, String userid, String placeid);
 	public int rmheart(Connection con, String userid, String placeid);
+	
 }

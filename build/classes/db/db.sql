@@ -109,7 +109,42 @@ BEGIN
     COMMIT;
 END;
 
+--------------------------------------------------------------------------
+-------유저별 블로그 갯수
+CREATE OR REPLACE VIEW V_COUNTBLOG
+AS
+SELECT COUNT(*) CNT, USER_ID 
+FROM V_BLOG_LIST
+GROUP BY USER_ID;
 
+--------------------------------------------------------------------------
+--------del blog
+CREATE OR REPLACE PROCEDURE DELBLOG
+(
+	P_USERID IN VARCHAR2,
+	P_BLOGSEQ IN NUMBER
+)
+IS 
+BEGIN 
+	DECLARE 
+		X NUMBER;
+	BEGIN 
+		DELETE FROM BLOG_DETAIL
+		WHERE USER_ID = P_USERID
+		AND BLOG_SEQ = P_BLOGSEQ;
+		
+		DELETE FROM BLOG_HEART
+		WHERE BLOG_ID = P_USERID
+		AND BLOG_SEQ = P_BLOGSEQ;
+		
+		EXCEPTION
+        	WHEN no_data_found THEN
+            	dbms_output.put_line('does not exits.'); RETURN;	
+		COMMIT;
+	END;
+END;
+/
+--------------------------------------------------------------------------
 
 
 
@@ -120,7 +155,7 @@ END;
 -------------------------------------------------------------------------댓글
 --PK : ID + BLOGSEQ + COMMENTSEQ
 CREATE TABLE BLOG_COMMENT(
-	USER_ID VARCHAR2(50) NOT NULL,
+	USER_ID VARCHAR2(50) NOT NULL, --blogid로 수정
 	BLOG_SEQ NUMBER NOT NULL,
 	COMMENT_SEQ NUMBER NOT NULL,
 	COMMENT_DATE DATE NOT NULL,
@@ -180,24 +215,90 @@ SELECT * FROM BLOG_DETAIL;
 
 
 
-
+--블로그주인이 블로그를 삭제하면 블로그찜테이블에서도 해당 블로그가 포함된 행 자동삭제
 ------------------------------------------------------------------------------블로그찜
 --pk (userid, blogid, blogseq)
 CREATE TABLE BLOG_HEART(
+	REG_DATE DATE NOT NULL,
 	USER_ID VARCHAR2(50) NOT NULL,
 	BLOG_ID VARCHAR2(50) NOT NULL,
 	BLOG_SEQ NUMBER NOT NULL,
+	BLOG_TITLE VARCHAR2(1000) NOT NULL,
 	CONSTRAINT FK_BLOG_HEART_USERID FOREIGN KEY(USER_ID) REFERENCES T_USER(USER_ID),
 	CONSTRAINT PK_BLOG_HEART PRIMARY KEY(USER_ID, BLOG_ID, BLOG_SEQ)
 );
-
------찜 추가 프로시저 (유저가 특정 블로그 찜을하면 찜테이블에 등록이 되어야하고 해당 블로그테이블 찜컬럼 1개 증가되어야함
-
-
-
------찜 삭제 프로시저 (유저가 특정 블로그 찜을 삭제하면 찜테이블에 등록이 삭제되어야하고 해당 블로그테이블 찜컬럼 1개 감소
+SELECT * FROM BLOG_HEART;
+DROP TABLE BLOG_HEART;
 
 
+--블로그찜추가------------------------------------------------
+CREATE OR REPLACE PROCEDURE ADD_BLOGHEART
+(
+	P_USERID IN VARCHAR2,
+	P_BLOGID IN VARCHAR2,
+	P_BLOGSEQ IN NUMBER,
+	P_BLOGTITLE IN VARCHAR2
+)
+IS
+BEGIN 
+	INSERT INTO BLOG_HEART
+	VALUES(SYSDATE, P_USERID, P_BLOGID, P_BLOGSEQ, P_BLOGTITLE);
+
+	EXCEPTION
+		WHEN DUP_VAL_ON_INDEX THEN 
+		RAISE NO_DATA_FOUND; RETURN;
+    COMMIT;
+END;
+/
+
+--블로그찜삭제------------------------------------------------
+CREATE OR REPLACE PROCEDURE RM_BLOGHEART
+(
+	P_USERID IN VARCHAR2,
+	P_BLOGID IN VARCHAR2,
+	P_BLOGSEQ IN NUMBER
+)
+IS
+BEGIN 
+	DELETE FROM BLOG_HEART
+	WHERE USER_ID = P_USERID
+	AND BLOG_ID =P_BLOGID
+	AND BLOG_SEQ =P_BLOGSEQ;
+	IF SQL%ROWCOUNT = 0 THEN
+    	RAISE NO_DATA_FOUND; RETURN;
+	END IF;	
+
+    COMMIT;
+END;
+/
+
+--초기 페이지오픈시 찜여부확인용------------------------------------------------
+CREATE OR REPLACE PROCEDURE CONFIRM_BLOGHEART
+(
+	P_USERID IN VARCHAR2,
+	P_BLOGID IN VARCHAR2,
+	P_BLOGSEQ IN NUMBER,
+	p_cursor OUT SYS_REFCURSOR
+)
+IS 
+BEGIN 
+	OPEN p_cursor FOR 
+	SELECT * FROM BLOG_HEART WHERE USER_ID = P_USERID AND BLOG_ID = P_BLOGID AND BLOG_SEQ = P_BLOGSEQ;
+	EXCEPTION
+        WHEN no_data_found THEN
+            dbms_output.put_line('does not exits.');
+END;
+/
+
+--블로그 뷰 (찜대상 블로그 주인이 ACTIVE Y인 블로그만)------------------------------------------------
+CREATE OR REPLACE VIEW V_BLOG_HEARTLIST
+AS
+	SELECT A.*, B.NICKNAME 
+	FROM BLOG_HEART A, T_USER B
+	WHERE A.BLOG_ID = B.USER_ID 
+	AND B.ACTIVE = 'Y';
+------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
 
 
@@ -235,6 +336,15 @@ SELECT * FROM T_USER;
 
 
 --------------------------------------------------------------------------------
+--찜수 계산 VIEW
+CREATE OR REPLACE VIEW COUNT_PLACE_HEART
+AS
+	SELECT COUNT(PLACE_ID) CNT, PLACE_ID PID
+	FROM PLACE_HEART
+	GROUP BY PLACE_ID ;
+
+
+SELECT * FROM COUNT_PLACE_HEART;
 --------------------------------------------------------------------------------
 -----유저장소찜 추가 프로시저
 CREATE OR REPLACE PROCEDURE ADDHEART
@@ -256,7 +366,7 @@ BEGIN
 	VALUES(P_USERID, P_PLACEID, P_THUMBNAIL, P_PLACENAME, P_LATITUDE, P_LONGTITUDE, P_ADDRESS, P_NATION, P_CITY);
 
 	OPEN p_cursor FOR 
-	SELECT COUNT(PLACE_ID) FROM PLACE_HEART WHERE PLACE_ID = P_PLACEID;
+	SELECT CNT FROM COUNT_PLACE_HEART WHERE PID = P_PLACEID;
 	EXCEPTION
 		WHEN DUP_VAL_ON_INDEX THEN RETURN;
         WHEN no_data_found THEN
@@ -280,8 +390,8 @@ BEGIN
     	RETURN;
 	END IF;	
 
-	OPEN p_cursor FOR 
-	SELECT COUNT(PLACE_ID) FROM PLACE_HEART WHERE PLACE_ID = P_PLACEID;
+	OPEN p_cursor FOR
+	SELECT COUNT(PLACE_ID) FROM PLACE_HEART WHERE PLACE_ID =P_PLACEID;
 	EXCEPTION
         WHEN no_data_found THEN
             dbms_output.put_line('does not exits.');
