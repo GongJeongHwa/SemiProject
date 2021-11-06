@@ -34,6 +34,7 @@ public class blog extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		 
 		String command = request.getParameter("command");
+		PrintWriter pw = response.getWriter();
 		
 		if(command.equals("bloglist")) {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -68,7 +69,7 @@ public class blog extends HttpServlet {
 			out.print(jarray.toJSONString());
 		}
 		
-		if(command.equals("selectone")) {
+		else if(command.equals("selectone")) {
 			System.out.println("넘겨받은 seq : " + request.getParameter("blogseq"));
 			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
 			String userid = request.getParameter("user_id");
@@ -77,11 +78,64 @@ public class blog extends HttpServlet {
 			request.setAttribute("bdto", bdto);
 			dispatch("/blog/blog_detail_sk.jsp", request, response);
 			
-			
-			
-			
 		}
 		
+		else if(command.equals("delblog")) {
+			
+			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
+			String userid = request.getParameter("userid");
+			
+			int res = new BizImpl().delblog(userid, blogseq);
+			if(res > 0) {
+				response.sendRedirect(request.getContextPath() + "/blog/blog_main.jsp");
+			}else {
+				response.sendRedirect(request.getContextPath() + "/blog/blog_main.jsp");
+			}
+		}
+		
+		else if(command.equals("confirmblogheart")) {
+			
+			String sessionid = request.getParameter("sessionId");
+			String blogid = request.getParameter("blogId");
+			int blogseq = Integer.parseInt(request.getParameter("blogSeq"));
+			boolean res = new BizImpl().confirmblogheart(sessionid, blogid, blogseq);
+			pw.print(res);
+		}
+		
+		else if(command.equals("addblogheart")) {
+			
+			String sessionid = request.getParameter("sessionId");
+			String blogid = request.getParameter("blogId");
+			int blogseq = Integer.parseInt(request.getParameter("blogSeq"));
+			String title = request.getParameter("title");
+			
+			int res = new BizImpl().addblogheart(sessionid, blogid, blogseq, title);
+			if(res > 0) {
+				pw.print("success");
+			}else {
+				pw.print("fail");
+			}
+		}
+		
+		else if(command.equals("rmblogheart")) {
+			
+			String sessionid = request.getParameter("sessionId");
+			String blogid = request.getParameter("blogId");
+			int blogseq = Integer.parseInt(request.getParameter("blogSeq"));
+			
+			System.out.println(sessionid);
+			System.out.println(blogid);
+			System.out.println(blogseq);
+			
+			
+			int res = new BizImpl().rmblogheart(sessionid, blogid, blogseq);
+			if(res > 0) {
+				pw.print("success");
+			}else {
+				pw.print("fail");
+			}
+			
+		}
 		
 		
 	}
@@ -96,3 +150,20 @@ public class blog extends HttpServlet {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

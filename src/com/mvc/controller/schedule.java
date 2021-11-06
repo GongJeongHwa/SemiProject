@@ -53,8 +53,6 @@ public class schedule extends HttpServlet {
 		MypageDao m_dao = new MypageDaoImpl();
 		Dao	u_dao = new DaoImpl();  
 		
-		
-		
 	      if(command.equals("schedule")) {
 	           if(dto != null) {
 	               List<HeartDto> wished_list =  m_dao.selectWishedSql(dto.getUser_id());

@@ -512,10 +512,8 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 	
 	   function photoRf(path){
 		      var temp = path.split("Photo?1s");
-		      console.log(temp);
 		      
 		      var temp2 = temp[1].split("&callback");
-		      console.log(temp2);
 		      
 		      return(temp2[0]);
 		   }
@@ -624,7 +622,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 				}
 			}
 			nationarr = Array.from(new Set(nationarr));
-			
+			console.log(nationarr);
 			//city
 			for(var i = 0; i < citySorted.length; i++){
 				var arr = citySorted[i].String.split(",");
@@ -639,15 +637,16 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 				}
 			}
 			cityarr = Array.from(new Set(cityarr));
-			
+			console.log(cityarr);
 			for(var i = 0; i < nationarr.length; i++){
 				nations_citys += nationarr[i] + ",";
 			}
 			for(var i = 0; i < cityarr.length; i++){
 				nations_citys += cityarr[i] + ",";
 			}
+			console.log(nations_citys);
 			nations_citys = nations_citys.slice(0,-1);
-
+			console.log(nations_citys);
 			
 			var thumbarr = thumbnailSorted[0].String.split(",");
 			thumbnailpath = thumbarr[0];
@@ -679,6 +678,9 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 			
 			if(confirm("여행일정을 완료하시겠습니까?")){
 				location.href="javascript:document.form.submit()";
+			}else{
+				nations_citys = "";
+				thumbnailpath = "";
 			}
 			
 		});
