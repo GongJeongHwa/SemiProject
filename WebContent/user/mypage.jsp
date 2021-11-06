@@ -141,7 +141,7 @@
 							<tr>
 								<td>${blogDto.blog_create_date }</td>
 								<td style="text-align:center">♥${blogDto.heart_count }</td>
-								<td>${blogDto.areaname }</td>
+								<td><a href="blog.do?command=selectone&blogseq=${blogDto.blog_seq}&user_id=${blogDto.user_id}">${blogDto.areaname }</a></td>
 							</tr>
 						</c:forEach>
 					</c:otherwise>

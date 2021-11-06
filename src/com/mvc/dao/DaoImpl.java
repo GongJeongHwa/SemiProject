@@ -13,10 +13,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import com.mvc.dto.HeartDto;
-import com.mvc.dto.SnsUserDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
-import com.sun.net.httpserver.Authenticator.Result;
 
 import static common.JDBCTemplate.*;
 
@@ -118,7 +116,8 @@ public class DaoImpl implements Dao{
 			pstm.setString(8, dto.getAddress());
 			pstm.setString(9, dto.getU_national());
 			pstm.setString(10, dto.getGender());
-			pstm.setString(11, dto.getSns());
+			pstm.setString(11, dto.getUser_img());
+			pstm.setString(12, dto.getSns());
 			
 			System.out.println(dto.getUser_id()+ " // " +dto.getName()+ " // " + dto.getPhone() +" // " + dto.getEmail() +" // "+ dto.getPasswd() );
 			System.out.println(dto.getNickname()+ " // " +dto.getAge()+ " // " + dto.getAddress() +" // " + dto.getU_national() +" // "+ dto.getGender()+"//"+dto.getSns() );
@@ -191,11 +190,11 @@ public class DaoImpl implements Dao{
 		
 		try {
 			pstm = con.prepareStatement(deleteUserSql);
-			pstm.setString(1, id);
+			pstm.setString(1, "N");
+			pstm.setString(2, id);
 			System.out.println("03. query준비 : "+deleteUserSql);
 			
-			res= pstm.executeUpdate();
-			System.out.println("04. query 실행 및 리턴");
+			res = pstm.executeUpdate();
 			
 			if(res>0) {
 				commit(con);

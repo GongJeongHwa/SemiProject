@@ -17,7 +17,6 @@ import com.mvc.dao.DaoImpl;
 import com.mvc.dao.mypage.MypageDao;
 import com.mvc.dao.mypage.MypageDaoImpl;
 import com.mvc.dto.HeartDto;
-//import com.mvc.dto.Paging;
 import com.mvc.dto.PromiseDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
@@ -31,28 +30,7 @@ public class mypage extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		MypageDao m_dao = new MypageDaoImpl();
 		Dao	u_dao = new DaoImpl();
-//		Paging paging = new Paging();
-//		//페이징
-//		int page = 1;
-//		
-//		int count = m_dao.wishedCount();
-//		paging.setTotalCount(count);
-//		
-//		paging.setPage(page);
-//		
-//		if(request.getParameter("page")!= null) {
-//			page=Integer.parseInt(request.getParameter("page"));
-//		}
-//		
-//		List<HeartDto> plist = m_dao.selectWishedSql_paging(page);
-//		
-//		request.setAttribute("plist", plist);
-//		request.setAttribute("paging", paging);
-//		
-//		dispatch("user/save_travel.jsp", request, response);
-//		
-//		
-		
+
 		HttpSession session = request.getSession();
 		UserDto user = (UserDto) session.getAttribute("dto");
 		//user.setUser_id("ILNAM");//일남 
