@@ -17,6 +17,8 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 
@@ -28,28 +30,55 @@
 .table{
 font-size:13px;
 }
+#keyword{
+width:250px;
+height:25px;
+font-size:13px;
+text-align:center;
+}
 </style>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#keyword").keyup(function() {
+        var k = $(this).val();
+        $("#user-table > tbody > tr").hide();
+        var temp = $("#user-table > tbody > tr > td:nth-child(5n+3):contains('" + k + "')");
+        
+        $(temp).parent().show();
+    })
+})
+</script>
 </head>
 <body style="font-family: 'Jeju Gothic', sans-serif;">
 
 <%
-	int pageSize =10;
-	String pageNum = request.getParameter("pageNum");
-	if(pageNum==null){
-		pageNum="1";
-	}
-	int count = 0;
-	int number = 0;
-	int currentPage = Integer.parseInt(pageNum);
 	BlogDao dao = new BlogDao();
-	count = dao.getAllCount();
+	List<BlognewsboardDto> list = dao.selectAll();
 	
-	 int startRow = (currentPage - 1) * pageSize + 1;
-     int endRow = currentPage * pageSize;
-
-     Vector<BlognewsboardDto> vec = dao.getAllBoard(startRow, endRow);
-
-     number = count - (currentPage - 1) * pageSize;
+	int count= 0;
+	int number=0;
+	
+	int cnt = dao.getAllCount();
+	
+	int pageSize = 7;
+	
+	String pageNum = request.getParameter("pageNum");
+	
+	if(pageNum == null){
+		pageNum = "1";
+	}
+	int currentPage = Integer.parseInt(pageNum);
+	
+	int startRow = (currentPage-1)*pageSize +1;
+	int endRow = currentPage * pageSize;
+	
+	
+	System.out.println(dao.selectAll());
+	List<BlognewsboardDto> selectAll = null;
+	
+	if(cnt != 0){
+		selectAll = dao.selectAll(startRow, endRow);
+	}
 %>	
 	<!-- 고정(헤더) -->
 	<div id="header">
@@ -62,7 +91,12 @@ font-size:13px;
 	<br>
 	<br>
 	
-		<table class="table table-bordered" style="width:800px; margin-left:250px;">
+	<div id="input-form" style="margin-left:800px;">
+            <input type="text" id="keyword"  placeholder="제목으로 검색 하세요🔍">
+        </div> 
+        
+        <br>
+		<table class="table table-bordered" style="width:800px; margin-left:250px;" id="user-table">
 			<thead style="background-color:#DCE2F0; color:#50586C; border:0px solid;">
 				<tr align="center" height="40" >
 					<td width="50" >번호</td>
@@ -72,31 +106,27 @@ font-size:13px;
 					<td width="80">조회수</td>
 				</tr>
 			</thead>
+	
 <%
-	List<BlognewsboardDto> list = dao.selectAll();
-	if(list.size()==0){
-%>
-	<tr>
-		<td colspan="5" >-----글이 존재하지 않습니다.-----</td>
-	</tr>		
-<%
-	}else{
-		for(BlognewsboardDto blognews : list){
+		for(int i=0; i<selectAll.size();i++){
+			
+			BlognewsboardDto blognews = (BlognewsboardDto) selectAll.get(i);
 %>	
+
 	<tr align="center">
 		<td><%=blognews.getSeq() %></td>
 		<td><%=blognews.getWriter() %></td>
-		<td><a href="selectone.jsp?seq=<%=blognews.getSeq()%>"><%=blognews.getTitle() %></a></td>
+		<td><a href="selectone.jsp?seq=<%=blognews.getSeq()%>&pageNum=<%=pageNum%>"><%=blognews.getTitle() %></a></td>
 		<td><%=blognews.getRegdate() %></td>
 		<td><%=blognews.getViewcnt() %></td>
 	</tr>
 <%
 		}
-	}
 %>	
 		</table>
 		
-		<div style="margin-left:900px;">
+		<div style="margin-left:820px;">
+			 총 게시글 : <%=cnt %> 개 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<input type = "button" value="돌아가기" onclick="location.href='blog_main.jsp'" 
 				style="background-color: #7b9acc; color:#FCF6F5; width:70px; height:30px; font-size:12px; border:0px;">
 			<input type = "button" value="글쓰기" onclick="location.href='insert.jsp'" 
@@ -105,55 +135,44 @@ font-size:13px;
 		
 	<br>
             <div style="font-size:12px;"align="center">
-            <!-- 페이지 카운터링 소스를 작성 -->
-            <%
-                if (count > 0) {
-                    int pageCount = count / pageSize + (count % pageSize == 0 ? 0 : 1); //카운터링 숫자를 얼마까지 보여줄건지 결정
- 
-                    //시작 페이지 숫자를 설정
-                    int startPage = 1;
- 
-                    if (currentPage % 10 != 0) {
-                        startPage = (int) (currentPage / 10) * 10 + 1;
- 
-                    } else {
-                        startPage = ((int) (currentPage / 10) - 1) * 10 + 1;
-                    }
- 
-                    int pageBlock = 10; //카운터링 처리 숫자
-                    int endPage = startPage + pageBlock - 1; //화면에 보여질 페이지의 마지막 숫자
- 
-                    if (endPage > pageCount){
-                    	endPage = pageCount;
-                    }
-                        
- 
-                    //이전이라는 링크를 만들건지 파악
-                    if (startPage > 10) {
-            %>
-            <a href="newslist.jsp?pageNum=<%=startPage - 10%>"> [이전] </a>
-            <%
-                }
- 
-                    //페이징 처리
-                    for (int i = startPage; i <= endPage; i++) {
-            %>
-            <a href="newslist.jsp?pageNum=<%=i%>" > [<%=i%>]</a>
-            <%
-                }
- 
-                    //다음이라는 링크를 만들건지 파악
-                    if (endPage < pageCount) {
-            %>
-            <a href="newslist.jsp?pageNum=<%=startPage + 10%>"> [다음] </a>
-            <%
-                }
- 
-                }
-            %>
-		</div>
-
+<%
+		if(cnt != 0){
+			int pageCount = cnt/pageSize + (cnt%pageSize == 0? 0:1);
+			int pageBlock = 3;
+			int startPage = ((currentPage-1)/pageBlock) * pageBlock + 1;
 			
+			int endPage = startPage + pageBlock - 1;
+			if(endPage > pageCount){
+				endPage = pageCount;
+		}
+			
+%>        
+<div id="pageBlock">
+	<%
+	if(startPage > pageBlock){
+		%>
+		<a href="newslist.jsp?pageNum=<%=startPage-pageBlock%>">   이전   </a>
+		<%
+	}
+	
+	//숫자
+	for(int i=startPage; i<=endPage; i++){
+		%>
+		<a href ="newslist.jsp?pageNum=<%=i%>">   <%=i%>   </a>
+		<%
+	}
+	//다음
+	if(endPage < pageCount){
+		%>
+		<a href ="newslist.jsp?pageNum=<%=startPage+pageBlock%>">   다음   </a>
+		<%
+	}
+	%>
+	</div>
+<%
+		}
+%>	
+		</div>
 	<br>	
 	<br>
 		<!-- 고정(푸터) -->
@@ -165,4 +184,3 @@ font-size:13px;
 	
 </body>
 </html>
-           

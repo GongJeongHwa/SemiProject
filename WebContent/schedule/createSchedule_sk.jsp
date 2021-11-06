@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <% response.setContentType("text/html; charset=UTF-8"); %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.mvc.dto.UserDto" %>   
 <% 
    UserDto userdto = (UserDto)session.getAttribute("dto");
@@ -50,7 +51,269 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
 
+ <style type="text/css">
  
+ @charset "UTF-8";
+
+ 
+.toast-success {
+	background-color: #77ca8a !important;
+	font-weight: bold !important;
+	font-size: 12pt !important; 
+}
+
+.toast-error {
+	background-color: #BD362F !important;
+}
+
+.toast-info {
+	background-color: #2F96B4 !important;
+}
+
+.toast-warning {
+	background-color: #F89406 !important;
+}
+
+.toast-top-right {
+	top: 7%;
+}
+
+.btn-3d {
+	position: relative;  
+	transition: top .01s linear;
+	text-shadow: 1 1px 0 rgba(0,0,0,0.15);
+}
+ 
+.btn-3d:active {
+	top: 10px;
+}
+.btn-group dropstart{
+ width:300px;
+ height:300px;
+ 
+ }
+.btn-group dropstart .dropdown-menu { 
+ 
+  padding: 3px;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;	
+  position: relative;
+  box-shadow: 1px 1px 8px -4px rgba(0, 0, 0, 0.6); 
+} 
+   
+ 
+
+<!--container>
+
+.demo-title {
+  text-align: center;
+   line-height: 1;
+  font-size: 3rem;
+  margin-bottom: 50px; 
+}
+
+.suggestionTable {
+  display: table;
+  width: 90%;  
+}
+.suggestionTable .suggestionOpt {
+  width: 27%;
+  height:600px; 
+  background: white;
+  float: right;
+  padding: 2%;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  overflow-y: auto;
+  scrollbar-color: #d4aa70 #e4e4e4;
+  scrollbar-width: thin;
+ 
+}
+
+
+.suggestionTable .suggestionOpt::-webkit-scrollbar {
+  width: 10px;
+}
+
+.suggestionTable .suggestionOpt::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 200px;
+}
+
+.suggestionTable .suggestionOpt::-webkit-scrollbar-thumb {
+  border-radius: 200px;
+  background-image: linear-gradient(180deg, #36d0b6 0%, #708ad4 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+}
+     
+     
+.suggestionTable .suggestionOpt:nth-child(even) {
+  margin: 0 2%;
+}
+.suggestionTable .suggestionOpt:hover {
+  cursor: pointer;
+  color:linear-gradient(180deg, #36d0b6 0%, #708ad4 99%);
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+  transform: scale(1.04);
+}
+.suggestionTable .suggestionOpt:hover i,
+.suggestionTable .suggestionOpt:hover h1,
+.suggestionTable .suggestionOpt:hover span,
+.suggestionTable .suggestionOpt:hover b {
+  color: #76d6b6;
+}
+.suggestionTable .suggestionOpt:hover .front {
+  opacity: 0;
+  visibility: hidden;
+}
+.suggestionTable .suggestionOpt:hover .back {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.suggestionTable .suggestionOpt:hover .back a.button {
+  transform: translateY(0px) !important;
+}
+.suggestionTable .suggestionOpt hr {
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+.suggestionTable .suggestionOpt i {
+  font-size: 2rem;
+  color: #d8d8d8;
+  transition: all 0.3s ease-in-out;
+}
+.suggestionTable .suggestionOpt h1 {
+  margin: 10px 0;
+  color: #212121;
+  transition: all 0.3s ease-in-out;
+}
+.suggestionTable .suggestionOpt p {
+  color: #999;
+  padding: 0 10px;
+  line-height: 1.3;
+} 
+@media screen and (max-width: 600px) {
+  .suggestionTable .suggestionOpt {
+    padding: 5%;
+    width: 90%;
+  }
+  .suggestionTable .suggestionOpt:nth-child(even) {
+    margin: 30px 0 !important;
+  }
+}
+ 
+ 
+#dragdrop{
+	 scrollbar-color: #d4aa70 #e4e4e4;
+  scrollbar-width: thin;
+}
+ 
+ 
+#dragdrop::-webkit-scrollbar {
+  width: 10px; 
+  height:5px;
+  opacity:50%;
+}
+
+#dragdrop::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+  opacity:50%;
+}
+
+#dragdrop::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(180deg, #36d0b6 0%, #708ad4 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+  opacity:50%;
+}
+ 
+ img{
+ border-radius: 7px;
+ }
+ 
+  
+.travleInput{ 
+  border-radius: 1rem;
+  box-sizing: border-box;
+  color: #0d172a;
+  cursor: pointer; 
+  font-size:16px;
+  line-height: 1;
+  padding: 10px;
+  text-align: center; 
+  box-shadow: 1px 1px 1px rgba(166, 175, 195, 0.5); 
+  width:100%;
+}
+ 
+
+	.dropdown-menu{
+	 
+  overflow-y: auto;
+  overflow-x:hidden;
+  scrollbar-color: #d4aa70 #e4e4e4;
+  scrollbar-width: thin;
+  text-align:center;
+	width:300px; 
+	 
+	 }
+	 
+	 
+.dropdown-menu::-webkit-scrollbar {
+  width: 10px; 
+  opacity:50%;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+  opacity:50%;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(180deg, #36d0b6 0%, #708ad4 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+  opacity:50%;
+}
+     
+     
+     
+.button-67 {
+  background-color: #fff;
+  border: 0 solid #bac4d1;
+  border-radius: 1rem;
+  box-sizing: border-box; 
+  cursor: pointer; 
+  padding:5px;
+  line-height: 1; 
+  text-align: center; 
+  box-shadow: 3px 3px 3px rgba(166, 175, 195, 0.5);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation; 
+}
+
+.button-67:hover {
+  background-color: #8ccfc7;
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .button-67 {
+    font-size: 1.125rem; 
+  }
+}
+    html{font-family: 'Noto Sans KR', sans-serif; }
+    
+    
+    #modalAddress{
+    font-size:18px;
+    }
+     
+ </style>
  
 <script>
 let photopath = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photo_reference=';
@@ -249,10 +512,8 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 	
 	   function photoRf(path){
 		      var temp = path.split("Photo?1s");
-		      console.log(temp);
 		      
 		      var temp2 = temp[1].split("&callback");
-		      console.log(temp2);
 		      
 		      return(temp2[0]);
 		   }
@@ -361,7 +622,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 				}
 			}
 			nationarr = Array.from(new Set(nationarr));
-			
+			console.log(nationarr);
 			//city
 			for(var i = 0; i < citySorted.length; i++){
 				var arr = citySorted[i].String.split(",");
@@ -376,15 +637,16 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 				}
 			}
 			cityarr = Array.from(new Set(cityarr));
-			
+			console.log(cityarr);
 			for(var i = 0; i < nationarr.length; i++){
 				nations_citys += nationarr[i] + ",";
 			}
 			for(var i = 0; i < cityarr.length; i++){
 				nations_citys += cityarr[i] + ",";
 			}
+			console.log(nations_citys);
 			nations_citys = nations_citys.slice(0,-1);
-
+			console.log(nations_citys);
 			
 			var thumbarr = thumbnailSorted[0].String.split(",");
 			thumbnailpath = thumbarr[0];
@@ -416,6 +678,9 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 			
 			if(confirm("여행일정을 완료하시겠습니까?")){
 				location.href="javascript:document.form.submit()";
+			}else{
+				nations_citys = "";
+				thumbnailpath = "";
 			}
 			
 		});
@@ -465,61 +730,35 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 	<!-- 고정(헤더) -->
 	<div id="header">
 		<%@ include file="/form/header.jsp"%>
-	</div>
-	
-	<br><br>
-	
+	</div> 
+ 
          <!-- 찜테이블-->
  
  <div class="btn-group dropstart" style="position:absolute; top:200px; right:15px;">
   <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:14px; padding:4px;">
-   <img src="img/heartmarker2.png" style="width:40%; ">찜
+   <img src="schedule/img/heartmarker2.png" style="width:40%; ">찜
   </button>
   <div class="dropdown-menu" style="width:300px; height:370px; text-align:center;">
  
-    <h5 style="font-size:15px;"><a class="btn-3d red" id="drop" ><img src="img/heartmarker2.png" style="width:10%; margin-top:15px; "></a><br>찜리스트	 
+    <h5 style="font-size:15px;"><a class="btn-3d red"  id="drop"	 ><img src="schedule/img/heartmarker2.png" style="width:10%; margin-top:15px; "></a><br>찜리스트	 
 		</h5>
     	 <div style="padding-left:10%; padding-right:10%;">
-		 	<table class="table table-hover" >
+		 	<table class="table table-hover" style="overflow:auto;">
   			<thead>
     		<tr>
-      			<th colspan="2"> </th>
-      			<th colspan="2"> </th>
+      			<th colspan="2" style="width:50px;"> </th>
+      			<th colspan="2" style="width:50px;"> </th>
     		</tr>
   			</thead>
-  			<tbody>
-    		<tr>
-		      <td colspan="2"><img src="img/namsan.jpg" style="width:100px; height:60px;"></td>
-		      <td colspan="2"><br>남산골한옥마을</td>
-		    </tr> 
-			 <tr>
-		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
-		      <td colspan="2"><br>서울숲</td>
-		    </tr> 
-		    <tr>
-		      <td colspan="2"><img src="img/naksan.jpg" style="width:100px; height:60px;"></td>
-		      <td colspan="2"><br>낙산공원</td>
-		    </tr> 
-		   	<tr>
-		      <td colspan="2"><img src="img/musee.jpg" style="width:100px; height:60px;"></td>
-		      <td colspan="2"><br>과천 미술관</td>
-		    </tr> 
-		    <tr>
-		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
-		      <td colspan="2"><br>서울숲</td>
-		    </tr> 
-		    		    <tr>
-		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
-		      <td colspan="2"><br>서울숲</td>
-		    </tr> 
-		    		    <tr>
-		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
-		      <td colspan="2"><br>서울숲</td>
-		    </tr> 
-		    		    <tr>
-		      <td colspan="2"><img src="img/seoulfor.jpg" style="width:100px; height:60px;"></td>
-		      <td colspan="2"><br>서울숲</td>
-		    </tr> 
+  			<tbody> 
+			 <c:forEach items="${wished_list }" var="HeartDto">
+							<tr> 
+								<td  colspan="2"><img style="width:100px; height:60px;" src="<c:url value='${HeartDto.thumbnail }' />" /> </td>
+								<td  colspan="2">${HeartDto.place_name }</td>
+								<td  style="display:none;">{ lat: ${HeartDto.latitude}, lng: ${HeartDto.longtitude} }</td>
+								 
+							</tr>
+						</c:forEach>
 			 </tbody>
 			</table>
 		 </div> 
@@ -582,7 +821,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 	
 	
 	
-	<!-- drop -->
+	<!-- 일정짜기 -->
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12" style="overflow-x:scroll;" id="dragdrop">

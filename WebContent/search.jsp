@@ -485,8 +485,8 @@ function addheart(){
 				$("#heartcount").html("<b>"+data+"</b>&nbsp명");
 				
 			}else if(data == "-1"){
-				toastr.options.positionClass = "toast-top-right";
-				toastr.error("추가 실패");
+				/* toastr.options.positionClass = "toast-top-right";
+				toastr.error("추가 실패"); */
 			}else{//noid
 				toastr.options.positionClass = "toast-top-right";
 				toastr.warning("로그인이 필요합니다.");
@@ -515,8 +515,8 @@ function rmheart(){
 				$("#heartcount").html("<b>"+data+"</b>&nbsp명");
 				
 			}else if(data == "-1"){
-				toastr.options.positionClass = "toast-top-right";
-				toastr.error("찜 삭제 실패");
+				/* toastr.options.positionClass = "toast-top-right";
+				toastr.error("찜 삭제 실패"); */
 				
 			}else{//세션종료
 				toastr.options.positionClass = "toast-top-right";

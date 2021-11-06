@@ -15,6 +15,9 @@ import java.util.Map.Entry;
 import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
+import com.mvc.dto.blogHeartDto;
+import com.sun.net.httpserver.Authenticator.Result;
+
 
 import static common.JDBCTemplate.*;
 
@@ -215,7 +218,7 @@ public class DaoImpl implements Dao{
 	
 	
 	
-	//Blog
+	//Blog 관련-------------------------------------------------------------------------
 	
 	//전체 블로그 리스트
 	@Override
@@ -304,7 +307,7 @@ public class DaoImpl implements Dao{
 	public int getBlogSeq(Connection con, String userid) {
 		
 		int seq = 0;
-		String query = "SELECT MAX(BLOG_SEQ) FROM BLOG_DETAIL WHERE USER_ID = ?";
+		String query = "SELECT MAXSEQ FROM V_MAXBLOG WHERE USER_ID = ?";
 		
 		try {
 			pstmt = con.prepareStatement(query);
@@ -375,9 +378,140 @@ public class DaoImpl implements Dao{
 		return b? seq : 0;
 	}
 	
+	@Override
+	public int delblog(Connection con, String userid, int blogseq) {
+		
+		int res = 0;
+		String query = "BEGIN delblog(?,?); END;";
+		
+		try {
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, userid);
+			cstmt.setInt(2, blogseq);
+			res = cstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, cstmt, null);
+		}
+		return res;
+	}
+
+	@Override
+	public boolean confirmblogheart(Connection con, String userid, String blogid, int blogseq) {
+		
+		boolean res = false;
+		String query = "BEGIN CONFIRM_BLOGHEART(?,?,?,?); END;";
+		
+		try {
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, userid);
+			cstmt.setString(2, blogid);
+			cstmt.setInt(3, blogseq);
+			cstmt.registerOutParameter(4, oracle.jdbc.OracleTypes.CURSOR);
+			cstmt.execute();
+			rs = (ResultSet)cstmt.getObject(4);
+			
+			if(rs.next()) {
+				res = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, cstmt, rs);
+		}
+		return res;
+	}
+	
+	@Override
+	public int addblogheart(Connection con, String userid, String blogid, int blogseq, String title) {
+		
+		int res = 0;
+		String query = "BEGIN ADD_BLOGHEART(?,?,?,?); END;";
+		
+		try {
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, userid);
+			cstmt.setString(2, blogid);
+			cstmt.setInt(3, blogseq);
+			cstmt.setString(4, title);
+			res = cstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, cstmt, null);
+		}
+		return res;
+	}
+
+	@Override
+	public int rmblogheart(Connection con, String userid, String blogid, int blogseq) {
+		
+		int res = 0;
+		String query = "BEGIN RM_BLOGHEART(?,?,?); END;";
+		
+		try {
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, userid);
+			cstmt.setString(2, blogid);
+			cstmt.setInt(3, blogseq);
+			res = cstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, cstmt, null);
+		}
+		return res;
+	}
+	
+	@Override
+	public ArrayList<blogHeartDto> getBlogHeart(Connection con, String userid) {
+		
+		ArrayList<blogHeartDto> blogheartlist = new ArrayList<blogHeartDto>();
+		
+		//해당 유저가 특정 블로그를찜한 날짜순으로 보여주기때문에 list0부터 마지막인덱스까지 화면에 뿌려주기만 하면됨
+		String query = "SELECT * FROM V_BLOG_HEARTLIST WHERE USER_ID = ? ORDER BY REG_DATE";
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, userid);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				blogHeartDto dto = new blogHeartDto();
+				dto.setRegdate(rs.getDate(1));
+				dto.setUserid(userid); //userid (찜한 유저) - 현재 세션유저라고 봐도무방 (필요한 변수는아님)
+				dto.setBlogid(rs.getString(3)); //찜대상 블로그 주인 로그인ID (필수)
+				dto.setBlogseq(rs.getInt(4)); // (필수) - 버튼링크  = blog.do?command=selectone&blogid=<%=dto.getBlogid%>&blogseq=<%=dto.getBlogseq%>
+				dto.setTitle(rs.getString(5)); //찜한 블로그의 제목 
+				dto.setBlogNickname(rs.getString(6)); //찜한블로그의 주인의 닉네임 
+				
+				blogheartlist.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, pstmt, rs);
+		}
+		return blogheartlist;
+	}
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	//장소찜관련---------------------------------------------------------------------------------------
 	//특정유저 하트여부 확인(프로시저) --초반호출
 	@Override
 	public boolean confirmheart(Connection con, String userid, String placeid) {
@@ -457,6 +591,7 @@ public class DaoImpl implements Dao{
 			rs = (ResultSet)cstmt.getObject(3);
 			
 			if(rs.next()) {
+				System.out.println("찜삭제");
 				res = rs.getInt(1);
 			}
 			
@@ -528,6 +663,14 @@ public class DaoImpl implements Dao{
 		}
 		return res;
 	}
+
+
+
+
+
+
+
+
 
 
 	

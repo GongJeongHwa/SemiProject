@@ -105,8 +105,10 @@
 	<div id="right" class="flex_container" style="margin-left:250px; height:550px;">
 	
 	
-		<!-- 나의약속 목록 -->
-		 
+		<!-- button -->
+		<div> 
+		<h3>일정짜기<a href="schedule.do?command=schedule"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
+		</div>
 			<!-- 날짜검색 -->
 			<div class="date" style="height:700px;">
 				<%@ include file="save_travel_picker.jsp"%>

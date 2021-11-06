@@ -15,9 +15,9 @@
 </head>
 <body>
 <%
-	String writer = request.getParameter("myname");
-	String title = request.getParameter("mytitle");
-	String content = request.getParameter("mycontent");
+	String writer = request.getParameter("writer");
+	String title = request.getParameter("title");
+	String content = request.getParameter("content");
 	
 	BlognewsboardDto dto = new BlognewsboardDto(writer,title,content);
 	
