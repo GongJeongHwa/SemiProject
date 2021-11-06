@@ -12,8 +12,8 @@ public interface Dao {
 	
 	//우저 관련 sql
 	String selectUserSql = ""; // 예시) 유저 선택
-	String insertUserSql = " INSERT INTO T_USER VALUES(?,USER_SEQ.NEXTVAL,SYSDATE,NULL,?,?,?,?,?,?,?,?,?,'Y',0,'user02',? )"; // 예시) 유저 회원가입
-	String deleteUserSql = " DELETE FROM T_USER WHERE USER_ID=? "; // 예시) 유저 삭제
+	String insertUserSql = " INSERT INTO T_USER VALUES(?,USER_SEQ.NEXTVAL,SYSDATE,NULL,?,?,?,?,?,?,?,?,?,'Y',0,?,? )"; // 예시) 유저 회원가입
+	String deleteUserSql = " UPDATE T_USER SET ACTIVE=? WHERE USER_ID=?"; // 예시) 유저 삭제 -> 엑티브변경
 	String updateUserSql = " UPDATE T_USER SET NAME=?, PHONE=?, EMAIL=?, PASSWD=?, NICKNAME=?, ADDRESS=?, U_NATIONAL=?, GENDER=?, AGE=? WHERE USER_ID=? "; // 예시) 유저 수정 
 	String loginUserSql = " SELECT * FROM T_USER WHERE USER_ID=? AND PASSWD=? "; //로그인 유저
 	String idchkSql = " SELECT * FROM T_USER WHERE USER_ID=? "; //아이디 중복체크

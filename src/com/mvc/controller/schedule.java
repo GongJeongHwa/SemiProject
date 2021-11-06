@@ -52,18 +52,20 @@ public class schedule extends HttpServlet {
 		
 		MypageDao m_dao = new MypageDaoImpl();
 		Dao	u_dao = new DaoImpl();  
-		if(command.equals("schedule")) {
-			  
-				List<HeartDto> wished_list =  m_dao.selectWishedSql(dto.getUser_id());
-				request.setAttribute("wished_list", wished_list);
+		
+	      if(command.equals("schedule")) {
+	           if(dto != null) {
+	               List<HeartDto> wished_list =  m_dao.selectWishedSql(dto.getUser_id());
+	               request.setAttribute("wished_list", wished_list);
 
-				System.out.println(wished_list.size());
-				 
-				dispatch("/schedule/createSchedule_sk.jsp", request, response);
-			  
-		}
-		
-		
+	               System.out.println(wished_list.size());
+	                
+	               dispatch("/schedule/createSchedule_sk.jsp", request, response);
+	           }else {
+	              
+	                 response.sendRedirect(request.getContextPath() + "/schedule/createSchedule_sk.jsp");
+	           }
+	      }
 		
 		
 		if(command.equals("addschedule")) {

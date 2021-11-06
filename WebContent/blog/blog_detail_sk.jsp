@@ -582,7 +582,6 @@ let key = "73ba5abe8af88dbcd7e38268a7747f94";
 let covid;
 let tripCountry = "<%=bdto.getAreaname() %>";
 let tripCountryList = tripCountry.split(",");
-let KrCode = new Array();
 let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 
 
@@ -714,10 +713,14 @@ let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 				  console.log(covid);
 				});
 		
+		//국가코드 인덱스 참고용
 		let index = [];
 		for (let x in jsonData) { 
 			index.push(x); 
-		}
+		} 
+		
+		//covid country배열
+		var arr = covid.Countries;
 		
 		for(var i = 0; i < tripCountryList.length; i++){
 			for(var j = 0; j < index.length; j++){
@@ -725,9 +728,20 @@ let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 				var CnameKR = jsonData[index[j]].CountryNameKR.replace(/(\s*)/g, "");
 				var CnameEN = jsonData[index[j]].CountryNameEN.replace(/(\s*)/g, "");
 				var CnameOr = jsonData[index[j]].CountryNameOriginal.replace(/(\s*)/g, "");
+
 				if(CnameKR == cname || CnameEN == cname || CnameOr == cname){
+					
 					var str = jsonData[index[j]]["2digitCode"];
-					KrCode.push(str);
+					var idx = arr.findIndex(x => x.CountryCode == str);
+					
+					if(idx != -1){
+						var html2 = createTr(covid.Countries[idx].Country,
+								covid.Countries[idx].TotalConfirmed,
+								covid.Countries[idx].NewConfirmed,
+								covid.Countries[idx].TotalDeaths,
+								covid.Countries[idx].NewDeaths);
+						$("#visitCountry").append(html2);
+					}
 				}
 			}
 		}
@@ -743,24 +757,6 @@ let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 				   covid.Global.NewConfirmed.toLocaleString(),
 				   covid.Global.NewDeaths.toLocaleString());
 		$("#totalCountry").append(html);
-		
-		//visitreport
-		for(var i = 0; i < covid.Countries.length; i++){
-			for(var j = 0; j < KrCode.length; j++){
-				if(covid.Countries[i].CountryCode == KrCode[j]){
-					var html2 = createTr(covid.Countries[i].Country,
-										covid.Countries[i].TotalConfirmed,
-										covid.Countries[i].NewConfirmed,
-										covid.Countries[i].TotalDeaths,
-										covid.Countries[i].NewDeaths);
-					$("#visitCountry").append(html2);
-				}
-			}
-		}
-		
-		
-		
-		
 		
 		
 		
@@ -1312,18 +1308,12 @@ jQuery(document).ready(function($){
 	<br><br><br><br><br>
 
 
-<div class="container" style="font-size: 12pt;">
+	<div class="container" style="font-size: 12pt;">
 		<div class="row">
 			<div class="col-lg-12" style="text-align: right;">
 				<span>&nbsp;<input type="button" class="bottomBtn" value="블로그 메인" onclick="location.href='<%=request.getContextPath()%>/blog/blog_main.jsp'" /></span>
 				<span style="display: <%=(sessionId.equals(userid))? None:Yes %>;">&nbsp;<input type="button" class="bottomBtn" value="동행신청하기" onclick="func_prompt()"/></span>
 				<span style="display: <%=(sessionId.equals(userid))? None:Yes %>;">&nbsp;<button type="button" id="btnheart" class="bottomBtn" onclick="addheart();"><img id="heartimg" src="<%=request.getContextPath()%>/img/icons/suit-heart.svg" alt="Bootstrap"><span id="heart">추가</span></button></span>
-				
- 				<script type="text/javascript">
-					
- 
-				</script>
-				
 				<span style="display: <%=(sessionId.equals(userid))? Yes:None %>;">&nbsp;<button type="button" class="bottomBtn" onclick="delBlog();"><img src="<%=request.getContextPath()%>/img/icons/trash.svg" alt="Bootstrap">삭제</button></span>
 			</div>
 		</div>
@@ -1331,12 +1321,31 @@ jQuery(document).ready(function($){
 			<hr style="margin-top: 5px; margin-bottom: 5px;"><br>
 		</div>
 		<div class="row">
-			<div class='col-lg-10'>
-				<textarea rows="" cols="" placeholder="댓글을 입력하세요." name="comment" style="resize: none; width:100%; height:150px;" ></textarea>
+			<div class='col-lg-1'></div>
+			<div class='col-lg-8'>
+				<textarea rows="" cols="" placeholder="댓글을 입력하세요." name="comment" maxlength="100" style="resize: none; width:100%; height:100px;" ></textarea>
 			</div>
 			<div class='col-lg-2'>
 				<button type="button" style="width: 100%; height:30px;">등록</button>
 			</div>
+			<div class='col-lg-1'></div>
+		</div>
+		<br>
+		<div class="row">
+			<div class='col-lg-1'></div>
+			<div class='col-lg-10'>
+				<table class="table">
+					<tbody>
+						<tr>
+							<td nowrap="nowrap"></td>
+							<td style="word-break:break-all;"></td>
+							<td nowrap="nowrap"></td>
+							<td><img id="heartimg" style="cursor: pointer;" onclick="delcomment();" src="<%=request.getContextPath()%>/img/icons/x.svg" width="30" height="30" alt="Bootstrap"></td>
+						</tr>
+					</tbody>				
+				</table>
+			</div>
+			<div class='col-lg-1'></div>
 		</div>
 	</div>
 
