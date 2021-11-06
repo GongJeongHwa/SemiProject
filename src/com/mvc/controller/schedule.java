@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,12 +21,15 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.mvc.biz.BizImpl;
+import com.mvc.dao.Dao;
+import com.mvc.dao.DaoImpl;
+import com.mvc.dao.mypage.MypageDao;
+import com.mvc.dao.mypage.MypageDaoImpl;
+import com.mvc.dto.HeartDto;
+import com.mvc.dto.PromiseDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
-
-/**
- * Servlet implementation class schedule
- */
+ 
 @WebServlet("/schedule.do")
 public class schedule extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -41,14 +45,23 @@ public class schedule extends HttpServlet {
 		HttpSession session = request.getSession();
 		UserDto dto = (UserDto)session.getAttribute("dto");
 		String command = request.getParameter("command");
+		System.out.println("["+command+"]");
+		
 		PrintWriter pw = response.getWriter();
 		
-		if(command.equals("schedule")) {
-			
-			dispatch("/schedule/createSchedule_sk.jsp", request, response);
-			
-		}
 		
+		MypageDao m_dao = new MypageDaoImpl();
+		Dao	u_dao = new DaoImpl();  
+		if(command.equals("schedule")) {
+			  
+				List<HeartDto> wished_list =  m_dao.selectWishedSql(dto.getUser_id());
+				request.setAttribute("wished_list", wished_list);
+
+				System.out.println(wished_list.size());
+				 
+				dispatch("/schedule/createSchedule_sk.jsp", request, response);
+			  
+		}
 		
 		
 		
@@ -114,15 +127,15 @@ public class schedule extends HttpServlet {
 			}else {
 				
 			}
-		}
-		
-		
-		
-		
-		
-		
-		
+		} //add ends
+
+		 
+			
+		  
 	}
+		 
+		 
+	
 
 	public void dispatch(String url, HttpServletRequest request, HttpServletResponse reponse) throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(url);
