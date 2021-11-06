@@ -9,6 +9,7 @@ import com.mvc.dao.DaoImpl;
 import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
+import com.mvc.dto.blogHeartDto;
 
 public class BizImpl implements MVCBiz{
 	
@@ -81,6 +82,82 @@ public class BizImpl implements MVCBiz{
 		
 		return bdto;
 	}
+	
+	@Override
+	public int delblog(String userid, int blogseq) {
+		
+		con = getConnection();
+		int res = dao.delblog(con, userid, blogseq);
+		closeConn(con);
+		
+		return res;
+	}
+	
+	@Override
+	public boolean confirmblogheart(String userid, String blogid, int blogseq) {
+		
+		con = getConnection();
+		boolean res = dao.confirmblogheart(con, userid, blogid, blogseq);
+		closeConn(con);
+		
+		return res;
+	}
+
+	@Override
+	public int addblogheart(String userid, String blogid, int blogseq, String title) {
+		con = getConnection();
+		int res = dao.addblogheart(con, userid, blogid, blogseq, title);
+		if(res != 0) {
+			commit(con);
+		}else {
+			rollback(con);
+		}
+		closeConn(con);
+		
+		return res;
+	}
+
+	@Override
+	public int rmblogheart(String userid, String blogid, int blogseq) {
+		
+		con = getConnection();
+		int res = dao.rmblogheart(con, userid, blogid, blogseq);
+		if(res != 0) {
+			commit(con);
+		}else {
+			rollback(con);
+		}
+		closeConn(con);
+		
+		return res;
+	}
+
+	@Override
+	public ArrayList<blogHeartDto> getBlogHeart(String userid) {
+		
+		con = getConnection();
+		ArrayList<blogHeartDto> list = dao.getBlogHeart(con, userid);
+		closeConn(con);
+		
+		return list;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -157,6 +234,12 @@ public class BizImpl implements MVCBiz{
 		
 		return heartlist;
 	}
+
+
+
+
+
+
 
 
 
