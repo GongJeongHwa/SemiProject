@@ -753,7 +753,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
   			<tbody> 
 			 <c:forEach items="${wished_list }" var="HeartDto">
 							<tr> 
-								<td  colspan="2"><img style="width:100px; height:60px;" src="<c:url value='${HeartDto.thumbnail }' />" /> </td>
+								<td  id="clickdrop" colspan="2"><img style="width:100px; height:60px;" src="<c:url value='${HeartDto.thumbnail }' />" /> </td>
 								<td  colspan="2">${HeartDto.place_name }</td>
 								<td  style="display:none;">{ lat: ${HeartDto.latitude}, lng: ${HeartDto.longtitude} }</td>
 								 

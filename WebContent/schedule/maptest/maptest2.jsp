@@ -224,21 +224,14 @@ var customIcons = { //지도상에서 type별 마커를 색으로 구분
 var hostnameRegexp = new RegExp('^https?://.+?/');
 var countries = {
   'kr': { center: {lat: 37.52,lng: 126.97},zoom: 12},};
-  
-
- `<c:forEach items="${wished_list }" var="HeartDto">`
- 	 
-var markerOnMap = [ //drop시 찍히는 임의의 4개 마커.  
-	//{ lat: `<c:out value="${HeartDto.latitude }"></c:out>`, lng: `<c:out value="${HeartDto.longtitude }"></c:out>`} , 
-	//{ lat: Number(`<c:out value="${HeartDto.latitude }"></c:out>`), lng: Number(`<c:out value="${HeartDto.longtitude }"></c:out>`)} , 
-
  
-	{ lat: Number(`${HeartDto.latitude}`), lng: Number(`${HeartDto.longtitude}`)}, 
-	   ];
-	   
- `</c:forEach>`
-
-
+ var markerOnMap=new Array(); 
+ <c:forEach items="${wished_list }" var="HeartDto">
+ markerOnMap.push ({lat: Number("${HeartDto.latitude}")
+	,lng:Number("${HeartDto.longtitude}") });
+ </c:forEach>
+ 
+ 
  
 
 
@@ -272,6 +265,10 @@ function initMap() {
     document.getElementById('country').addEventListener('change', setAutocompleteCountry);
 
 	document.getElementById("drop").addEventListener("click", drop);  //id=drop, 클릭하면 드롭
+	
+	//TEST ING...
+	document.getElementById("clickdrop").addEventListener("click",clickdrop);
+	
 	
 	google.maps.event.addListener(map, "click", (event) => { 
 	addMarker(event.latLng, map);});
@@ -391,6 +388,8 @@ function dropMarker(i) {
     }
   }
 }
+ 
+
 
 function addResult(result, i, type) {
 	  var results = document.getElementById('results');
@@ -462,11 +461,16 @@ function drop() {
 clearMarkersOnMap(); 
 for (var i = 0; i < markerOnMap.length; i++) {
  addMarkerWithTimeout(markerOnMap[i], i * 200);
+ 
+ console.log(markerOnMap);
 }
 }
+ 
+  
 
 function addMarkerWithTimeout(location, timeout) {
       var image='img/heartmarker2.png';
+      
       
 window.setTimeout(() => {
    fixedMarkers.push(
@@ -477,7 +481,9 @@ window.setTimeout(() => {
      icon:image,
    })
  );
-}, timeout);
+}, timeout); 
+   
+
 }
 
 function addMarker(location, timeout) {
