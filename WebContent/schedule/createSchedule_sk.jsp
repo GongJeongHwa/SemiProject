@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <% response.setContentType("text/html; charset=UTF-8"); %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.mvc.dto.UserDto" %>   
 <% 
    UserDto userdto = (UserDto)session.getAttribute("dto");
@@ -465,9 +466,44 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 	<!-- 고정(헤더) -->
 	<div id="header">
 		<%@ include file="/form/header.jsp"%>
-	</div>
-	
-	<br><br>
+	</div> 
+	<div class="t_list">
+	 
+		<!-- 찜목록 -->
+		<div class="t_list">
+			<h3>내가 찜한 여행지 & 일정<a href="mypage.do?command=wishedTravel"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
+			<table class="table" style="width:750px;">
+				<col width="100px">
+				<col width="160px">
+				<col width="300px">
+				<tr>
+					<th>국가</th>
+					<th>장소이름</th>
+					<th>위도 / 경도</th>
+				</tr>
+				<c:choose>
+					<c:when test="${empty wished_list }">
+						<tr>
+							<td colspan="3" class="blank_list"> 여행일정이 없습니다.</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${wished_list }" var="HeartDto" end="4">
+							<tr>
+								<td>${HeartDto.nation }</td>
+								<td>${HeartDto.place_name }</td>
+								<td>${HeartDto.latitude } / ${HeardDto.longtitude }</td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>	
+			</table>
+		</div>
+		<br><hr style="width:800px">
+		
+		 
+		
+		</div>
 	
          <!-- 찜테이블-->
  
