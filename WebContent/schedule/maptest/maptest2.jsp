@@ -1,8 +1,15 @@
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.mvc.dto.HeartDto"%> 
+ 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 <% response.setContentType("text/html; charset=UTF-8"); %>       
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     
+     
 <!DOCTYPE html>
 <html>
   <head>
@@ -154,6 +161,7 @@ tr{
 
 <body>
  
+    
    
  <div class="map-search">
 
@@ -216,15 +224,30 @@ var customIcons = { //지도상에서 type별 마커를 색으로 구분
 var hostnameRegexp = new RegExp('^https?://.+?/');
 var countries = {
   'kr': { center: {lat: 37.52,lng: 126.97},zoom: 12},};
-let markerOnMap = [ //drop시 찍히는 임의의 4개 마커.  
-	   { lat: 37.5720, lng: 126.9600 },
-	   { lat: 37.5630, lng: 126.9732 },
-	   { lat: 37.5686, lng: 126.9955 },
-	   { lat: 37.5724, lng: 127.0071 },
+  
+
+ `<c:forEach items="${wished_list }" var="HeartDto">`
+ 	 
+var markerOnMap = [ //drop시 찍히는 임의의 4개 마커.  
+	//{ lat: `<c:out value="${HeartDto.latitude }"></c:out>`, lng: `<c:out value="${HeartDto.longtitude }"></c:out>`} , 
+	//{ lat: Number(`<c:out value="${HeartDto.latitude }"></c:out>`), lng: Number(`<c:out value="${HeartDto.longtitude }"></c:out>`)} , 
+
+ 
+	{ lat: Number(`${HeartDto.latitude}`), lng: Number(`${HeartDto.longtitude}`)}, 
 	   ];
-	let fixedMarkers = []; //drop시 찍히는 모든 마커의 배열 
+	   
+ `</c:forEach>`
 
 
+ 
+
+
+
+
+	let fixedMarkers = [
+		
+	]; //drop시 찍히는 모든 마커의 배열 
+ 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: countries['kr'].zoom,
@@ -248,7 +271,8 @@ function initMap() {
 	autocomplete.addListener('place_changed', onPlaceChanged);
     document.getElementById('country').addEventListener('change', setAutocompleteCountry);
 
-	document.getElementById("drop").addEventListener("click", drop);  
+	document.getElementById("drop").addEventListener("click", drop);  //id=drop, 클릭하면 드롭
+	
 	google.maps.event.addListener(map, "click", (event) => { 
 	addMarker(event.latLng, map);});
 	addMarker(markerOnMap, map);
@@ -435,18 +459,19 @@ function showInfoWindow() {
 }
 
 function drop() {
-clearMarkersOnMap();
-for (let i = 0; i < markerOnMap.length; i++) {
+clearMarkersOnMap(); 
+for (var i = 0; i < markerOnMap.length; i++) {
  addMarkerWithTimeout(markerOnMap[i], i * 200);
 }
 }
 
-function addMarkerWithTimeout(position, timeout) {
+function addMarkerWithTimeout(location, timeout) {
       var image='img/heartmarker2.png';
+      
 window.setTimeout(() => {
    fixedMarkers.push(
    new google.maps.Marker({
-     position: position,
+     position: location,
      map,
      animation: google.maps.Animation.DROP,
      icon:image,
