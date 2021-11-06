@@ -37,15 +37,18 @@ public class loginController extends HttpServlet {
 			String pw = request.getParameter("pw");
 			
 			UserDto dto = dao.login(id, pw);
-			
 			if(dto.getUser_id() != null) {
-				session.setAttribute("dto", dto);
-				session.setMaxInactiveInterval(60*60); //세션 유지 시간 - 1시간
-				
-				dispatch("index.jsp", request, response);
-
+				if(dto.getActive().equals("Y") && dto.getSns() == null) {
+					session.setAttribute("dto", dto);
+					session.setMaxInactiveInterval(60*60); //세션 유지 시간 - 1시간
+					
+					dispatch("index.jsp", request, response);
+	
+				}else {
+					jsResponse("로그인실패", request.getContextPath()+"/login/login.jsp", response);
+				}
 			}else {
-				jsResponse("로그인실패", request.getContextPath()+"/login/login.jsp", response);
+				jsResponse("아이디와 비밀번호를 확인해주세요.", request.getContextPath()+"/login/login.jsp", response);
 			}
 		}else if(command.equals("logout")) {
 		
@@ -60,6 +63,7 @@ public class loginController extends HttpServlet {
 			String email = request.getParameter("email");
 			String nickname = request.getParameter("nickname");
 			String gender = request.getParameter("gender");			
+			String user_img = randomPic();
 			
 			UserDto dto = new UserDto();
 			
@@ -81,8 +85,8 @@ public class loginController extends HttpServlet {
 				dto.setAge(0);
 				dto.setPhone("");
 				dto.setAddress("");
+				dto.setUser_img(user_img);
 				dto.setSns("naver"); //네이버 구별값
-				
 				
 				int res = dao.register(dto);
 				
@@ -126,6 +130,7 @@ public class loginController extends HttpServlet {
 			String email = request.getParameter("email")+"@"+request.getParameter("dot");
 			int age = Integer.parseInt(request.getParameter("age"));
 			String phone = request.getParameter("phone");
+			String user_img = randomPic();
 			
 			//주소 Api를 통한 주소값받기
 			String postcode = request.getParameter("postcode");
@@ -144,6 +149,7 @@ public class loginController extends HttpServlet {
 			dto.setAge(age);
 			dto.setPhone(phone);
 			dto.setAddress(addr);
+			dto.setUser_img(user_img);
 			dto.setSns(null);
 			int res = dao.register(dto);
 			
@@ -153,6 +159,13 @@ public class loginController extends HttpServlet {
 
 	}
 
+	public String randomPic() {
+		int rNum = (int)(Math.random()*10 + 1);
+		StringBuilder name = new StringBuilder("user");
+		name.append(rNum);
+		return name.toString();
+	}
+	
 	private void jsResponse(String msg, String url, HttpServletResponse response) throws IOException{
 		String s = "<script type='text/javascript'>" +
 					"alert('"+msg+"');" +
@@ -162,7 +175,7 @@ public class loginController extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(s);
 	}
-	
+
 	public void dispatch(String url, HttpServletRequest request, HttpServletResponse reponse) throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 		dispatcher.forward(request, reponse);

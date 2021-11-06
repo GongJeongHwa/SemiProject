@@ -60,7 +60,8 @@
 								<tr>
 									<td>${blogDto.blog_create_date }</td>
 									<td>${blogDto.heart_count }</td>
-									<td>${blogDto.areaname }</td>
+									<td><a href="blog.do?command=selectone&blogseq=${blogDto.blog_seq}&user_id=${blogDto.user_id}">${blogDto.areaname }</a></td>
+									
 									<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>
 								</tr>
 							</c:forEach>

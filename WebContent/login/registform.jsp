@@ -51,6 +51,9 @@ span{
 			open(target,"","width=300,height=200"); //팝업창을 거쳐 원하는 내용을 띄어줌
 		}
 	}
+	function id_title(){
+		document.getElementsByName("user_id")[0].title ="n";
+	}
 	function idChkConfirm(){
 		var chk = document.getElementsByName("user_id")[0].title;
 		if(chk=="n"){
@@ -58,6 +61,8 @@ span{
 			document.getElementsByName("user_id")[0].focus();
 		}
 	}
+	
+
 	function beforeSubmit(){
 		var pw1 = document.getElementsByName("passwd")[0];
 		var pw2 = document.getElementsByName("pw_check")[0];
@@ -189,7 +194,7 @@ span{
 					<tr class="tr">
 						<td>아이디</td>
 						<td>
-							<input type="text" name="user_id" maxlength="16" title="n" required="required">
+							<input type="text" name="user_id" maxlength="16" title="n" required="required" onclick="id_title();">
 							<input type="button" class="btn" value="중복확인" style="border: 2px solid grey;" onclick="idChk();">
 						</td>
 					</tr>
