@@ -306,7 +306,7 @@ public class DaoImpl implements Dao{
 	public int getBlogSeq(Connection con, String userid) {
 		
 		int seq = 0;
-		String query = "SELECT CNT FROM V_COUNTBLOG WHERE USER_ID = ?";
+		String query = "SELECT MAXSEQ FROM V_MAXBLOG WHERE USER_ID = ?";
 		
 		try {
 			pstmt = con.prepareStatement(query);
