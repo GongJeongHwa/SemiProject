@@ -77,27 +77,35 @@ span{
 		
 		if(pw1.value.trim()==""|| pw1.value==null){
 			alert("비밀번호를 입력해 주세요");
+			pw1.focus();
             return false;
 		}else if(pw2.value.trim()==""|| pw2.value==null){
 			alert("비밀번호 확인을 입력해 주세요");
+			pw2.focus();
             return false;
 		}else if(!pattern1.test(pw1.value.trim())||!pattern2.test(pw1.value.trim())||!pattern3.test(pw1.value.trim())||pw1.value.trim().length<4||pw1.value.trim().length>17){
             alert("영문+숫자+특수기호 5-16자리로 구성하여야 합니다.");
+            pw1.focus();
             return false;         
 		}else if(name.value.trim()==""|| name.value==null){
 			alert("이름을 입력해 주세요");
+			name.focus();
             return false;
 		}else if(nickname.value.trim()==""|| nickname.value==null){
 			alert("닉네임을 입력해 주세요");
+			nickname.focus();
             return false;
 		}else if(addr.value.trim()==""|| addr.value==null){
 			alert("주소를 입력해 주세요");
+			addr.focus();
             return false;
 		}else if(email.value.trim()==""|| email.value==null){
 			alert("메일을 입력해 주세요");
+			email.focus();
             return false;
 		}else if(pw1.value.trim() != pw2.value.trim()){
 			document.getElementById("pw_msg").innerHTML = "<b><font color='red'>"+"비밀번호가 다릅니다."+"</font></b>";
+			pw1.focus();
 			return false;
 		}else if(pw1.value.trim() == pw2.value.trim()){
 			document.getElementById("pw_msg").innerHTML = "비밀번호가같습니다.";

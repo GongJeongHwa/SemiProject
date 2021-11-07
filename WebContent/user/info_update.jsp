@@ -118,43 +118,49 @@ span, .noti{
 		
 		if(pw1.value.trim()==""|| pw1.value==null){
 			alert("비밀번호를 입력해 주세요");
+			pw1.focus();
             return false;
 		}else if(pw2.value.trim()==""|| pw2.value==null){
 			alert("비밀번호 확인을 입력해 주세요");
+			pw2.focus();
             return false;
 		}else if(!pattern1.test(pw1.value.trim())||!pattern2.test(pw1.value.trim())||!pattern3.test(pw1.value.trim())||pw1.value.trim().length<4||pw1.value.trim().length>17){
             alert("영문+숫자+특수기호 5-16자리로 구성하여야 합니다.");
+			pw3.focus();
             return false;	
 		}else if(name.value.trim()==""|| name.value==null){
 			alert("이름을 입력해 주세요");
+			name.focus();
             return false;
 		}else if(nickname.value.trim()==""|| nickname.value==null){
 			alert("닉네임을 입력해 주세요");
+			nickname.focus();
             return false;
 		}else if(addr.value.trim()==""|| addr.value==null){
 			alert("주소를 입력해 주세요");
+			addr.focus();
             return false;
 		}else if(email.value.trim()==""|| email.value==null){
 			alert("메일을 입력해 주세요");
+			email.focus();
             return false;
 		}else if(pw1.value.trim() != pw2.value.trim()){
 			document.getElementById("pw_msg").innerHTML = "<b><font color='red'>"+"비밀번호가 다릅니다."+"</font></b>";
-            return false;
+			pw1.focus();
+			return false;
 		}else if(pw1.value.trim() == pw2.value.trim()){
 			document.getElementById("pw_msg").innerHTML = "비밀번호가같습니다.";
 			return true; //모든 값 확인 후 리턴
 		}
 	}
-
-	function popup(){
-		window.open("unregister_1.jsp","_blank","width=300px, height=150px");
-		
-	}
-	
-
 	
 </script>
-
+<script type="text/javascript">
+	function popup(){
+		window.open("user/unregister_1.jsp","_blank","width=300px, height=150px");
+		
+	}
+</script>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
     <!-- 주소 API-->
@@ -234,11 +240,11 @@ span, .noti{
 		<ul>
 			<li><a href="<%=request.getContextPath()%>/mypage.do?command=mypage">내여행</a></li>
 			<hr>
-			<li><a href="<%=request.getContextPath()%>/mypage.do?command=infoupdate">정보수정</a></li>
+			<li><a href="<%=request.getContextPath()%>/mypage.do?command=infoUpdate">정보수정</a></li>
 			<hr>
 			<li><a href="javascript:popup();">회원탈퇴</a></li>	
 			<hr>
-			<li><a href="<%=request.getContextPath()%>/Companion.do?command=message">채팅하기</a></li>	
+			<li><a href="<%=request.getContextPath()%>/message.do?command=message">채팅하기</a></li>	
 		</ul>
 	</div>
 	

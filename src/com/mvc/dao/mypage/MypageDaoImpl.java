@@ -42,6 +42,8 @@ public class MypageDaoImpl extends JDBCTemplate implements MypageDao{
 				tmp.setTitle(rs.getString("TITLE"));
 				tmp.setContent(rs.getString("CONTENT"));
 				tmp.setAreaname(rs.getString("AREA_NAME"));
+				tmp.setMindate(rs.getDate("MINDATE"));
+				tmp.setMaxdate(rs.getDate("MAXDATE"));
 				tmp.setThumbnailPath(rs.getString("IMG_PATH"));
 				tmp.setHeart_count(rs.getInt("HEART_COUNT"));
 				tmp.setComment(rs.getInt("COMMENT_COUNT"));
@@ -147,24 +149,6 @@ public class MypageDaoImpl extends JDBCTemplate implements MypageDao{
 	}
 
 	@Override
-	public boolean insertWishedSql(UserDto dto) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean insertCompanionSql(UserDto dto) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean updateTravelSql(UserDto dto) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public boolean deleteTravelSql(int seq) {
 		// TODO Auto-generated method stub
 		return false;
@@ -182,69 +166,4 @@ public class MypageDaoImpl extends JDBCTemplate implements MypageDao{
 		return false;
 	}
 
-	//페이징
-	@Override
-	public List<HeartDto> selectWishedSql_paging(int page) {
-//		Connection con = getConnection();
-//		PreparedStatement pstm = null;
-//		ResultSet rs = null;
-//		List<HeartDto> list = new ArrayList<HeartDto>();
-//		//Paging paging = new Paging();
-//				
-//		//int startNum = paging.getStartNum();
-//		//int endNum = paging.getEndNum();
-//		
-//		try {
-//			pstm = con.prepareStatement(selectWishedSql_paging);
-//			pstm.setInt(1, startNum);
-//			pstm.setInt(2, endNum);
-//			
-//			rs = pstm.executeQuery();
-//			
-//			while(rs.next()) {
-//				HeartDto tmp = new HeartDto();
-//				tmp.setUserid(rs.getString("USER_ID"));
-//				tmp.setPlace_id(rs.getString("PLACE_ID"));
-//				tmp.setThumbnail(rs.getString("THUMBNAIL"));
-//				tmp.setPlace_name(rs.getString("PLACE_NAME"));
-//				tmp.setLatitude(rs.getString("LATITUDE"));
-//				tmp.setLongtitude(rs.getString("LONGITUDE"));
-//				tmp.setPlace_address(rs.getString("PLACE_ADDRESS"));
-//				tmp.setNation(rs.getString("NATION"));
-//				tmp.setCity(rs.getString("CITY"));
-//				
-//				list.add(tmp);
-//
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}finally {
-//			closeAll(con, pstm, rs);
-//		}
-	
-//		return list;
-		return null;
-	}
-
-	@Override
-	public int wishedCount() {
-		Connection con = getConnection();
-		PreparedStatement pstm = null;
-		ResultSet rs = null;
-		
-		int count = 0;
-		try {
-			pstm= con.prepareStatement(countSql);
-			if(rs.next()) {
-				count = rs.getInt("count");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			closeAll(con, pstm, rs);
-		}
-		
-		return count;
-	}
-	
 }
