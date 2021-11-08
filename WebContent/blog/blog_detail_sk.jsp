@@ -1492,6 +1492,12 @@ jQuery(document).ready(function($){
            success:function(msg) {
         	  console.log(typeof msg);
               console.log(msg);
+              
+              if (msg == "이미 연결된 회원입니다.") {
+            	  alert(msg);
+            	  return;
+              }
+              
               if (msg == "성공") {
                  alert("동행 신청을 완료했습니다.\n상대방 수락 시 채팅창이 연결됩니다!");
               } else {
