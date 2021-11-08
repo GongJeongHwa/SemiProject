@@ -161,9 +161,14 @@ public class CompanionController extends HttpServlet {
 		} else if (command.equals("blogAsk")) {
 			String con_id = request.getParameter("con_id");
 			String comment = request.getParameter("comment");
+			boolean able = biz.ableAskCompanion(login_id.getUser_id(), con_id);
 			
-			boolean flag = biz.blogAskCompanion(login_id.getUser_id(), con_id, comment);
-			response.getWriter().write(flag?"성공":"실패");
+			if (able) {
+				boolean flag = biz.blogAskCompanion(login_id.getUser_id(), con_id, comment);
+				response.getWriter().write(flag?"성공":"실패");
+			} else {
+				response.getWriter().write("이미 연결된 회원입니다.");
+			}
 			
 		} else if (command.equals("completeDelete")) {
 			String con_id = request.getParameter("con_id");
@@ -179,6 +184,17 @@ public class CompanionController extends HttpServlet {
 			int res = biz.sendDenyMessage(login_id.getUser_id(), con_id, chat_serial);
 			response.getWriter().write(res>0?"성공":"실패");
 			
+		} else if (command.equals("cancelPromise")) {
+			String loc = request.getParameter("loc");
+			int penalty = biz.ableCancel(login_id.getUser_id());
+			int res = 0;
+			
+			if (penalty == 3) {
+				res = biz.deletePromise(login_id.getUser_id(), penalty, loc);
+			} else {
+				res = biz.deletePromise(login_id.getUser_id(), penalty+1, loc);
+			}
+			response.getWriter().write(res>0?"성공":"실패");
 		}
 	}
 	

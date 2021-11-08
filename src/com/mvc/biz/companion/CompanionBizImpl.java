@@ -195,4 +195,48 @@ public class CompanionBizImpl extends JDBCTemplate implements CompanionBiz{
 		
 		return res;
 	}
+
+	@Override
+	public int ableCancel(String login_id) {
+		int penalty = dao.getPenalty(con, login_id);
+		System.out.println("login_id : "+login_id);
+		System.out.println("penalty : "+penalty);
+		closeConn(con);
+		
+		return penalty;
+	}
+
+	@Override
+	public int deletePromise(String login_id, int penalty, String loc) {
+		int res = 0;
+		Connection con2 = getConnection();
+		
+		if (penalty == 3) {
+			res = dao.deletePromise(con2, loc);
+			if (res > 0) {
+				commit(con2);
+			} else {
+				rollback(con2);
+			}
+			return res;
+			
+		} else {
+			res = dao.upPenalty(con2, penalty, login_id);
+			res += dao.deletePromise(con2, loc);
+			if (res == 2) {
+				commit(con2);
+			} else {
+				rollback(con2);
+			}
+		}
+		closeConn(con2);
+		return res;
+	}
+
+	@Override
+	public boolean ableAskCompanion(String login_id, String con_id) {
+		boolean flag = dao.ableConnection(con, login_id, con_id);
+		closeConn(con);
+		return flag;
+	}
 }

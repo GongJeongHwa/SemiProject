@@ -107,4 +107,19 @@ public interface CompanionDao {
 			+ "MESSAGE_SEQ.NEXTVAL, ?, ?, ?, ?, SYSDATE"
 			+ ")" ;
 	public int sendDenyMessage(Connection con, String login_id, String con_id, int chat_serial);
+	
+	
+	//약속 강제 취소
+	//1. 패널티 확인
+	String getPenalty = " SELECT PENALTY FROM T_USER WHERE USER_ID = ? ";
+	public int getPenalty(Connection con, String login_id);
+	//2. 약속 삭제 및 패널티 +1
+	String deletePromise = " DELETE FROM M_PROMISE WHERE P_LOC = ? ";
+	String upPenalty = " UPDATE T_USER SET PENALTY = ? WHERE USER_ID = ? ";
+	public int deletePromise(Connection con, String loc);
+	public int upPenalty(Connection con, int penalty, String login_id);
+	
+	//동행 구하기 전 이미 연결되어있는지 확인
+	String ableConnection = " SELECT ROWNUM, MESSAGE FROM M_MESSAGE WHERE SEN_ID = ? AND REC_ID = ? ";
+	public boolean ableConnection(Connection con, String login_id, String con_id);
 }

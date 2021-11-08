@@ -28,4 +28,9 @@ public interface CompanionBiz {
 	
 	public int sendDenyMessage(String login_id, String con_id, int chat_serial);
 	
+	public int ableCancel(String login_id);
+	
+	public int deletePromise(String login_id, int penalty, String loc);
+	
+	public boolean ableAskCompanion(String login_id, String con_id);
 }
