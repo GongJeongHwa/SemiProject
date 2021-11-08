@@ -16,10 +16,32 @@
 <script>
 
   document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+	var p_time = document.getElementsByName("p_time")[0].value; 
+	console.log(p_time);
+	var y = p_time.substr(0,4);
+	var m = p_time.substr(5,2);
+	var d = p_time.substr(8,2);
+	console.log(y+"//"+m+"//"+d);
+	var date = new Date(y,m-1,d);
+	console.log(date);
+	
+	var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth'
-    });
+         events: [
+            <c:forEach items="${travel_list }" var="blogDto">
+              {	title: "${blogDto.title}",
+            	start: "${blogDto.mindate}",
+            	end : "${blogDto.maxdate}"},
+              </c:forEach>
+  			  
+              <c:forEach items="${companion_list }" var="PromiseDto">
+            	{   title:"${PromiseDto.p_loc}",
+            		start: date},
+            	</c:forEach>
+         ]
+       });
+    
+   
     calendar.render();
   });
 
@@ -107,7 +129,7 @@
 			<hr>
 			<li><a href="javascript:popup();">회원탈퇴</a></li>	
 			<hr>
-			<li><a href="<%=request.getContextPath()%>/Companion.do?command=message">채팅하기</a></li>	
+			<li><a href="<%=request.getContextPath()%>/message.do?command=message">채팅하기</a></li>	
 		</ul>
 	</div>
 	
@@ -117,7 +139,8 @@
 		<!-- 달력 -->	
 		<div style='float:center;width:400px;height:500px;font-size:0.6em;' id='calendar'></div>
 		<br><hr style="width:800px">
-	
+		
+		
 		<!-- 나의여행 목록 -->
 		<div class="t_list">
 			<h3>나의여행<a href="mypage.do?command=myTravel"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
@@ -127,7 +150,7 @@
 				<col width="400px">
 				
 				<tr>
-					<th>날짜</th>
+					<th>작성날짜</th>
 					<th style="text-align:center">♡</th>
 					<th>여행지</th>
 				</tr>
@@ -139,6 +162,7 @@
 					</c:when>
 					<c:otherwise>
 						<c:forEach items="${travel_list }" var="blogDto" end="4">
+							
 							<tr>
 								<td>${blogDto.blog_create_date }</td>
 								<td style="text-align:center">♥${blogDto.heart_count }</td>
@@ -187,7 +211,7 @@
 		<!-- 약속일정 -->
 		<div class="t_list">
 			<h3>나의 약속<a href="mypage.do?command=myCompanion"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
-			<table class="table" style="width:750px;">
+			<table class="table" style="width:750px;">			
 				<col width="100px">
 				<col width="80px">
 				<col width="400px">
@@ -205,6 +229,8 @@
 					</c:when>
 					<c:otherwise>
 						<c:forEach items="${companion_list }" var="PromiseDto">
+						<input type="hidden" name="p_time" value="${PromiseDto.p_time }">
+						
 							<tr>
 								<td>${PromiseDto.p_time }</td>
 								<td>${PromiseDto.p_loc }</td>

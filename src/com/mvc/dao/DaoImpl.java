@@ -16,8 +16,11 @@ import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
 import com.mvc.dto.blogHeartDto;
+
+
 import com.mvc.dto.commentDto;
 import com.sun.net.httpserver.Authenticator.Result;
+
 
 
 import static common.JDBCTemplate.*;
@@ -62,6 +65,7 @@ public class DaoImpl implements Dao{
 				res.setActive(rs.getString("ACTIVE"));
 				res.setPanalty(rs.getInt("PENALTY"));
 				res.setUser_img(rs.getString("USER_IMG"));
+				res.setSns(rs.getString("SNS"));
 			}
 			
 		} catch (SQLException e) {
