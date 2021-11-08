@@ -1,11 +1,13 @@
 package com.mvc.biz;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
 import com.mvc.dto.blogHeartDto;
+import com.mvc.dto.commentDto;
 
 public interface MVCBiz {
 	
@@ -23,6 +25,12 @@ public interface MVCBiz {
 	public int addblogheart(String userid, String blogid, int blogseq, String title);
 	public int rmblogheart(String userid, String blogid, int blogseq);
 	public ArrayList<blogHeartDto> getBlogHeart(String userid);
+	public ArrayList<commentDto> getcommentlist(String blogid, int blogseq);
+	public ArrayList<commentDto> addcomment(String blogid, int blogseq, String commentid, String content);
+	public ArrayList<commentDto> delcomment(String blogid, int blogseq, int commentseq, int groupno, int groupseq);
+	public ArrayList<commentDto> addanswer(String blogid, int blogseq, String commentid, String answer, int groupno);
+	
+	
 	
 	
 	//search.jsp 장소heart
