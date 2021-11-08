@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 
 import com.mvc.biz.BizImpl;
 import com.mvc.dto.blogDto;
+import com.mvc.dto.commentDto;
 
 /**
  * Servlet implementation class Servlet
@@ -136,6 +137,146 @@ public class blog extends HttpServlet {
 			}
 			
 		}
+		
+		else if(command.equals("comment")) {
+			
+			String blogid = request.getParameter("blogid");
+			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
+			
+			ArrayList<commentDto> list = new BizImpl().getcommentlist(blogid, blogseq);
+			JSONArray jarray = new JSONArray();
+			
+			for(int i = 0; i < list.size(); i++) {
+				JSONObject json = new JSONObject();
+			
+				json.put("blogid", list.get(i).getBlogid());
+				json.put("blogseq", list.get(i).getBlogseq());
+				json.put("commentdate", list.get(i).getCommentDate().toString());
+				json.put("commentseq", list.get(i).getCommentseq());
+				json.put("groupno", list.get(i).getGroupno());
+				json.put("groupseq", list.get(i).getGroupseq());
+				json.put("commentid", list.get(i).getCommentid());
+				json.put("content", list.get(i).getContent());
+				jarray.add(json);
+			}
+			System.out.println(jarray);
+			PrintWriter out = response.getWriter();
+			out.print(jarray.toJSONString());
+		}
+		
+		else if(command.equals("addcomment")) {
+			
+			String blogid = request.getParameter("blogid");
+			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
+			String commentid = request.getParameter("commentid");
+			String content = request.getParameter("content");
+			
+			ArrayList<commentDto> list = new BizImpl().addcomment(blogid, blogseq, commentid, content);
+			JSONArray jarray = new JSONArray();
+			
+			for(int i = 0; i < list.size(); i++) {
+				JSONObject json = new JSONObject();
+			
+				json.put("blogid", list.get(i).getBlogid());
+				json.put("blogseq", list.get(i).getBlogseq());
+				json.put("commentdate", list.get(i).getCommentDate().toString());
+				json.put("commentseq", list.get(i).getCommentseq());
+				json.put("groupno", list.get(i).getGroupno());
+				json.put("groupseq", list.get(i).getGroupseq());
+				json.put("commentid", list.get(i).getCommentid());
+				json.put("content", list.get(i).getContent());
+				jarray.add(json);
+			}
+			System.out.println(jarray);
+			PrintWriter out = response.getWriter();
+			out.print(jarray.toJSONString());
+			
+		}
+		
+		else if(command.equals("delcomment")) {
+			
+			String blogid = request.getParameter("blogid");
+			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
+			int commentseq = Integer.parseInt(request.getParameter("commentseq"));
+			int groupno = Integer.parseInt(request.getParameter("groupno"));
+			int groupseq = Integer.parseInt(request.getParameter("groupseq"));
+			
+			ArrayList<commentDto> list = new BizImpl().delcomment(blogid, blogseq, commentseq, groupno, groupseq);
+			JSONArray jarray = new JSONArray();
+			
+			for(int i = 0; i < list.size(); i++) {
+				JSONObject json = new JSONObject();
+			
+				json.put("blogid", list.get(i).getBlogid());
+				json.put("blogseq", list.get(i).getBlogseq());
+				json.put("commentdate", list.get(i).getCommentDate().toString());
+				json.put("commentseq", list.get(i).getCommentseq());
+				json.put("groupno", list.get(i).getGroupno());
+				json.put("groupseq", list.get(i).getGroupseq());
+				json.put("commentid", list.get(i).getCommentid());
+				json.put("content", list.get(i).getContent());
+				jarray.add(json);
+			}
+			System.out.println(jarray);
+			PrintWriter out = response.getWriter();
+			out.print(jarray.toJSONString());
+			
+		}
+		
+		else if(command.equals("addanswer")) {
+			
+			String blogid = request.getParameter("blogid");
+			int blogseq = Integer.parseInt(request.getParameter("blogseq"));
+			String commentid = request.getParameter("commentid");
+			String answer = request.getParameter("answer");
+			int groupno = Integer.parseInt(request.getParameter("groupno"));
+			
+			ArrayList<commentDto> list = new BizImpl().addanswer(blogid, blogseq, commentid, answer, groupno);
+			JSONArray jarray = new JSONArray();
+			
+			for(int i = 0; i < list.size(); i++) {
+				JSONObject json = new JSONObject();
+			
+				json.put("blogid", list.get(i).getBlogid());
+				json.put("blogseq", list.get(i).getBlogseq());
+				json.put("commentdate", list.get(i).getCommentDate().toString());
+				json.put("commentseq", list.get(i).getCommentseq());
+				json.put("groupno", list.get(i).getGroupno());
+				json.put("groupseq", list.get(i).getGroupseq());
+				json.put("commentid", list.get(i).getCommentid());
+				json.put("content", list.get(i).getContent());
+				jarray.add(json);
+			}
+			System.out.println(jarray);
+			PrintWriter out = response.getWriter();
+			out.print(jarray.toJSONString());
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	}

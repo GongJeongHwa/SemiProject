@@ -16,6 +16,7 @@ import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
 import com.mvc.dto.blogHeartDto;
+import com.mvc.dto.commentDto;
 import com.sun.net.httpserver.Authenticator.Result;
 
 
@@ -502,6 +503,152 @@ public class DaoImpl implements Dao{
 	}
 	
 	
+	//--------------------blogcomment관련
+	
+	@Override
+	public ArrayList<commentDto> getcommentlist(Connection con, String blogid, int blogseq) {
+		
+		ArrayList<commentDto> list = new ArrayList<commentDto>();
+		
+		String query = "SELECT * FROM BLOG_COMMENT WHERE BLOG_ID = ? AND BLOG_SEQ = ? ORDER BY COMMENT_GROUPNO, COMMENT_GROUPSEQ";
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, blogid);
+			pstmt.setInt(2, blogseq);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				commentDto dto = new commentDto();
+				dto.setBlogid(rs.getString(1));
+				dto.setBlogseq(rs.getInt(2));
+				dto.setCommentDate(rs.getTimestamp(3));
+				dto.setCommentseq(rs.getInt(4));
+				dto.setGroupno(rs.getInt(5));
+				dto.setGroupseq(rs.getInt(6));
+				dto.setCommentid(rs.getString(7));
+				dto.setContent(rs.getString(8));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, pstmt, rs);
+		}
+		return list;
+	}
+	
+	
+	@Override
+	public int addcomment(Connection con, String blogid, int blogseq, String commentid, String content) {
+		
+		int res = 0;
+		/*
+		 * String query = "INSERT INTO BLOG_COMMENT " + "VALUES(?, ?, SYSDATE, " +
+		 * "(SELECT NVL(MAX(COMMENT_SEQ), 0) FROM BLOG_COMMENT WHERE BLOG_ID = ? AND BLOG_SEQ = ?) + 1, "
+		 * +
+		 * "(SELECT NVL(MAX(COMMENT_GROUPNO), 0) FROM BLOG_COMMENT WHERE BLOG_ID = ? AND BLOG_SEQ = ?) + 1, "
+		 * + "1, ?, ?)";
+		 */
+		
+		String query = "BEGIN BLOG_ADDCOMMENT(?,?,?,?); END;";
+		
+		try {
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, blogid);
+			cstmt.setInt(2, blogseq);
+			cstmt.setString(3, commentid);
+			cstmt.setString(4, content);
+			res = cstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, cstmt, null);
+		}
+		return res;
+	}
+	
+	@Override
+	public int delcomment(Connection con, String blogid, int blogseq, int commentseq) {
+		
+		int res = 0;
+		
+		String query = "BEGIN BLOG_DELCOMMENT(?,?,?); END;";
+		
+		try {
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, blogid);
+			cstmt.setInt(2, blogseq);
+			cstmt.setInt(3, commentseq);
+			res = cstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, cstmt, null);
+		}
+		return res;
+	}
+	
+	@Override
+	public int delcommentAll(Connection con, String blogid, int blogseq, int commentseq, int groupno) {
+		
+		int res = 0;
+		
+		String query = "BEGIN BLOG_DELCOMMENTALL(?,?,?,?); END;";
+		
+		try {
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, blogid);
+			cstmt.setInt(2, blogseq);
+			cstmt.setInt(3, commentseq);
+			cstmt.setInt(4, groupno);
+			res = cstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, cstmt, null);
+		}
+		return res;
+	}
+	
+	
+	@Override
+	public int addanswer(Connection con, String blogid, int blogseq, String commentid, String answer, int groupno) {
+		int res = 0;
+		String query = "BEGIN BLOG_ADDANSWER(?,?,?,?,?); END;";
+		
+		try {
+			cstmt = con.prepareCall(query);
+			cstmt.setString(1, blogid);
+			cstmt.setInt(2, blogseq);
+			cstmt.setString(3, commentid);
+			cstmt.setString(4, answer);
+			cstmt.setInt(5, groupno);
+			res = cstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, cstmt, null);
+		}
+		return res;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -663,6 +810,16 @@ public class DaoImpl implements Dao{
 		}
 		return res;
 	}
+
+
+
+
+
+
+
+
+
+
 
 
 
