@@ -377,7 +377,7 @@ let apikey = '&key=AIzaSyBURtfwi-GrNQHLcH9QSc0MJgEzhVdXfzg';
 			}
 		}
 		
-		$("#temp").text($("#datepicker").val()+"의 일정");
+		$("#temp").text($("#datepicker").val()+"일의 일정");
 	};
 	
 	//일정추가 버튼 클릭 시
