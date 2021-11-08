@@ -170,6 +170,19 @@ li {
 	width:80%; height:auto; margin-left:17%; font-size:20px; letter-spacing:2px;
 	font-family: 'Nanum Pen Script', cursive;
 }
+.deletePromise {
+	width:15px;
+	height:15px;
+}
+.ask_deleteSpan {
+	margin-left:20px;
+}
+.deletePromise:hover{
+	cursor:pointer;
+}
+#close-button-promise:hover{
+	cursor:pointer;
+}
 
 </style>
 <script type="text/javascript">
@@ -249,7 +262,7 @@ $(function() {
 						}
 					}
 					$("#promiseTitle").append(
-							"<li style='margin-bottom:0px;> <div class='firstProDiv'> <div class='secondDiv'>" + 
+							"<li style='margin-bottom:0px;'> <div class='firstProDiv'> <div class='secondDiv'>" + 
 							"<div class='userImg' style='display:none;'>" + value[4] + "</div>" +
 							"<div class='userName' style='display:none;'>" + value[5] + "</div>" +
 							"<div class='userId' style='display:none;'>" + value[0] + "</div>" +
@@ -259,6 +272,7 @@ $(function() {
 							"<span id='ask_name' class='ask_nameSpanPro'><b>" + value[5] + "</b></span>" + 
 							"<span id='ask_loc' class='ask_locSpan'>" + value[1] + "</span>" +
 							"<span id='ask_time' class='ask_timeSpan'>" + date + "</span>" + 
+							"<span id='ask-delete' class='ask_deleteSpan'><img class='deletePromise' src='./img/companion/promiseCancel.png' alt='deletePromise' onclick='cancelPromise(this);'></span>" +
 							"</div>" +
 							"<div id='ask_comment' class='fourthDivPro'>" + "<b style='font-size:20px;'>" + time +
 							"</b>&nbsp;&nbsp;" + value[3] + "</div>" + 
@@ -269,6 +283,29 @@ $(function() {
 		});
 	});
 });
+
+//보내야하는 데이터 연결된 상대방 아이디, 위치정보로 해당 약속 찾아서 삭제하자
+function cancelPromise(obj) {
+	var con_id = $(obj).parent().parent().siblings(".secondDiv").children(".userId").text();
+	var loc = $(obj).parent().siblings("#ask_loc").text();
+	
+	if (confirm("약속을 취소하시면 패널티가 1회 부여됩니다. 약속을 취소하시겠습니까?")) {
+		$.ajax({
+			url:"message.do?command=cancelPromise",
+			type:"post",
+			data:{
+				"loc":loc
+			},
+			success:function(msg){
+				alert(con_id + "님과의 약속을 취소하셨습니다. 패널티가 1회 부여됩니다.");
+				$(obj).parent().parent().parent().css({"display":"none"});
+			},
+			error:function(msg) {
+				console.log(msg);
+			}
+		});
+	}
+}
 
 function deleteMessageTab() {
 	$("#tbody").html("");
@@ -361,11 +398,11 @@ function askPermit(obj) {
 			$("#tbody").append(
 					"<tr class='"+id+"' style='padding:10px;'>" +
 					"<td rowspan='2' style='text-align:center;'><img class='listpic' alt='profile' src='./img/user/" + userImg + ".png'></td>" +
-					"<td colspan='2' class='fw-bold'>"+userName+"</td>" +
+					"<td colspan='3' class='fw-bold'>"+userName+"</td>" +
 					"</tr>" +
 					"<tr class='"+id+"' style='padding:10px;'>" +
 					"<td><a href='message.do?command=detailMessage&sen_id="+id+"' class='message'>"+message+"</a></td>" +
-					"<td style='padding-left:25px;'>" +
+					"<td style='padding-left:105px;' colspan='2'>" +
 					"<span class='sen-id' style='display:none;'>"+id+"</span>" +
 					"<img class='trash' alt='trash' src='./img/companion/trash.png' onclick='deleteMessage(this);'>" +
 					"</td>" +

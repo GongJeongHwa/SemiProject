@@ -40,11 +40,8 @@ public class UserImg extends HttpServlet {
 	
 	public String randomPic() {
 		int rNum = (int)(Math.random()*10 + 1);
-		StringBuilder name = new StringBuilder("USER");
+		StringBuilder name = new StringBuilder("user");
 		
-		if (rNum <=9) {
-			name.append("0");
-		}
 		name.append(rNum);
 		
 		return name.toString();

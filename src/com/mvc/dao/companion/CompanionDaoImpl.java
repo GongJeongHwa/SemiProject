@@ -555,4 +555,87 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		}
 		return list;
 	}
+
+	@Override
+	public int getPenalty(Connection con, String login_id) {
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		int penalty = 0;
+		
+		try {
+			pstm = con.prepareStatement(getPenalty);
+			pstm.setString(1, login_id);
+			rs = pstm.executeQuery();
+			
+			if (rs.next()) {
+				penalty = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, pstm, rs);
+		}
+		return penalty;
+	}
+
+	@Override
+	public int deletePromise(Connection con, String loc) {
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			pstm = con.prepareStatement(deletePromise);
+			pstm.setString(1, loc);
+			
+			res = pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStmt(pstm);
+		}
+		return res;
+	}
+
+	@Override
+	public int upPenalty(Connection con, int penalty, String login_id) {
+		PreparedStatement pstm = null;
+		int res = 0;
+		
+		try {
+			pstm = con.prepareStatement(upPenalty);
+			pstm.setInt(1, penalty);
+			pstm.setString(2, login_id);
+			
+			res = pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeStmt(pstm);
+		}
+		return res;
+	}
+
+	@Override
+	public boolean ableConnection(Connection con, String login_id, String con_id) {
+		boolean flag = false;
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		
+		try {
+			pstm = con.prepareStatement(ableConnection);
+			pstm.setString(1, login_id);
+			pstm.setString(2, con_id);
+			
+			rs = pstm.executeQuery();
+			
+			if (!rs.next()) {
+				flag = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll(null, pstm, rs);
+		}
+		return flag;
+	}
 }
