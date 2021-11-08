@@ -18,11 +18,11 @@ public class BlognewsboardDto {
 		super();
 	}
 
-	public BlognewsboardDto(String content, String writer, String title) {
+	public BlognewsboardDto(String writer, String title, String content) {
 		super();
-		this.content = content;
 		this.writer = writer;
 		this.title = title;
+		this.content = content;
 	}	
 	
 
