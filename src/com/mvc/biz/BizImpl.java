@@ -10,6 +10,7 @@ import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
 import com.mvc.dto.blogHeartDto;
+import com.mvc.dto.commentDto;
 
 public class BizImpl implements MVCBiz{
 	
@@ -143,12 +144,72 @@ public class BizImpl implements MVCBiz{
 	}
 	
 	
+	//-------------blogcomment
+	@Override
+	public ArrayList<commentDto> getcommentlist(String blogid, int blogseq) {
+		
+		con = getConnection();
+		ArrayList<commentDto> list = dao.getcommentlist(con, blogid, blogseq);
+		closeConn(con);
+		
+		return list;
+	}
 	
+	@Override
+	public ArrayList<commentDto> addcomment(String blogid, int blogseq, String commentid, String content) {
+		
+		con = getConnection();
+		int res = dao.addcomment(con, blogid, blogseq, commentid, content);
+		if(res == 0) {
+			rollback(con);
+			closeConn(con);
+			return null;
+		}
+		ArrayList<commentDto> list = dao.getcommentlist(con, blogid, blogseq);
+		commit(con);
+		closeConn(con);
+		
+		return list;
+	}
 	
+	@Override
+	public ArrayList<commentDto> delcomment(String blogid, int blogseq, int commentseq, int groupno, int groupseq) {
+		con = getConnection();
+		int res = 0;
+		
+		if(groupseq != 1) {
+			res = dao.delcomment(con, blogid, blogseq, commentseq);
+		}else {
+			res = dao.delcommentAll(con, blogid, blogseq, commentseq, groupno);
+		}
+		if(res == 0) {
+			rollback(con);
+			closeConn(con);
+			return null;
+		}
+		ArrayList<commentDto> list = dao.getcommentlist(con, blogid, blogseq);
+		commit(con);
+		closeConn(con);
+		
+		return list;
+	}
 	
-	
-	
-	
+	@Override
+	public ArrayList<commentDto> addanswer(String blogid, int blogseq, String commentid, String answer, int groupno) {
+
+		con = getConnection();
+		int res = dao.addanswer(con, blogid, blogseq, commentid, answer, groupno);
+		if(res == 0) {
+			rollback(con);
+			closeConn(con);
+			return null;
+		}
+		ArrayList<commentDto> list = dao.getcommentlist(con, blogid, blogseq);
+		commit(con);
+		closeConn(con);
+		
+		return list;
+	}
 	
 	
 	
@@ -234,6 +295,14 @@ public class BizImpl implements MVCBiz{
 		
 		return heartlist;
 	}
+
+
+
+
+
+
+
+
 
 
 

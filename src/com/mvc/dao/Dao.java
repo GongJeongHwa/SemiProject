@@ -7,6 +7,7 @@ import com.mvc.dto.HeartDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
 import com.mvc.dto.blogHeartDto;
+import com.mvc.dto.commentDto;
 
 public interface Dao {
 	
@@ -40,6 +41,12 @@ public interface Dao {
 	public int addblogheart(Connection con, String userid, String blogid, int blogseq, String title);
 	public int rmblogheart(Connection con, String userid, String blogid, int blogseq);
 	public ArrayList<blogHeartDto> getBlogHeart(Connection con, String userid);	
+	public ArrayList<commentDto> getcommentlist(Connection con, String blogid, int blogseq);
+	public int addcomment(Connection con, String blogid, int blogseq, String commentid, String content);
+	public int delcomment(Connection con, String blogid, int blogseq, int commentseq);
+	public int delcommentAll(Connection con, String blogid, int blogseq, int commentseq, int groupno);
+	public int addanswer(Connection con, String blogid, int blogseq, String commentid, String answer, int groupno);
+	
 	
 	//search add heart(장소찜 관련)
 	public int addheart(Connection con, HeartDto dto);
@@ -47,5 +54,7 @@ public interface Dao {
 	public int getheartCount(Connection con, String placeid);
 	public boolean confirmheart(Connection con, String userid, String placeid);
 	public int rmheart(Connection con, String userid, String placeid);
+	
+	
 	
 }

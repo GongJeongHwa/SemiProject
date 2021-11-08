@@ -65,6 +65,10 @@
 <title>Insert title here</title>
 
 <style type="text/css">
+.right{
+	text-align: right;
+}
+
 #container-top a, #container-top a{
 	font-size: 100% !important;
 }
@@ -74,6 +78,15 @@
 	text-align: center;
 	background-color: white;
 	border-radius: 22px;
+	padding: 8px;
+	margin-bottom: 5px;
+}
+
+.commentbtn{
+	border: 1px solid gray;
+	text-align: center;
+	background-color: white;
+	border-radius: 8px;
 	padding: 8px;
 	margin-bottom: 5px;
 }
@@ -574,6 +587,20 @@ let Data = new Array();
 <script type="text/javascript">
 //세션아이디
 let sessionid = "<%=sessionId %>";
+//작성자
+let userid = "<%=userid %>";
+//기타
+let none = "none";
+let yes = "display";
+let writer = "작성자";
+let pointer = "pointer";
+let dfcursor = "default";
+let noshowanswer = "";
+let showanswer_ = "showanswer(this)";
+let white = "";
+let gray = "table-light";
+let blue = "rgb(126, 167, 233)";
+let black = "black";
 //dtolist
 let dayandplace = new Array();
 //날씨변수
@@ -1322,32 +1349,108 @@ jQuery(document).ready(function($){
 		</div>
 		<div class="row">
 			<div class='col-lg-1'></div>
-			<div class='col-lg-8'>
-				<textarea rows="" cols="" placeholder="댓글을 입력하세요." name="comment" maxlength="100" style="resize: none; width:100%; height:100px;" ></textarea>
+			
+			
+			<div class='col-lg-10'>
+				<span>
+				<textarea id="textarea" placeholder="댓글을 입력하세요." name="comment" maxlength="150" style="resize: none; width:80%; height:100px; vertical-align: top; outline: none; border-radius: 8px;"></textarea>
+				<button class='commentbtn' id="submit" type="submit" style="width: 19%;">등록</button>
+				</span>
 			</div>
-			<div class='col-lg-2'>
-				<button type="button" style="width: 100%; height:30px;">등록</button>
-			</div>
+			
+			<!-- submit -->
+			<script type="text/javascript">
+				$('#textarea').keypress(function(event){
+					if(event.which == 13){
+						$('#submit').click();
+						return false;
+					}
+				});
+				
+				$('#submit').click(function(){
+					
+ 					if(sessionid == ""){
+					  	  toastr.options.positionClass = "toast-top-right";
+						  toastr.warning("로그인이 필요합니다.");
+						  return;
+					} 
+					
+ 					var content = $('#textarea').val();
+ 					
+					if(content.trim() == "" || content == null){
+						alert("공백만 입력되었습니다.");
+						return;
+					} 
+					
+					
+  					$.ajax({
+						url:'blog.do?command=addcomment&blogid=<%=userid%>&blogseq=<%=blogseq%>',
+						method: "post",
+						data: {"commentid" : sessionid,
+							   "content" : content.trim()},
+						dataType: "json",
+						success:function(data){
+							
+							$('#commentbody').html("");
+							for(var i = 0; i < data.length; i++){
+								$("#commentbody").append(createComment(data[i].commentid, data[i].content, data[i].commentdate, data[i].commentseq, data[i].groupno, data[i].groupseq));
+							}
+							
+							$('#textarea').val("");
+						},
+						error:function(){
+							$("#heart").html("에러");
+						}
+					});	  
+					
+					
+				});
+				
+			</script>
+			<!-- submit -->
+			
 			<div class='col-lg-1'></div>
 		</div>
 		<br>
+		
 		<div class="row">
 			<div class='col-lg-1'></div>
 			<div class='col-lg-10'>
-				<table class="table">
-					<tbody>
-						<tr>
-							<td nowrap="nowrap"></td>
-							<td style="word-break:break-all;"></td>
-							<td nowrap="nowrap"></td>
-							<td><img id="heartimg" style="cursor: pointer;" onclick="delcomment();" src="<%=request.getContextPath()%>/img/icons/x.svg" width="30" height="30" alt="Bootstrap"></td>
-						</tr>
-					</tbody>				
+				<table class="table align-middle">
+					<colgroup>
+						<col width = "15%">
+						<col width = "77%">
+						<col width = "5%">
+						<col width = "3%">
+					</colgroup>					
+					<tbody id='commentbody'>
+					</tbody>
 				</table>
 			</div>
 			<div class='col-lg-1'></div>
 		</div>
 	</div>
+	
+			<!-- 댓글가져오기 -->
+		<script type="text/javascript">
+			$.ajax({
+				url:'blog.do?command=comment&blogid=<%=userid%>&blogseq=<%=blogseq%>',
+				method: "post",
+				dataType: "json",
+				success:function(data){
+					console.log(data);
+					console.log(data.length);
+					for(var i = 0; i < data.length; i++){
+						$("#commentbody").append(createComment(data[i].commentid, data[i].content, data[i].commentdate, data[i].commentseq, data[i].groupno, data[i].groupseq));
+					}
+					
+				},
+				error:function(){
+					$("#heart").html("에러");
+				}
+			});	
+		
+		</script>
 
 <script type="text/javascript">
 //건든 내용
@@ -1462,9 +1565,131 @@ jQuery(document).ready(function($){
 		});
    }
    
+   //groupseq = 2 이상
+   function createComment(commentid, content, date, seq, groupno, groupseq){
+	   var html = "";
+	   html = "<tr class='"+ ((groupseq == 1)? white : gray) +"'>"+
+		    "<td nowrap='nowrap'><span style='color:"+ ((commentid==userid)? blue:black) +"'><b>"+ ((commentid==userid)? writer:commentid) +"</b></span></td>" + 
+			"<td style='word-break:break-all; cursor: "+ ((groupseq == 1)? pointer : dfcursor) +";' onclick='"+ ((groupseq == 1)? showanswer_ : noshowanswer)+";'><img style='display:"+ ((groupseq == 1)? none : yes) +";' src='<%=request.getContextPath()%>/img/icons/arrow-return-right.svg' width='22' height='22' alt='Bootstrap' ><span style='display:"+ ((groupseq == 1)? none : yes) +";'>&nbsp;&nbsp;</span>"+ content +"</td>" + 
+			"<td nowrap='nowrap' class='right'>"+ date.split(".")[0] +"</td>" + 
+			"<td class='right'><img id='heartimg'  style='display:"+ ((sessionid==commentid)? yes:none)  + "; cursor:pointer;' onclick='delcomment(this);' src='<%=request.getContextPath()%>/img/icons/x.svg' width='30' height='30' alt='Bootstrap'></td>" + 
+			"<input type='hidden' id='seq' value='"+ seq +"'>" + 
+			"<input type='hidden' id='groupno' value='"+ groupno +"'>" + 
+			"<input type='hidden' id='groupseq' value='"+ groupseq +"'>" + 
+			"</tr>";
+   	   return html;
+   }
+   
+   
+   function delcomment(doc){
+	   
+	   	var commentseq = $(doc).closest('tr').find('#seq').val();
+	   	var groupno = $(doc).closest('tr').find('#groupno').val();
+	   	var groupseq = $(doc).closest('tr').find('#groupseq').val();
+		
+ 			$.ajax({
+				url:'blog.do?command=delcomment&blogid=<%=userid%>&blogseq=<%=blogseq%>',
+				method: "post",
+				data : {"commentseq" : commentseq,
+						"groupno" : groupno,
+						"groupseq" : groupseq},
+				dataType: "json",
+				success:function(data){
+					
+					$('#commentbody').html("");
+					for(var i = 0; i < data.length; i++){
+						$("#commentbody").append(createComment(data[i].commentid, data[i].content, data[i].commentdate, data[i].commentseq, data[i].groupno, data[i].groupseq));
+					}
+				},
+				error:function(){
+					$("#heart").html("에러");
+				}
+			});	  	
+	   
+   }
+   
+   function showanswer(doc){
+	   
+	   if($(doc).closest('tr').next().attr('class')=='answer'){
+		   $(doc).closest('tr').next().remove();
+		   return;
+	   }
+	   
+	   $('.answer').each(function(){
+		  $(this).remove(); 
+	   });
+	   
+	   $(doc).closest('tr').after(addanswerDoc());
+	   
+   }
+   
+   function addanswerDoc(){
+	   
+	   var html = "";
+	   html = 
+		   "<tr class='answer'>" + 
+		   "<td colspan='2'><img src='<%=request.getContextPath()%>/img/icons/arrow-return-right.svg' width='22' height='22' alt='Bootstrap' >&nbsp;&nbsp;<textarea id='answertextarea' placeholder='답글을 입력하세요.' name='answer' maxlength='100' style='resize: none; width:95%; height:70px; vertical-align: top; outline:none; border-radius: 8px; margin-top:5px; margin-bottom:10px;'></textarea></td>" + 
+			"<td colspan='2'><button class='commentbtn' id='answersubmit' type='submit' onclick='addanswer(this)' style='width: 45%; margin-right: 5px;'>등록</button><button type='button' class='commentbtn' style='width: 45%;' onclick='cancel(this)'>취소</button></td>" + 
+			"</tr>";
+	   return html;
+   }
+   
+   function cancel(doc){
+	   
+	   $(doc).closest('tr').remove();
+	   
+   }
+   
+   function test(){
+	   alert("test");
+   }
+
+   function addanswer(doc){
+	   
+		if(sessionid == ""){
+			toastr.options.positionClass = "toast-top-right";
+			toastr.warning("로그인이 필요합니다.");
+			return;
+		}
+		
+	    var answer = $(doc).closest('tr').find('textarea').eq(0).val();
+		if(answer.trim() == "" || answer == null){
+			alert("공백만 입력되었습니다.");
+			return;
+		} 
+	    
+		var groupno = $(doc).closest('tr').prev().find('#groupno').val();
+	    console.log(answer);
+	    console.log(groupno);
+	    
+			$.ajax({
+				url:'blog.do?command=addanswer&blogid=<%=userid%>&blogseq=<%=blogseq%>',
+				method: "post",
+				data: {"commentid" : sessionid,
+					   "answer" : answer.trim(),
+					   "groupno" : groupno},
+				dataType: "json",
+				success:function(data){
+					
+					$('#commentbody').html("");
+					for(var i = 0; i < data.length; i++){
+						$("#commentbody").append(createComment(data[i].commentid, data[i].content, data[i].commentdate, data[i].commentseq, data[i].groupno, data[i].groupseq));
+					}
+					
+				},
+				error:function(){
+					$("#heart").html("에러");
+				}
+			});	 
+   }
+   
+   
+   
+   
+   
 </script>         
 	
-	
+
 
 
 
