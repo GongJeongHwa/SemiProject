@@ -83,7 +83,7 @@
 						<img src="<%=request.getContextPath()%>/img/icons/list.svg" alt="Bootstrap" width="21" height="21">
 						<img src="<%=profilePath %>" alt="Bootstrap" width="27" height="27">
 					</button>
-					<ul class="dropdown-menu dropdown-menu-lg-end">
+					<ul class="dropdown-menu dropdown-menu-lg-end" style="width:170px">
 						
 						<%
 							if (dto != null) {
