@@ -1,17 +1,16 @@
- 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
     
 <% request.setCharacterEncoding("UTF-8"); %>
 <% response.setContentType("text/html; charset=UTF-8"); %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
- 
-
+    
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 <head>
     <title>Search date from table</title>
 <style type="text/css">
@@ -51,7 +50,7 @@
 </head>
 <body>
 
-<div id="calender"   style="width:10px; font-size:10px;top:180px; left:570px; position:absolute; visibility:hidden; ">
+<div id="calender"   style="width:10px; font-size:10px;top:180px; left:570px; position:absolute; visibility:hidden;">
 
 <div id="reportrange" class="btn btn-success btn-lg" align="center" >
     <i class="fa fa-calendar"></i>&nbsp;
@@ -63,10 +62,11 @@
 
 <div id="tabledata" style="width:60%; top:270px; right:350px; position:absolute;">
 <table id="example" class="display"  >  
-				<col width="60px">
-				<col width="200px">
+				
+				<col width="100px">
+				<col width="80px">
 				<col width="300px">
-				<col width="30px"> 
+				<col width="50px">
 				<tr>
 					<th></th>
 					<th></th>
@@ -74,18 +74,18 @@
 					<th></th>
 				</tr>
 				<c:choose>
-					<c:when test="${empty companion_list }">
+					<c:when test="${empty wishedB_list }">
 						<tr>
-							<td colspan="4" class="blank_list"> 약속이 없습니다.</td>
+							<td colspan="3" class="blank_list"> 여행일정이 없습니다.</td>
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:forEach items="${companion_list }" var="PromiseDto">
+						<c:forEach items="${wishedB_list }" var="blogHeartDto">
 							<tr>
-								<td>${PromiseDto.p_time }</td>
-								<td>${PromiseDto.p_loc }</td>
-								<td>${PromiseDto.p_comment }</td>
-								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="location.href='massage.do?command=completeDelete&con_id=${PromiseDto.rec_id}'"></td>	
+								<td>${blogHeartDto.regdate }</td>
+                        		<td>${blogHeartDto.blogid }</td>
+                        		<td>${blogHeartDto.blogNickname }</td>
+								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>
 							</tr>
 						</c:forEach>
 					</c:otherwise>
@@ -166,10 +166,10 @@ var table = $('#example').DataTable({
         title: "날짜"
       },
       {
-        title: "장소이름"
+        title: "작성자"
       },
       {
-        title: "comment"
+        title: "블로그"
       }, 
       {
           title: "삭제"
@@ -182,14 +182,13 @@ var table = $('#example').DataTable({
 
 
 
-});// ready function ends here 
- 
+});// ready function ends here
 
-`<c:forEach items="${companion_list }" var="PromiseDto">`
+`<c:forEach items="${wishedB_list }" var="blogHeartDto">`
 
 var dataSet = [ 
     
-   [` ${PromiseDto.p_time }`, `${PromiseDto.p_loc }`,`${PromiseDto.p_comment}`], q
+   [` ${blogHeartDto.regdate }`, `${blogHeartDto.blogid }`,`${blogHeartDto.blogNickname }`,`	<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>	`], q
 ];
 
 `</c:forEach>`
@@ -200,11 +199,11 @@ $(document).ready(function() {
         data: dataSet,
         columns: [
             { title: "날짜" },
-            { title: "장소이름" },
-            { title: "comment" },
+            { title: "작성자" },
+            { title: "블로그 " },
             {
                 title: "삭제"
-              }, 
+              } 
             
         ]
     } );

@@ -158,7 +158,7 @@
    <!-- 메인 -->
    <div id="right" class="flex_container" style="margin-left:350px;">
       <!-- 달력 -->   
-      <div style='float:center;width:400px;height:500px;font-size:0.6em;' id='calendar'></div>
+      <div style='float:center;width:650px;height:500px;font-size:0.6em; margin-left:40px;' id='calendar'></div>
       <br><hr style="width:800px">
       
       
@@ -197,17 +197,52 @@
       </div>
       <br><hr style="width:800px">
       
+      
+            
+      
+      <!-- 블로그찜목록 -->
+      <div class="t_list">
+         <h3>내가 찜한 블로그<a href="mypage.do?command=wishedBlog"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
+         <table class="table" style="width:750px;">
+            <col width="100px">
+            <col width="100px">
+            <col width="350px">
+            <tr>
+               <th>작성날짜</th>
+               <th>작성자</th>
+               <th>여행지</th>
+            </tr>
+            <c:choose>
+               <c:when test="${empty wishedB_list }">
+                  <tr>
+                     <td colspan="3" class="blank_list"> 여행일정이 없습니다.</td>
+                  </tr>
+               </c:when>
+               <c:otherwise>
+                  <c:forEach items="${wishedB_list }" var="blogHeartDto" end="4">
+                     <tr>
+                        <td>${blogHeartDto.regdate }</td>
+                        <td>${blogHeartDto.blogid }</td>
+                        <td>${blogHeartDto.blogNickname }</td>
+                     </tr>
+                  </c:forEach>
+               </c:otherwise>
+            </c:choose>   
+         </table>
+      </div>
+      <br><hr style="width:800px">
+      
       <!-- 찜목록 -->
       <div class="t_list">
          <h3>내가 찜한 여행지 & 일정<a href="mypage.do?command=wishedTravel"><img src="<%=request.getContextPath()%>/img/plus_icon.png" width="30" height="30"></a></h3>
          <table class="table" style="width:750px;">
-            <col width="100px">
-            <col width="160px">
+            <col width="150px">
+            <col width="150px">
             <col width="300px">
             <tr>
                <th>국가</th>
                <th>장소이름</th>
-               <th>위도 / 경도</th>
+               <th>주소</th>
             </tr>
             <c:choose>
                <c:when test="${empty wished_list }">
@@ -220,7 +255,7 @@
                      <tr>
                         <td>${HeartDto.nation }</td>
                         <td>${HeartDto.place_name }</td>
-                        <td>${HeartDto.latitude } / ${HeardDto.longtitude }</td>
+                        <td style="font-size:10pt">${HeartDto.place_address }</td>
                      </tr>
                   </c:forEach>
                </c:otherwise>

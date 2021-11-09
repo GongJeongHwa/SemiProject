@@ -55,7 +55,7 @@ public class schedule extends HttpServlet {
 		
 	      if(command.equals("schedule")) {
 	           if(dto != null) {
-	               List<HeartDto> wished_list =  m_dao.selectWishedSql(dto.getUser_id());
+	               List<HeartDto> wished_list =  m_dao.selectWished(dto.getUser_id());
 	               request.setAttribute("wished_list", wished_list);
 
 	               System.out.println(wished_list.size());
