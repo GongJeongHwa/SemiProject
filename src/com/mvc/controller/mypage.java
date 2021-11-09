@@ -20,6 +20,7 @@ import com.mvc.dto.HeartDto;
 import com.mvc.dto.PromiseDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
+import com.mvc.dto.blogHeartDto;
 
 @WebServlet("/mypage.do")
 public class mypage extends HttpServlet {
@@ -46,15 +47,19 @@ public class mypage extends HttpServlet {
 				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
 			} else {
 				//내여행 리스트
-				List<blogDto> travel_list =  m_dao.selectTravelSql(user.getUser_id());
+				List<blogDto> travel_list =  m_dao.selectTravel(user.getUser_id());
 				request.setAttribute("travel_list", travel_list);
 				
-				//내가 찜한 여행지 + 일정
-				List<HeartDto> wished_list =  m_dao.selectWishedSql(user.getUser_id());
+				//내가 찜한 블로그
+				List<blogHeartDto> wishedB_list = m_dao.selectWishedBlog(user.getUser_id());
+				request.setAttribute("wishedB_list", wishedB_list);
+				
+				//내가 찜한 여행지
+				List<HeartDto> wished_list =  m_dao.selectWished(user.getUser_id());
 				request.setAttribute("wished_list", wished_list);
 				
 				//동행 리스트
-				List<PromiseDto> companion_list = m_dao.selectCompanionSql(user.getUser_id());
+				List<PromiseDto> companion_list = m_dao.selectCompanion(user.getUser_id());
 				request.setAttribute("companion_list", companion_list);
 				
 				dispatch("user/mypage.jsp", request, response);
@@ -66,7 +71,7 @@ public class mypage extends HttpServlet {
 
 			} else {
 				//내여행 리스트
-				List<blogDto> travel_list =  m_dao.selectTravelSql(user.getUser_id());
+				List<blogDto> travel_list =  m_dao.selectTravel(user.getUser_id());
 				request.setAttribute("travel_list", travel_list);
 				dispatch("user/my_travel.jsp", request, response);
 			}
@@ -77,9 +82,20 @@ public class mypage extends HttpServlet {
 
 			} else {
 				//내가 찜한 여행지 + 일정
-				List<HeartDto> wished_list =  m_dao.selectWishedSql(user.getUser_id());
+				List<HeartDto> wished_list =  m_dao.selectWished(user.getUser_id());
 				request.setAttribute("wished_list", wished_list);
 				dispatch("user/save_travel.jsp", request, response);
+			}
+			
+		}else if(command.equals("wishedBlog")) {
+			if (user == null || user.getUser_id().trim().equals("")) {
+				System.out.println("로그인확인!!!");
+				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
+
+			} else {
+				List<blogHeartDto> wishedB_list = m_dao.selectWishedBlog(user.getUser_id());
+				request.setAttribute("wishedB_list", wishedB_list);
+				dispatch("user/save_blog.jsp", request, response);
 			}
 			
 		}else if(command.equals("myCompanion")) {
@@ -88,7 +104,7 @@ public class mypage extends HttpServlet {
 				jsResponse("로그인이 필요합니다", request.getContextPath()+"/login/login.jsp", response);
 			} else {
 				//동행 리스트
-				List<PromiseDto> companion_list = m_dao.selectCompanionSql(user.getUser_id());
+				List<PromiseDto> companion_list = m_dao.selectCompanion(user.getUser_id());
 				request.setAttribute("companion_list", companion_list);
 				dispatch("user/my_companion.jsp", request, response);
 			}

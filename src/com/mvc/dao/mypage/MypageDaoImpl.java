@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.mvc.dto.HeartDto;
@@ -12,13 +13,14 @@ import com.mvc.dto.HeartDto;
 import com.mvc.dto.PromiseDto;
 import com.mvc.dto.UserDto;
 import com.mvc.dto.blogDto;
+import com.mvc.dto.blogHeartDto;
 
 import common.JDBCTemplate;
 
 public class MypageDaoImpl extends JDBCTemplate implements MypageDao{
 
 	@Override
-	public List<blogDto> selectTravelSql(String user_id) {
+	public List<blogDto> selectTravel(String user_id) {
 		Connection con = getConnection();
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
@@ -66,7 +68,7 @@ public class MypageDaoImpl extends JDBCTemplate implements MypageDao{
 	}
 
 	@Override
-	public List<HeartDto> selectWishedSql(String user_id) {
+	public List<HeartDto> selectWished(String user_id) {
 		Connection con = getConnection();
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
@@ -109,7 +111,7 @@ public class MypageDaoImpl extends JDBCTemplate implements MypageDao{
 	}
 
 	@Override
-	public List<PromiseDto> selectCompanionSql(String user_id) {
+	public List<PromiseDto> selectCompanion(String user_id) {
 		Connection con = getConnection();
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
@@ -149,21 +151,45 @@ public class MypageDaoImpl extends JDBCTemplate implements MypageDao{
 	}
 
 	@Override
-	public boolean deleteTravelSql(int seq) {
-		// TODO Auto-generated method stub
-		return false;
+	public List<blogHeartDto> selectWishedBlog(String user_id) {
+		Connection con = getConnection();
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		List<blogHeartDto> res = new ArrayList<blogHeartDto>();
+		//select * from v_blog_list where user_id=?;
+		
+		try {
+			pstm = con.prepareStatement(selectWishedBSql);
+			pstm.setString(1, user_id);
+			System.out.println("03. query준비 : "+selectWishedBSql);
+			
+			rs=pstm.executeQuery();
+			System.out.println("04.query 실행 및 리턴");
+			
+			while(rs.next()) {
+				blogHeartDto tmp = new blogHeartDto();
+				tmp.setRegdate(rs.getDate(1));
+				tmp.setUserid(rs.getString(2));
+				tmp.setBlogid(rs.getString(3));
+				tmp.setBlogseq(rs.getInt(4));
+				tmp.setBlogNickname(rs.getString(5));
+				
+				res.add(tmp);
+				}
+			
+			
+			} catch (SQLException e) {
+				System.out.println("3/4단계 에러");
+				e.printStackTrace();
+			}finally {
+				closeAll(con, pstm, rs);
+				System.out.println("05. db종료\n");
+			}
+
+		return res;
+	
 	}
 
-	@Override
-	public boolean deleteWishedSql(int seq) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean deleteCompanionSql(int seq) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 }

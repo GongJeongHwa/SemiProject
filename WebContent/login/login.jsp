@@ -19,6 +19,10 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
+.btn {
+	width:113px;
+}
+
 </style>
 
 <title>Insert title here</title>
@@ -33,7 +37,7 @@
 	<div class="main">
 		<div class="main-inner">
 		
-			<h1> L O G I N</h1>
+			<h1 style="text-align:center" > L O G I N</h1>
 			<form action="../loginController.do" method="post">
 				<input type="hidden" name="command" value="login">
 				<table>
@@ -47,9 +51,9 @@
 						<td><input type="password" name="pw"></td>
 					</tr>
 					<tr>
-						<td colspan="2">
-							<input type="submit" value="로그인" >
-							<input type="button" value="회원가입" onclick="location.href='../loginController.do?command=registform'">
+						<td style="text-align:center" colspan="2">
+							<input type="submit" class="btn" style="border: 2px solid grey;" value="로그인" >
+							<input type="button" class="btn" style="border: 2px solid grey;" value="회원가입" onclick="location.href='../loginController.do?command=registform'">
 						</td>
 					</tr>
 				</table>

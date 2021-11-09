@@ -66,10 +66,8 @@
 				
 				<col width="100px">
 				<col width="130px">
-				<col width="300px">
-				<col width="50px">
+				<col width="400px">
 				<tr>
-					<th></th>
 					<th></th>
 					<th></th>
 					<th></th>
@@ -81,12 +79,11 @@
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:forEach items="${wished_list }" var="HeardDto">
+						<c:forEach items="${wished_list }" var="HeartDto">
 							<tr>
-								<td>${HeardDto.nation }</td>
-								<td>${HeardDto.place_name }</td>
-								<td>${HeardDto.latitude } / ${HeardDto.longtitude }</td>
-								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>
+								<td>${HeartDto.nation }</td>
+								<td>${HeartDto.place_name }</td>
+								<td>${HeartDto.place_address }</td>
 							</tr>
 						</c:forEach>
 					</c:otherwise>
@@ -170,11 +167,9 @@ var table = $('#example').DataTable({
         title: "장소이름"
       },
       {
-        title: "위도 / 경도"
+        title: "주소"
       }, 
-      {
-          title: "삭제"
-        }, 
+       
       
 
     ]
@@ -186,11 +181,11 @@ var table = $('#example').DataTable({
 });// ready function ends here
  
 
-`<c:forEach items="${wished_list }" var="HeardDto">`
+`<c:forEach items="${wished_list }" var="HeartDto">`
 
 var dataSet = [ 
     
-   [` ${HeardDto.nation }`, `${HeardDto.place_name }`,`${HeardDto.latitude } / ${HeardDto.longtitude }`,`	<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>	`], q
+   [` ${HeartDto.nation }`, `${HeartDto.place_name }`,`${HeartDto.place_address }`], q
 ];
 
 `</c:forEach>`
@@ -202,10 +197,7 @@ $(document).ready(function() {
         columns: [
             { title: "국가" },
             { title: "장소이름" },
-            { title: "위도/ 경도 " },
-            {
-                title: "삭제"
-              } 
+            { title: "주소 " }
             
         ]
     } );

@@ -93,7 +93,7 @@
 
 #map {
 	width: 100%;
-	height: 400px;
+	height: 500px;
 }
 
 .toast-success {
@@ -609,7 +609,7 @@ let black = "black";
 //dtolist
 let dayandplace = new Array();
 //날씨변수
-let key = "b4c06919dd631fbd22102cb87c564261";
+let key = "7a1ac041d1f72d9c0178aea6efe0543c";
 //코로나 api 변수
 let covid;
 let tripCountry = "<%=bdto.getAreaname() %>";
@@ -740,96 +740,104 @@ let infocontent = [];
 		});
 		
 		
-		//마커---------------------------------------------------------------------------------------
-		
-		
-		for(var i = 0; i < dayandplace.length; i++){
-		
-			for(var j = 0; j < dayandplace[i].place.length; j++){
-			
-				var tmp = {lat : parseFloat(dayandplace[i].place[j].lat), 
-						   lng : parseFloat(dayandplace[i].place[j].lng)};
-				markerlist.push(tmp);				
-				
-				var obj = new Object();
-				obj.pname = dayandplace[i].place[j].name;
-				obj.time = dayandplace[i].place[j].time;
-				obj.pdate = dayandplace[i].date;
-				
-				infocontent.push(obj);
-			}
-			
-		}
-		//map
-		initMap();
-		/* createMarker(markerlist); */
-		
-		
-		
+
 		//코로나 데이터 추가--------------------------------------------------------------------------------
 		
 		var settings = {
 				  "url": "https://api.covid19api.com/summary",
 				  "method": "GET",
 				  "timeout": 0,
-				  "async":false,
+				  /* "async":false, */
 				};
 
 				$.ajax(settings).done(function (response) {
 				  covid = response;
 				  console.log(covid);
-				});
-		
-		//국가코드 인덱스 참고용
-		let index = [];
-		for (let x in jsonData) { 
-			index.push(x); 
-		} 
-		
-		//covid country배열
-		var arr = covid.Countries;
-		
-		for(var i = 0; i < tripCountryList.length; i++){
-			for(var j = 0; j < index.length; j++){
-				var cname = tripCountryList[i].replace(/(\s*)/g, "");
-				var CnameKR = jsonData[index[j]].CountryNameKR.replace(/(\s*)/g, "");
-				var CnameEN = jsonData[index[j]].CountryNameEN.replace(/(\s*)/g, "");
-				var CnameOr = jsonData[index[j]].CountryNameOriginal.replace(/(\s*)/g, "");
+				  
+				  
+				  //국가코드 인덱스 참고용
+				  let index = [];
+				  for (let x in jsonData) { 
+					  index.push(x); 
+				  } 
+					
+				  //covid country배열
+				  var arr = covid.Countries;
+					
+				  for(var i = 0; i < tripCountryList.length; i++){
+					  for(var j = 0; j < index.length; j++){
+						  var cname = tripCountryList[i].replace(/(\s*)/g, "");
+						  var CnameKR = jsonData[index[j]].CountryNameKR.replace(/(\s*)/g, "");
+						  var CnameEN = jsonData[index[j]].CountryNameEN.replace(/(\s*)/g, "");
+						  var CnameOr = jsonData[index[j]].CountryNameOriginal.replace(/(\s*)/g, "");
 
-				if(CnameKR == cname || CnameEN == cname || CnameOr == cname){
+						  if(CnameKR == cname || CnameEN == cname || CnameOr == cname){
+								
+							  var str = jsonData[index[j]]["2digitCode"];
+							  var idx = arr.findIndex(x => x.CountryCode == str);
+								
+							  if(idx != -1){
+								  var html2 = createTr(covid.Countries[idx].Country,
+									  covid.Countries[idx].TotalConfirmed,
+									  covid.Countries[idx].NewConfirmed,
+									  covid.Countries[idx].TotalDeaths,
+									  covid.Countries[idx].NewDeaths);
+								  $("#visitCountry").append(html2);
+							  }
+						  }
+					  }
+				  } 
+				
+				  //date
+				  $(".reportdate").each(function(){
+					  $(this).html(covid.Global.Date.split("T")[0]);
+				  });
 					
-					var str = jsonData[index[j]]["2digitCode"];
-					var idx = arr.findIndex(x => x.CountryCode == str);
+				  //totalreport
+				  var html = createTotalTr(covid.Global.TotalConfirmed.toLocaleString(),
+							   covid.Global.TotalDeaths.toLocaleString(),
+							   covid.Global.NewConfirmed.toLocaleString(),
+							   covid.Global.NewDeaths.toLocaleString());
+				  $("#totalCountry").append(html);
+			    });
+
+		//-----------------------------------------------------------------------------------------		
+				
+
+				//마커---------------------------------------------------------------------------------------
+				
+				
+				for(var i = 0; i < dayandplace.length; i++){
+				
+					for(var j = 0; j < dayandplace[i].place.length; j++){
 					
-					if(idx != -1){
-						var html2 = createTr(covid.Countries[idx].Country,
-								covid.Countries[idx].TotalConfirmed,
-								covid.Countries[idx].NewConfirmed,
-								covid.Countries[idx].TotalDeaths,
-								covid.Countries[idx].NewDeaths);
-						$("#visitCountry").append(html2);
+						var tmp = {lat : parseFloat(dayandplace[i].place[j].lat), 
+								   lng : parseFloat(dayandplace[i].place[j].lng)};
+						markerlist.push(tmp);				
+						
+						var obj = new Object();
+						obj.pname = dayandplace[i].place[j].name;
+						obj.time = dayandplace[i].place[j].time;
+						obj.pdate = dayandplace[i].date;
+						
+						infocontent.push(obj);
 					}
+					
 				}
-			}
-		}
 		
-		//date
-		$(".reportdate").each(function(){
-			$(this).html(covid.Global.Date.split("T")[0]);
-		});
-		
-		//totalreport
-		var html = createTotalTr(covid.Global.TotalConfirmed.toLocaleString(),
-				   covid.Global.TotalDeaths.toLocaleString(),
-				   covid.Global.NewConfirmed.toLocaleString(),
-				   covid.Global.NewDeaths.toLocaleString());
-		$("#totalCountry").append(html);
-		
-
-		
-		
-		
-		
+				//map
+				initMap();
+				/* createMarker(markerlist); */
+				
+				for(var i = 0; i < markerlist.length; i++){
+					$("#start").append(createSelect(i, i));
+					$("#end").append(createSelect(i, i));
+				}
+						
+				
+				
+				
+				
 	});
 
 	function visitTime(time){
@@ -954,6 +962,12 @@ let infocontent = [];
 			   "<td>"+ totalDe.toLocaleString() +"<br>("+ ((totalDe/totalCo)*100).toFixed(1) +"%)</td>" +		   
 			   "<td><span style='color:red'>"+ newDe.toLocaleString() +"▲</span></td>" +		   
 			   "</tr>";
+		return html;
+	}
+	
+	function createSelect(lnglat, i){
+		var html = "";
+		html = "<option value='"+ lnglat +"'>"+ (i+1) +"번째 장소</option>";
 		return html;
 	}
 	
@@ -1322,12 +1336,23 @@ jQuery(document).ready(function($){
 	
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-3"></div>
-			<div class="col-lg-6">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-8">
+				<div style='font-size: 15pt;'>※ Travel route</div>
+				    <div id="floating-panel">
+      <b>Start: </b>
+      <select id="start">
+
+      </select>
+      <b>End: </b>
+      <select id="end">
+      
+      </select>
+    </div>
 				<div id="map" class="rounded"></div>
 				<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD91v0jFyq9OujfSgguW_LeoicC-wATfNI&callback=initMap&v=weekly" async></script>
 			</div>
-			<div class="col-lg-3"></div>
+			<div class="col-lg-2"></div>
 		</div>
 	</div>
 	
@@ -1755,12 +1780,14 @@ jQuery(document).ready(function($){
    
 
    function initMap() {
+	   var directionsService = new google.maps.DirectionsService();
+	   var directionsRenderer = new google.maps.DirectionsRenderer();
 	   
    	  map = new google.maps.Map(document.getElementById("map"), {
    	    center: { lat: -33.866, lng: 151.196 },
    	    zoom: 15,
    	  });
-   	  
+   		directionsRenderer.setMap(map);
    	  /* console.log(markerlist); */
    	  
 	   for(var i = 0; i < markerlist.length; i++){
@@ -1831,19 +1858,41 @@ jQuery(document).ready(function($){
 		   
 	   }
 	   
-	   
-	   
-	   
-	   
-	   var flightPath = new google.maps.Polyline({
+ 	   var flightPath = new google.maps.Polyline({
 		   path: markerlist,
-		   strokeColor: "#fe0000",
-		   strokeOpacity: 0.8,
-		   strokeWeight: 2
+		    geodesic: true,
+		    strokeColor: "#c20000",
+		    strokeOpacity: 0.8,
+		    strokeWeight: 2,
 		   });
+	   flightPath.setMap(map); 
+	   
+	   
+	   
+	   const onChangeHandler = function () {
+		    calculateAndDisplayRoute(directionsService, directionsRenderer);
+		  };
 
-	   flightPath.setMap(map);
+		  document.getElementById("start").addEventListener("change", onChangeHandler);
+		  document.getElementById("end").addEventListener("change", onChangeHandler);
+	   
+	   
+	   function calculateAndDisplayRoute(directionsService, directionsRenderer, ) {
+		   directionsService
+		     .route({
+		       origin: markerlist[parseInt(document.getElementById("start").value)],
+		       destination: markerlist[parseInt(document.getElementById("end").value)],
+		       travelMode: google.maps.TravelMode.DRIVING,
+		     })
+		     .then((response) => {
+		       directionsRenderer.setDirections(response);
+		     })
+		     .catch((e) => window.alert("Directions request failed due to " + status));
+		 }
+	   
    }
+   
+
    
    
 </script>         
