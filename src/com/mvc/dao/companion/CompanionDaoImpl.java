@@ -573,7 +573,8 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeAll(null, pstm, rs);
+			closeStmt(pstm);
+			closeRs(rs);
 		}
 		return penalty;
 	}
@@ -634,7 +635,8 @@ public class CompanionDaoImpl extends JDBCTemplate implements CompanionDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			closeAll(null, pstm, rs);
+			closeStmt(pstm);
+			closeRs(rs);
 		}
 		return flag;
 	}
