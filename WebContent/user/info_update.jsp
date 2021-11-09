@@ -105,19 +105,19 @@ span, .noti{
 	}
 	
 	function beforeSubmit(){
-		var pw1 = document.getElementsByName("pw_change")[0]; //수정할 비밀번호
-		var pw2 = document.getElementsByName("pw_check")[0]; //비밀번호 확인
-		var name = document.getElementsByName("name")[0]; //
+		var pw1 = document.getElementsByName("pw_change")[0];
+		var pw2 = document.getElementsByName("pw_check")[0];
+		var name = document.getElementsByName("name")[0];
 		var nickname = document.getElementsByName("nickname")[0];
 		var addr = document.getElementById("extraAddress");
 		var email = document.getElementsByName("email")[0];
-		
+
 		var pattern1 = /[0-9]/;
         var pattern2 = /[a-zA-Z]/;
         var pattern3 = /[~!@\#$%<>^&*]/; 
 		
 		if(pw1.value.trim()==""|| pw1.value==null){
-			alert("비밀번호를 입력해 주세요");
+			alert("수정할 비밀번호를 입력해 주세요");
 			pw1.focus();
             return false;
 		}else if(pw2.value.trim()==""|| pw2.value==null){
@@ -126,8 +126,8 @@ span, .noti{
             return false;
 		}else if(!pattern1.test(pw1.value.trim())||!pattern2.test(pw1.value.trim())||!pattern3.test(pw1.value.trim())||pw1.value.trim().length<4||pw1.value.trim().length>17){
             alert("영문+숫자+특수기호 5-16자리로 구성하여야 합니다.");
-			pw3.focus();
-            return false;	
+            pw1.focus();
+            return false;         
 		}else if(name.value.trim()==""|| name.value==null){
 			alert("이름을 입력해 주세요");
 			name.focus();
@@ -150,9 +150,11 @@ span, .noti{
 			return false;
 		}else if(pw1.value.trim() == pw2.value.trim()){
 			document.getElementById("pw_msg").innerHTML = "비밀번호가같습니다.";
-			return true; //모든 값 확인 후 리턴
+			return true; //모든값 확인 후 리턴
 		}
+
 	}
+	
 	
 </script>
 <script type="text/javascript">

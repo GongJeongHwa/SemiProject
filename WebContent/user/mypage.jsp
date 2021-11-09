@@ -68,6 +68,11 @@
 </script>
  <!--  -->
 <style type="text/css">
+
+	.link, .link :visited, .link :hover{ 
+	text-decoration:none;
+	color: black
+	}
    ul {
       list-style-type : none;
        margin: 0px;
@@ -121,6 +126,7 @@
    .table th, .table td{
       border:1px solid black;
    }
+
 </style>
 <script type="text/javascript">
    function popup(){
@@ -187,7 +193,7 @@
                      <tr>
                         <td>${blogDto.blog_create_date }</td>
                         <td style="text-align:center">♥${blogDto.heart_count }</td>
-                        <td><a href="blog.do?command=selectone&blogseq=${blogDto.blog_seq}&user_id=${blogDto.user_id}">${blogDto.areaname }</a></td>
+                        <td><a class="link" href="blog.do?command=selectone&blogseq=${blogDto.blog_seq}&user_id=${blogDto.user_id}">${blogDto.areaname }</a></td>
                      </tr>
                   </c:forEach>
                </c:otherwise>
@@ -223,7 +229,7 @@
                      <tr>
                         <td>${blogHeartDto.regdate }</td>
                         <td>${blogHeartDto.blogid }</td>
-                        <td>${blogHeartDto.blogNickname }</td>
+                        <td><a class="link" href="blog.do?command=selectone&blogseq=${blogHeartDto.blogseq}&user_id=${blogHeartDto.blogid}">${blogHeartDto.blogNickname }</a></td>
                      </tr>
                   </c:forEach>
                </c:otherwise>

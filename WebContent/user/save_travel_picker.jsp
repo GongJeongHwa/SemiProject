@@ -202,7 +202,7 @@ $(document).ready(function() {
         columns: [
             { title: "국가" },
             { title: "장소이름" },
-            { title: "위도/ 경도 " },
+            { title: "주소 " },
             {
                 title: "삭제"
               } 

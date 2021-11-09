@@ -85,7 +85,9 @@
 								<td>${blogHeartDto.regdate }</td>
                         		<td>${blogHeartDto.blogid }</td>
                         		<td>${blogHeartDto.blogNickname }</td>
-								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>
+								<td class="del_travel">
+									<img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="location.href='blog.do?command=rmblogheart&sessionid=${blogHeartDto.userid }&blogid=${blogHeartDto.blogid }&blogseq=${blogHeartDto.blogseq }'">
+								</td>
 							</tr>
 						</c:forEach>
 					</c:otherwise>

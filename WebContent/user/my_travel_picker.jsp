@@ -62,7 +62,7 @@
 									<td>${blogDto.heart_count }</td>
 									<td><a href="blog.do?command=selectone&blogseq=${blogDto.blog_seq}&user_id=${blogDto.user_id}">${blogDto.areaname }</a></td>
 									
-									<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="cancel();"></td>
+									<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="location.href='blog.do?command=delblog&userid=${blogDto.user_id}&blogseq=${blogDto.blog_seq}'"></td>
 								</tr>
 							</c:forEach>
 						</c:otherwise>
@@ -73,7 +73,6 @@
 
 
 <script type="text/javascript">
-
 $(document).ready(function() {
 
   $(function() {

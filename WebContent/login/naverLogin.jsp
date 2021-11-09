@@ -23,7 +23,7 @@
   <script type="text/javascript">
   	var naver_id_login = new naver_id_login("pQjjGzIKSFC97IFwO7C5", "http://localhost:8787/semi/login/naverCallback.jsp");
   	var state = naver_id_login.getUniqState();
-  	naver_id_login.setButton("green", 3,60);
+  	naver_id_login.setButton("green", 3,53);
   	naver_id_login.setDomain("http://localhost:8787/semi/index.jsp");
   	naver_id_login.setState(state);
   	//naver_id_login.setPopup();
