@@ -164,7 +164,7 @@ public class CompanionController extends HttpServlet {
 			boolean able = biz.ableAskCompanion(login_id.getUser_id(), con_id);
 			
 			if (able) {
-				boolean flag = biz.blogAskCompanion(login_id.getUser_id(), con_id, comment);
+				boolean flag = blogAskCompanion(login_id.getUser_id(), con_id, comment);
 				response.getWriter().write(flag?"성공":"실패");
 			} else {
 				response.getWriter().write("이미 연결된 회원입니다.");
@@ -196,6 +196,13 @@ public class CompanionController extends HttpServlet {
 			}
 			response.getWriter().write(res>0?"성공":"실패");
 		}
+	}
+	
+	public boolean blogAskCompanion(String login_id, String con_id, String comment) {
+		CompanionBizImpl biz = new CompanionBizImpl();
+		boolean flag = biz.blogAskCompanion(login_id, con_id, comment);
+		
+		return flag;
 	}
 	
 	@SuppressWarnings("unchecked")
