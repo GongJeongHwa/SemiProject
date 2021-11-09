@@ -63,12 +63,10 @@
 
 <div id="tabledata" style="width:60%; top:270px; right:350px; position:absolute;">
 <table id="example" class="display"  >  
-				<col width="60px">
+				<col width="100px">
 				<col width="200px">
-				<col width="300px">
-				<col width="30px"> 
+				<col width="400px">
 				<tr>
-					<th></th>
 					<th></th>
 					<th></th>
 					<th></th>
@@ -85,7 +83,6 @@
 								<td>${PromiseDto.p_time }</td>
 								<td>${PromiseDto.p_loc }</td>
 								<td>${PromiseDto.p_comment }</td>
-								<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="location.href='massage.do?command=completeDelete&con_id=${PromiseDto.rec_id}'"></td>	
 							</tr>
 						</c:forEach>
 					</c:otherwise>
@@ -171,9 +168,6 @@ var table = $('#example').DataTable({
       {
         title: "comment"
       }, 
-      {
-          title: "삭제"
-        }, 
       
 
     ]
@@ -202,10 +196,6 @@ $(document).ready(function() {
             { title: "날짜" },
             { title: "장소이름" },
             { title: "comment" },
-            {
-                title: "삭제"
-              }, 
-            
         ]
     } );
 

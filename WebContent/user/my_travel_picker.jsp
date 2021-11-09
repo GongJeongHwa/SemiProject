@@ -44,10 +44,9 @@
 
 <div id="tabledata" style="width:60%; top:270px; right:350px; position:absolute;">
 	<table id="example" class="display"  >  
-		<col width="100px">
+					<col width="100px">
 					<col width="60px">
-					<col width="400px">
-					<col width="30px">
+					<col width="500px">
 					 
 				<c:choose>
 					<c:when test="${empty travel_list }">
@@ -61,8 +60,6 @@
 									<td>${blogDto.blog_create_date }</td>
 									<td>${blogDto.heart_count }</td>
 									<td><a href="blog.do?command=selectone&blogseq=${blogDto.blog_seq}&user_id=${blogDto.user_id}">${blogDto.areaname }</a></td>
-									
-									<td class="del_travel"><img src="https://img.icons8.com/material-rounded/24/000000/multiply--v1.png" width="20" height="20" onclick="location.href='blog.do?command=delblog&userid=${blogDto.user_id}&blogseq=${blogDto.blog_seq}'"></td>
 								</tr>
 							</c:forEach>
 						</c:otherwise>
@@ -146,10 +143,6 @@ var table = $('#example').DataTable({
       {
         title: "장소"
       }, 
-      {
-          title: "삭제"
-        }, 
-      
 
     ]
   }); //table var ends here
@@ -176,8 +169,7 @@ $(document).ready(function() {
         columns: [
             { title: "날짜" },
             { title: "찜" },
-            { title: "장소" },
-            {title: "삭제"}, 
+            { title: "장소" }
         ]
     } );
 } );
