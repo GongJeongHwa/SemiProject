@@ -91,6 +91,11 @@
 	margin-bottom: 5px;
 }
 
+#map {
+	width: 100%;
+	height: 400px;
+}
+
 .toast-success {
 	background-color: #77ca8a !important;
 	font-weight: bold !important;
@@ -610,7 +615,16 @@ let covid;
 let tripCountry = "<%=bdto.getAreaname() %>";
 let tripCountryList = tripCountry.split(",");
 let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
+//map
 
+//init Map
+let map;
+let infowindow;
+let markerlist = []; //{lat : ?? , lng : ??}
+let markers = []; //마커 객체배열
+let infowindows = []; //인포윈도우 객체배열
+//인포윈도우 띄울내용
+let infocontent = [];
 
 	$(function(){
 		
@@ -669,7 +683,6 @@ let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 			dayandplace.push(tempObj);
 		}
 		
-		
 		console.log(dayandplace);
 		
 		
@@ -682,7 +695,7 @@ let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 		}
 		
 		//날짜에 해당하는 데이터--------------------------------------------------------------------------------
-		
+		var count = 1;
 		for(var i = 0; i < length; i++){
 
 			var html = "";
@@ -690,7 +703,7 @@ let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 			for(var j = 0; j < dayandplace[i].place.length; j++){
 				
 				
-				html += createDetail(j+1,
+				html += createDetail(count++,
 								     dayandplace[i].place[j].name ,
 									 dayandplace[i].place[j].addr ,
 						             ((dayandplace[i].place[j].time=='00:00')? '미정' : visitTime(dayandplace[i].place[j].time)) ,
@@ -725,6 +738,33 @@ let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 			});
 			
 		});
+		
+		
+		//마커---------------------------------------------------------------------------------------
+		
+		
+		for(var i = 0; i < dayandplace.length; i++){
+		
+			for(var j = 0; j < dayandplace[i].place.length; j++){
+			
+				var tmp = {lat : parseFloat(dayandplace[i].place[j].lat), 
+						   lng : parseFloat(dayandplace[i].place[j].lng)};
+				markerlist.push(tmp);				
+				
+				var obj = new Object();
+				obj.pname = dayandplace[i].place[j].name;
+				obj.time = dayandplace[i].place[j].time;
+				obj.pdate = dayandplace[i].date;
+				
+				infocontent.push(obj);
+			}
+			
+		}
+		//map
+		initMap();
+		/* createMarker(markerlist); */
+		
+		
 		
 		//코로나 데이터 추가--------------------------------------------------------------------------------
 		
@@ -785,7 +825,7 @@ let jsonData = JSON.parse(JSON.stringify(data)); //국가코드 json파일
 				   covid.Global.NewDeaths.toLocaleString());
 		$("#totalCountry").append(html);
 		
-		
+
 		
 		
 		
@@ -1278,6 +1318,30 @@ jQuery(document).ready(function($){
 
 	<br><br><br>
 	
+	<!-- map -->
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3"></div>
+			<div class="col-lg-6">
+				<div id="map" class="rounded"></div>
+				<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD91v0jFyq9OujfSgguW_LeoicC-wATfNI&callback=initMap&v=weekly" async></script>
+			</div>
+			<div class="col-lg-3"></div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	<br><br><br>
+	<br><br><br>
+	<br><br><br>
+	
 	<!-- 코로나 -->
 	<div class="container" style="font-size:12pt !important;">
 	<div class="row">
@@ -1438,8 +1502,7 @@ jQuery(document).ready(function($){
 				method: "post",
 				dataType: "json",
 				success:function(data){
-					console.log(data);
-					console.log(data.length);
+					
 					for(var i = 0; i < data.length; i++){
 						$("#commentbody").append(createComment(data[i].commentid, data[i].content, data[i].commentdate, data[i].commentseq, data[i].groupno, data[i].groupseq));
 					}
@@ -1690,7 +1753,97 @@ jQuery(document).ready(function($){
    }
    
    
-   
+
+   function initMap() {
+	   
+   	  map = new google.maps.Map(document.getElementById("map"), {
+   	    center: { lat: -33.866, lng: 151.196 },
+   	    zoom: 15,
+   	  });
+   	  
+   	  /* console.log(markerlist); */
+   	  
+	   for(var i = 0; i < markerlist.length; i++){
+		   
+		   //숫자가 10 이상일경우 charcode연결필요
+		   var charcodeText = "";
+		   if(i >= 9){
+			   var str = (i+1).toString();
+			   for(var j = 0; j < str.length; j++){
+				   charcodeText += String.fromCharCode(str[j].charCodeAt(0));
+			   }
+		   }else{
+			   charcodeText += String.fromCharCode((i+1).toString().charCodeAt(0));
+		   }
+		   
+		   var marker = new google.maps.Marker({
+				  position: markerlist[i],
+			   	  icon: {
+		             url: 'https://maps.google.com/mapfiles/ms/micons/green.png',
+		             labelOrigin: new google.maps.Point(15, 10)
+		          },
+		          label: {
+		             text: charcodeText
+		          }
+				  
+			   });
+		   		
+		   	   markers.push(marker);
+		   
+		   	   //마커 세팅
+			   marker.setMap(map);
+		   	   
+		   	   //마커 1번을 처음으로 안내
+			   if(i == 0){
+			     map.setCenter(marker.getPosition());
+			   }
+	   }
+	   
+	   console.log("markers" + markers);
+	   console.log(infocontent[0].pname);
+	   
+	   //마커 객체 리스트 이벤트 추가
+	   for(var i = 0; i < markers.length; i++){
+		   var zerotime = '00:00';
+		   var noTime = '미정';
+		   
+		   //let으로 선언해주어야 for문돌때마다 변수변경적용 -> 마커클릭이벤트에 해당 문구적용
+		   let infostring = "<b style='font-size:13pt;'>"+ infocontent[i].pdate +"</b><br><br>"  + "<b>" + infocontent[i].pname + "</b><br>" + "방문 시각 : " + ((infocontent[i].time==zerotime)? noTime: infocontent[i].time);
+		   
+		   google.maps.event.addListener(markers[i], 'click', function(){
+			   
+			   //인포윈도우 객체를 모두 해제해야 다른 마커 클릭 시 새로운 인포윈도우
+			   for(var j = 0; j < infowindows.length; j++){
+				   infowindows[j].close();
+			   }
+			   
+			   map.setCenter(this.getPosition());
+			   map.setZoom(16);
+			   
+			   //infostring
+			   var infowindow = new google.maps.InfoWindow({
+			   		content : infostring
+			   });
+			   infowindow.open(map, this);   
+			   
+			   infowindows.push(infowindow);
+		   });
+		   
+	   }
+	   
+	   
+	   
+	   
+	   
+	   var flightPath = new google.maps.Polyline({
+		   path: markerlist,
+		   strokeColor: "#fe0000",
+		   strokeOpacity: 0.8,
+		   strokeWeight: 2
+		   });
+
+	   flightPath.setMap(map);
+   }
    
    
 </script>         

@@ -202,7 +202,6 @@ public class CompanionBizImpl extends JDBCTemplate implements CompanionBiz{
 		System.out.println("login_id : "+login_id);
 		System.out.println("penalty : "+penalty);
 		closeConn(con);
-		
 		return penalty;
 	}
 
@@ -221,6 +220,7 @@ public class CompanionBizImpl extends JDBCTemplate implements CompanionBiz{
 			return res;
 			
 		} else {
+			
 			res = dao.upPenalty(con2, penalty, login_id);
 			res += dao.deletePromise(con2, loc);
 			if (res == 2) {

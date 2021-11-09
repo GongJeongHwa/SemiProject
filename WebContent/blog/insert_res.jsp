@@ -34,7 +34,7 @@
 	}else{
 %>
 	<script type="text/javascript">
-		alert("글 등록 실패");
+		alert("모든 항목을 입력해주세요.");
 		location.href="insert.jsp";
 	</script>
 <%		
