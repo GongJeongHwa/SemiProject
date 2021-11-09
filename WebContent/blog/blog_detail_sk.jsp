@@ -1882,7 +1882,7 @@ jQuery(document).ready(function($){
 		     .route({
 		       origin: markerlist[parseInt(document.getElementById("start").value)],
 		       destination: markerlist[parseInt(document.getElementById("end").value)],
-		       travelMode: google.maps.TravelMode.DRIVING,
+		       travelMode: google.maps.TravelMode.TRANSIT,
 		     })
 		     .then((response) => {
 		       directionsRenderer.setDirections(response);
