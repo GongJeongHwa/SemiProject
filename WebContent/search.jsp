@@ -30,7 +30,7 @@
 	border: 1px solid rgb(105, 231, 175);
 }
 
-.btn_1, .btn_2 {
+.btn_1{
 	border: 1px solid gray;
 	border-radius: 25px;
 	text-align: center;
@@ -360,12 +360,12 @@ function getPlaceDetail(placeid){
 						$("#btnheart").removeAttr("onclick");
 						$("#btnheart").attr("onclick","rmheart();");
 						$("#heartimg").prop("src","./img/icons/suit-heart-fill.svg");
-						$("#heart").html("해제");
+						$("#heart").html("&nbsp;장소 찜 해제&nbsp;");
 					}else{
 						$("#btnheart").removeAttr("onclick");
 						$("#btnheart").attr("onclick","addheart();");
 						$("#heartimg").prop("src","./img/icons/suit-heart.svg");
-						$("#heart").html("추가");
+						$("#heart").html("&nbsp;장소 찜 추가&nbsp;");
 					}
 				},
 				error:function(){
@@ -481,7 +481,7 @@ function addheart(){
 				$("#btnheart").removeAttr("onclick");
 				$("#btnheart").attr("onclick","rmheart();");
 				$("#heartimg").prop("src","./img/icons/suit-heart-fill.svg");
-				$("#heart").html("해제");
+				$("#heart").html("&nbsp;장소 찜 해제&nbsp;");
 				$("#heartcount").html("<b>"+data+"</b>&nbsp명");
 				
 			}else if(data == "-1"){
@@ -511,7 +511,7 @@ function rmheart(){
 				$("#btnheart").removeAttr("onclick");
 				$("#btnheart").attr("onclick","addheart();");
 				$("#heartimg").prop("src","./img/icons/suit-heart.svg");
-				$("#heart").html("추가");
+				$("#heart").html("&nbsp;장소 찜 추가&nbsp;");
 				$("#heartcount").html("<b>"+data+"</b>&nbsp명");
 				
 			}else if(data == "-1"){
@@ -524,7 +524,7 @@ function rmheart(){
 				$("#btnheart").removeAttr("onclick");
 				$("#btnheart").attr("onclick","addheart();");
 				$("#heartimg").prop("src","./img/icons/suit-heart.svg");
-				$("#heart").html("추가");
+				$("#heart").html("&nbsp;장소 찜 추가&nbsp;");
 			}
 		},
 		error: function(){
@@ -668,7 +668,7 @@ $(function(){
 		<br>
 		<div class="row">
 			<div class="col-xs-12" style="text-align: left;">
-				이달의 인기 키워드 TOP 10 : &nbsp;&nbsp;
+				여묻 추천 키워드 &nbsp; : &nbsp;&nbsp;
 				<button type="button" class="detail"
 					onclick="buttoncall(this.value)" value="hotel">호텔</button>
 				&nbsp;&nbsp;
@@ -804,8 +804,7 @@ $(function(){
 					<input type="hidden" id="nation" value="">
 					<input type="hidden" id="city" value="">
 					<button type="button" class="btn" data-bs-dismiss="modal" style="outline: none;">닫기</button>
-					<button type="button" id="btnheart" class="btn_1" onclick=""><img class='img' id="heartimg" src='./img/icons/suit-heart.svg' alt='Bootstrap' width='20' height='20'><span id="heart">추가</span></button>
-					<button type="button" class="btn_2" onclick="">여행일정에 담기</button>
+					<button type="button" id="btnheart" class="btn_1" onclick=""><img class='img' id="heartimg" src='./img/icons/suit-heart.svg' alt='Bootstrap' width='20' height='20'><span id="heart">&nbsp;장소 찜 추가&nbsp;</span></button>&nbsp;&nbsp;
 				</div>
 			</div>
 		</div>
