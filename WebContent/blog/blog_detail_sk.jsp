@@ -825,14 +825,16 @@ let infocontent = [];
 					
 				}
 		
-				//map
-				initMap();
-				/* createMarker(markerlist); */
-				
 				for(var i = 0; i < markerlist.length; i++){
 					$("#start").append(createSelect(i, i));
 					$("#end").append(createSelect(i, i));
 				}
+		
+				//map
+				initMap();
+				/* createMarker(markerlist); */
+				
+
 						
 				
 				
