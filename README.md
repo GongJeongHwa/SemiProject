@@ -72,6 +72,22 @@
 -로그인구현은 추가로 맡게되어 화면설계를 진행하지 않았습니다.
 
 ## 결과
+<h3>화면</h3>
+1. 로그인 
+<img src="https://user-images.githubusercontent.com/92419990/154043256-893044e3-673c-4e0b-9a31-1391cd133118.png" />
+
+2. 마이페이지 - 메인
+<img src="https://user-images.githubusercontent.com/92419990/154043848-47cf0795-1233-4b54-9156-ab4bf53f1ff1.png" />
+
+3. 마이페이지 - 더보기
+<img src="https://user-images.githubusercontent.com/92419990/154044225-0d66ec17-708d-4008-9875-58452f619dc0.png" />
+
+4. 마이페이지 - 정보수정
+<img src="https://user-images.githubusercontent.com/92419990/154043996-2ea1ef06-6b00-4ea1-94fb-7493213e630d.png" />
+
+<br><br> 
+
+<h3>기능</h3>
 <ul>
   <li>의도한 바와 같이 화면 구현 완료 / 기능 구현 완료</li>
   <li>네이버로그인API 기능 구현 시 임의로 데이터베이스에 추가하여 진행</li>
